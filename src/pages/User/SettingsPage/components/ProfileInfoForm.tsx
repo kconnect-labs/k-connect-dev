@@ -71,7 +71,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   // Получаем текущее состояние стиля профиля
   useEffect(() => {
     const fetchProfileStyle = async () => {
-      if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max')) {
+      if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max' && subscription.type !== 'pick-me')) {
         setIsCustomProfileActive(false);
         setIsCompactInvertedActive(false);
         return;
@@ -125,7 +125,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   };
 
   const handleProfileStyleToggle = async () => {
-    if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max')) return;
+    if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max' && subscription.type !== 'pick-me')) return;
 
     setUpdatingProfileStyle(true);
     try {
@@ -166,7 +166,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   };
 
   const handleCompactInvertedToggle = async () => {
-    if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max')) return;
+    if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max' && subscription.type !== 'pick-me')) return;
 
     setUpdatingCompactInverted(true);
     try {
@@ -294,8 +294,8 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
         </Grid>
       </Grid>
 
-      {/* Profile style toggle - only for Ultimate and MAX subscription */}
-      {(subscription?.type === 'ultimate' || subscription?.type === 'max') && (
+      {/* Profile style toggle - only for Ultimate, MAX and pick-me subscription */}
+      {(subscription?.type === 'ultimate' || subscription?.type === 'max' || subscription?.type === 'pick-me') && (
         <>
           <Box sx={{ mt: 2, mb: 1 }}>
             <Paper

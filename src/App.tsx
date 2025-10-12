@@ -163,7 +163,7 @@ const AppProviders: React.FC<AppProvidersProps> = ({ children, themeContextValue
 function App() {
   // Убрали неиспользуемые useTransition и isAppLoading
 
-  const { isInitialized: isThemeInitialized } = useThemeManager();
+  const { isInitialized: isThemeInitialized, currentTheme } = useThemeManager();
 
   const authContext = useContext(AuthContext);
   const { isAuthenticated = false, loading = false, user: currentUser } = authContext || {};
@@ -186,11 +186,21 @@ function App() {
   }, []);
 
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => ({
-    mode: localStorage.getItem('themeMode') || 'default',
+    mode: currentTheme || 'default',
     backgroundColor: 'var(--theme-background-full)',
     textColor: '#FFFFFF',
     primaryColor: localStorage.getItem('primaryColor') || '#D0BCFF',
   }));
+
+  // Синхронизируем themeSettings с currentTheme из useThemeManager
+  useEffect(() => {
+    if (currentTheme && currentTheme !== themeSettings.mode) {
+      setThemeSettings(prev => ({
+        ...prev,
+        mode: currentTheme
+      }));
+    }
+  }, [currentTheme, themeSettings.mode]);
 
   
   const [profileBackground, setProfileBackgroundState] = useState<

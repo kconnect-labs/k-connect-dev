@@ -245,11 +245,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     setSelectedBadgeImagePath(imagePath);
     setBadgeModalOpen(true);
   };
-
-  // Отладочная информация для musician_type
-  console.log('ProfileCard - user.musician_type:', user?.musician_type);
-  console.log('ProfileCard - user.total_artists_count:', user?.total_artists_count);
-
   return (
     <Paper
       sx={{

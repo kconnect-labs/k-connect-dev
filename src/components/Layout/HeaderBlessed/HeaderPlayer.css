@@ -1,0 +1,283 @@
+@import '../../../uikit.module.css';
+
+/* HeaderPlayer - Стили только для BlessedBlur темы */
+
+[data-theme="BlessedBlur"] .header-player {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  contain: layout style paint;
+  justify-content: center;
+}
+
+[data-theme="BlessedBlur"] .MINI-track-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+[data-theme="BlessedBlur"] .MINI-track-info--clickable {
+  cursor: pointer;
+}
+
+[data-theme="BlessedBlur"] .MINI-track-info--clickable:hover {
+  background-color: rgba(208, 188, 255, 0.08);
+  transform: scale(1.02);
+}
+
+[data-theme="BlessedBlur"] .track-cover {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  object-fit: cover;
+}
+
+[data-theme="BlessedBlur"] .MINI-track-info--clickable:hover .track-cover {
+  box-shadow: 0 4px 12px rgba(208, 188, 255, 0.3);
+}
+
+[data-theme="BlessedBlur"] .track-details {
+  min-width: 0;
+  max-width: 180px;
+}
+
+[data-theme="BlessedBlur"] .track-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--theme-main-color);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+[data-theme="BlessedBlur"] .track-artist {
+  font-size: 0.75rem;
+  color: var(--theme-secondary-color);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  opacity: 0.8;
+}
+
+[data-theme="BlessedBlur"] .player-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+[data-theme="BlessedBlur"] .control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--theme-main-color);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+[data-theme="BlessedBlur"] .control-button:hover {
+  background-color: rgba(208, 188, 255, 0.1);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+[data-theme="BlessedBlur"] .control-button:active {
+  transform: scale(0.95);
+}
+
+[data-theme="BlessedBlur"] .play-pause-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary-color, #d0bcff);
+  color: white;
+  opacity: 1;
+}
+
+[data-theme="BlessedBlur"] .play-pause-button:hover {
+  background: var(--primary-color, #d0bcff);
+  transform: scale(1.05);
+}
+
+[data-theme="BlessedBlur"] .progress-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  min-width: 0;
+}
+
+[data-theme="BlessedBlur"] .progress-bar {
+  width: 100px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+[data-theme="BlessedBlur"] .progress-bar:hover {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="BlessedBlur"] .progress-fill {
+  height: 100%;
+  background: var(--primary-color, #d0bcff);
+  border-radius: 2px;
+  transition: width 0.1s ease;
+}
+
+[data-theme="BlessedBlur"] .time-display {
+  font-size: 0.75rem;
+  color: var(--theme-secondary-color);
+  white-space: nowrap;
+  opacity: 0.8;
+}
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="BlessedBlur"] .MINI-track-info--clickable:hover {
+    transform: none;
+  }
+
+  [data-theme="BlessedBlur"] .track-cover {
+    transition: none;
+  }
+
+  [data-theme="BlessedBlur"] .control-button {
+    transition: none;
+  }
+
+  [data-theme="BlessedBlur"] .control-button:hover {
+    transform: none;
+  }
+
+  [data-theme="BlessedBlur"] .control-button:active {
+    transform: none;
+  }
+
+  [data-theme="BlessedBlur"] .play-pause-button:hover {
+    transform: none;
+  }
+
+  [data-theme="BlessedBlur"] .progress-bar {
+    transition: none;
+  }
+
+  [data-theme="BlessedBlur"] .progress-fill {
+    transition: none;
+  }
+}
+
+/* Оптимизации для производительности */
+[data-theme="BlessedBlur"] .header-player {
+  will-change: transform;
+}
+
+[data-theme="BlessedBlur"] .MINI-track-info {
+  will-change: transform;
+}
+
+[data-theme="BlessedBlur"] .control-button {
+  will-change: transform, opacity;
+}
+
+[data-theme="BlessedBlur"] .progress-fill {
+  will-change: width;
+}
+
+/* Поддержка высокого DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  [data-theme="BlessedBlur"] .track-cover {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Поддержка печати */
+@media print {
+  [data-theme="BlessedBlur"] .header-player {
+    display: none !important;
+  }
+}
+
+/* Стили для плеера на ПК */
+[data-theme="BlessedBlur"] .header-player {
+  padding: 8px 12px;
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 4px 8px;
+}
+
+/* Стили для мобилки в стиле iOS 26 - только для BlessedBlur темы */
+@media (max-width: 700px) {
+  [data-theme="BlessedBlur"] .header-player {
+    padding: 8px 12px;
+    background: var(--theme-background);
+    backdrop-filter: var(--theme-backdrop-filter) !important;
+    -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 4px 8px;
+  }
+
+  [data-theme="BlessedBlur"] .MINI-track-info {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  [data-theme="BlessedBlur"] .track-cover {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+  }
+
+  [data-theme="BlessedBlur"] .track-details {
+    max-width: 120px;
+  }
+
+  [data-theme="BlessedBlur"] .track-title {
+    font-size: 0.8rem;
+  }
+
+  [data-theme="BlessedBlur"] .track-artist {
+    font-size: 0.7rem;
+  }
+
+  [data-theme="BlessedBlur"] .player-controls {
+    gap: 2px;
+  }
+
+  [data-theme="BlessedBlur"] .control-button {
+    width: 24px;
+    height: 24px;
+  }
+
+  [data-theme="BlessedBlur"] .play-pause-button {
+    width: 28px;
+    height: 28px;
+  }
+
+  [data-theme="BlessedBlur"] .progress-container {
+    display: none; /* Скрываем прогресс на мобилке для экономии места */
+  }
+}

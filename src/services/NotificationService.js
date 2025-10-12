@@ -19,14 +19,17 @@ class NotificationService {
         for (const reg of existingRegistrations) {
           if (
             reg.active &&
-            reg.active.scriptURL.includes('service-worker.js')
+            (reg.active.scriptURL.includes('service-worker.js') || 
+             reg.active.scriptURL.includes('custom-sw.js'))
           ) {
+            console.log('Found existing service worker:', reg.active.scriptURL);
             return reg;
           }
         }
 
+        console.log('Registering new service worker: /custom-sw.js');
         const registration = await navigator.serviceWorker.register(
-          '/service-worker.js',
+          '/custom-sw.js',
           {
             scope: '/',
             updateViaCache: 'none',
@@ -36,10 +39,12 @@ class NotificationService {
         if (registration.installing) {
           registration.installing.addEventListener('statechange', e => {
             if (e.target.state === 'activated') {
+              console.log('Service worker activated');
             }
           });
         }
 
+        console.log('Service worker registered successfully');
         return registration;
       } catch (error) {
         console.error('Push service worker registration failed:', error);

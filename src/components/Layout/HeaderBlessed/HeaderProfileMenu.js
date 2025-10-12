@@ -1,0 +1,397 @@
+import React from 'react';
+import {
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Avatar,
+  Typography,
+  Chip,
+  Button,
+  Box,
+  alpha,
+  Tooltip,
+  IconButton,
+} from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
+import VerifiedIcon from '@mui/icons-material/Verified';
+import TranslateIcon from '@mui/icons-material/Translate';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { Icon } from '@iconify/react';
+
+const HeaderProfileMenu = ({
+  user,
+  isMobile,
+  t,
+  theme,
+  anchorEl,
+  isMenuOpen,
+  handleMenuClose,
+  handleNavigate,
+  handleLogout,
+  handleCreateChannel,
+  accounts,
+  handleSwitchAccount,
+}) => {
+  const isFullScreenMenu = isMobile;
+
+
+  return (
+    <>
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isMenuOpen}
+        onClose={handleMenuClose}
+        container={isFullScreenMenu ? document.body : undefined}
+        PaperProps={{
+          elevation: 3,
+          sx: {
+            minWidth: isFullScreenMenu ? '100vw' : 280,
+            maxWidth: isFullScreenMenu ? '100vw' : undefined,
+            width: isFullScreenMenu ? '100vw' : undefined,
+            margin: 0,
+            borderRadius: isFullScreenMenu ? 0 : '14px',
+            position: isFullScreenMenu ? 'fixed' : undefined,
+            top: isFullScreenMenu ? '0 !important' : undefined,
+            left: isFullScreenMenu ? '0 !important' : undefined,
+            right: isFullScreenMenu ? '0 !important' : undefined,
+            bottom: isFullScreenMenu ? '0 !important' : undefined,
+            height: isFullScreenMenu ? '100vh' : undefined,
+            maxHeight: isFullScreenMenu ? '100vh' : undefined,
+            boxShadow: isFullScreenMenu
+              ? 'none'
+              : '0 8px 24px rgba(0,0,0,0.15)',
+            border: isFullScreenMenu
+              ? 'none'
+              : '1px solid rgb(24 24 24)',
+            overflow: 'visible',
+            background: 'var(--theme-background)',
+            backdropFilter: 'var(--theme-backdrop-filter)',
+            '& .MuiMenuItem-root': {
+              padding: '8px 14px',
+              borderRadius: 'var(--small-border-radius)',
+              margin: '1px 6px',
+              minHeight: '36px',
+              transition: 'all 0.2s',
+              '&:hover': {
+                backgroundColor: theme =>
+                  alpha(theme.palette.primary.main, 0.08),
+              },
+            },
+            '& .MuiDivider-root': {
+              margin: '4px 0',
+            },
+            '& .MuiTypography-caption': {
+              padding: '4px 12px',
+            },
+          },
+        }}
+      >
+        {user ? (
+          <>
+            <Box
+              sx={{ px: 2, py: 2, textAlign: 'center', position: 'relative' }}
+            >
+              {isMobile && (
+                <IconButton
+                  onClick={handleMenuClose}
+                  sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: 'text.secondary',
+                    '&:hover': {
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                    },
+                  }}
+                >
+                  <ClearIcon />
+                </IconButton>
+              )}
+              <Avatar
+                src={
+                  user.avatar_url || (user.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
+                }
+                alt={user.name || user.username}
+                sx={{
+                  width: 80,
+                  height: 80,
+                  mx: 'auto',
+                  border: `2px solid ${theme.palette.primary.main}`,
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                }}
+              />
+              <Typography variant='h6' sx={{ mt: 2, fontWeight: 600 }}>
+                {user.name || user.username}
+              </Typography>
+              <Typography
+                variant='body1'
+                color='text.secondary'
+                sx={{ mt: 0.5 }}
+              >
+                @{user.username}
+              </Typography>
+              {user.account_type === 'channel' && (
+                <Chip
+                  size='small'
+                  label={t('header.profile_menu.channel_label')}
+                  color='primary'
+                  sx={{ mt: 1, fontWeight: 500, px: 1 }}
+                />
+              )}
+            </Box>
+            <Divider sx={{ opacity: 0.1, mx: 2 }} />
+            {isMobile && (
+              <>
+                <Box sx={{ px: 2, py: 1, display: 'flex', gap: 1 }}>
+                  <Button
+                    component='a'
+                    href='/balance'
+                    startIcon={
+                      <Icon
+                        icon='solar:wallet-money-bold'
+                        width='18'
+                        height='18'
+                      />
+                    }
+                    className="theme-button"
+                    sx={{
+                      flex: 1,
+                      borderRadius: 'var(--main-border-radius)',
+                      textTransform: 'none',
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                      color: 'primary.main',
+                      '&:hover': {
+                        backgroundColor: alpha(
+                          theme.palette.primary.main,
+                          0.12
+                        ),
+                      },
+                    }}
+                  >
+                    {t('header.profile_menu.wallet')}
+                  </Button>
+                  <Button
+                    component='a'
+                    href='/badge-shop'
+                    startIcon={
+                      <Icon icon='solar:shop-bold' width='18' height='18' />
+                    }
+                    className="theme-button"
+                    sx={{
+                      flex: 1,
+                      borderRadius: 'var(--main-border-radius)',
+                      textTransform: 'none',
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                      color: 'primary.main',
+                      '&:hover': {
+                        backgroundColor: alpha(
+                          theme.palette.primary.main,
+                          0.12
+                        ),
+                      },
+                    }}
+                  >
+                    {t('header.profile_menu.shop')}
+                  </Button>
+                </Box>
+                <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
+              </>
+            )}
+            <MenuItem
+              onClick={() => handleNavigate(`/profile/${user?.username}`)}
+            >
+              <ListItemIcon>
+                <AccountCircleIcon fontSize='small' color='primary' />
+              </ListItemIcon>
+              <ListItemText>{t('header.profile_menu.my_profile')}</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={() => handleNavigate('/settings')}>
+              <ListItemIcon>
+                <SettingsIcon fontSize='small' color='primary' />
+              </ListItemIcon>
+              <ListItemText>{t('header.profile_menu.settings')}</ListItemText>
+            </MenuItem>
+            {isMobile && (
+              <>
+                <MenuItem onClick={() => handleNavigate('/search')}>
+                  <ListItemIcon>
+                    <Icon icon='solar:magnifer-bold' width='20' height='20' />
+                  </ListItemIcon>
+                  <ListItemText>{t('header.profile_menu.search')}</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate('/subscriptions')}>
+                  <ListItemIcon>
+                    <Icon
+                      icon='solar:users-group-rounded-bold'
+                      width='20'
+                      height='20'
+                    />
+                  </ListItemIcon>
+                  <ListItemText>
+                    {t('header.profile_menu.subscriptions')}
+                  </ListItemText>
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate('/channels')}>
+                  <ListItemIcon>
+                    <Icon
+                      icon='solar:play-stream-bold'
+                      width='20'
+                      height='20'
+                    />
+                  </ListItemIcon>
+                  <ListItemText>
+                    {t('header.profile_menu.channels')}
+                  </ListItemText>
+                </MenuItem>
+
+              </>
+            )}
+            <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
+            {/* 
+              Ограничение: нельзя создать больше 3 каналов. 
+              Если каналов уже 3 или больше, кнопка создания не отображается.
+            */}
+            {accounts.channels && accounts.channels.length < 3 && (
+              <MenuItem onClick={handleCreateChannel}>
+                <ListItemIcon>
+                  <AddIcon fontSize='small' color='primary' />
+                </ListItemIcon>
+                <ListItemText>
+                  {t('header.profile_menu.create_channel')}
+                </ListItemText>
+              </MenuItem>
+            )}
+            {accounts.main_account &&
+              accounts.current_account?.account_type === 'channel' && (
+                <>
+                  <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
+                  <Typography
+                    variant='caption'
+                    sx={{
+                      px: 3,
+                      py: 0.5,
+                      display: 'block',
+                      color: 'text.secondary',
+                      fontWeight: 500,
+                    }}
+                  >
+                    {t('header.profile_menu.main_account')}
+                  </Typography>
+                  <MenuItem
+                    key={accounts.main_account.id}
+                    onClick={() =>
+                      handleSwitchAccount(accounts.main_account.id)
+                    }
+                  >
+                    <ListItemIcon>
+                      <Avatar
+                        src={
+                          accounts.main_account.avatar_url || (accounts.main_account.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${accounts.main_account.id}/${accounts.main_account.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
+                        }
+                        sx={{ width: 30, height: 30 }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText>{accounts.main_account.name}</ListItemText>
+                  </MenuItem>
+                </>
+              )}
+            {accounts.channels && accounts.channels.length > 0 && (
+              <>
+                <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
+                <Typography
+                  variant='caption'
+                  sx={{
+                    px: 3,
+                    py: 0.5,
+                    display: 'block',
+                    color: 'text.secondary',
+                    fontWeight: 500,
+                  }}
+                >
+                  {t('header.profile_menu.my_channels')}
+                </Typography>
+                {accounts.channels.map(channel => (
+                  <MenuItem
+                    key={channel.id}
+                    onClick={() => handleSwitchAccount(channel.id)}
+                  >
+                    <ListItemIcon>
+                      <Avatar
+                        src={
+                          channel.avatar_url || (channel.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${channel.id}/${channel.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
+                        }
+                        sx={{ width: 30, height: 30 }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText>{channel.name}</ListItemText>
+                  </MenuItem>
+                ))}
+              </>
+            )}
+            <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
+          </>
+        ) : (
+          // Для неавторизованных пользователей показываем только базовые опции
+          <>
+            <Box sx={{ px: 2, py: 2, textAlign: 'center' }}>
+              {isMobile && (
+                <IconButton
+                  onClick={handleMenuClose}
+                  sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: 'text.secondary',
+                    '&:hover': {
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                    },
+                  }}
+                >
+                  <ClearIcon />
+                </IconButton>
+              )}
+              <Typography variant='h6' sx={{ fontWeight: 600 }}>
+                Гость
+              </Typography>
+              <Typography
+                variant='body1'
+                color='text.secondary'
+                sx={{ mt: 0.5 }}
+              >
+                Не авторизован
+              </Typography>
+            </Box>
+            <Divider sx={{ opacity: 0.1, mx: 2 }} />
+          </>
+        )}
+        
+        {/* Кнопка "Выйти" показывается всегда */}
+        <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
+        <MenuItem
+          onClick={handleLogout}
+          sx={{
+            color: theme => theme.palette.error.main,
+            '&:hover': {
+              backgroundColor: theme =>
+                alpha(theme.palette.error.main, 0.08),
+            },
+          }}
+        >
+          <ListItemIcon>
+            <ExitToAppIcon fontSize='small' style={{ color: 'inherit' }} />
+          </ListItemIcon>
+          <ListItemText>{t('header.profile_menu.logout')}</ListItemText>
+        </MenuItem>
+      </Menu>
+    </>
+  );
+};
+
+export default HeaderProfileMenu;

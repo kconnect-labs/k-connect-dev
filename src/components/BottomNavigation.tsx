@@ -127,7 +127,10 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({
   const currentValue = getCurrentValue();
 
   return (
-    <div id={BOTTOM_NAV_ID} className='bottom-navigation'>
+    <div 
+      id={BOTTOM_NAV_ID} 
+      className='bottom-navigation'
+    >
       <div className='bottom-nav-container'>
         <button
           className={`bottom-nav-item ${currentValue === 0 ? 'active' : ''}`}

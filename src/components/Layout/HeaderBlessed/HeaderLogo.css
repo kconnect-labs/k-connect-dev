@@ -1,0 +1,153 @@
+@import '../../../uikit.module.css';
+
+/* HeaderLogo - Стили только для BlessedBlur темы */
+
+[data-theme="BlessedBlur"] .header-logo {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  box-sizing: border-box;
+  contain: layout style paint;
+  color: var(--theme-main-color);
+}
+
+[data-theme="BlessedBlur"] .logo-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+[data-theme="BlessedBlur"] .logo-svg {
+  height: 20px;
+  width: auto;
+  transition: all 0.2s ease;
+}
+
+[data-theme="BlessedBlur"] .logo-text {
+  font-weight: var(--font-weight-black);
+  font-size: 1.2rem;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+}
+
+[data-theme="BlessedBlur"] .logo-text-content {
+  color: #ffffff;
+  opacity: 0.9;
+  line-height: 1.2;
+  font-weight: var(--font-weight-black);
+}
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="BlessedBlur"] .logo-link {
+    transition: none;
+  }
+
+  [data-theme="BlessedBlur"] .logo-link:hover {
+    transform: none;
+  }
+
+  [data-theme="BlessedBlur"] .logo-svg {
+    transition: none;
+  }
+}
+
+/* Оптимизации для производительности */
+[data-theme="BlessedBlur"] .header-logo {
+  will-change: transform;
+}
+
+[data-theme="BlessedBlur"] .logo-link {
+  will-change: transform;
+}
+
+/* Поддержка высокого DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  [data-theme="BlessedBlur"] .logo-svg {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Поддержка печати */
+@media print {
+  [data-theme="BlessedBlur"] .header-logo {
+    color: black !important;
+  }
+
+  [data-theme="BlessedBlur"] .logo-text-content {
+    color: black !important;
+  }
+}
+
+/* Стили для логотипа на ПК */
+[data-theme="BlessedBlur"] .header-logo {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  margin-right: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="BlessedBlur"] .header-logo:hover {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+[data-theme="BlessedBlur"] .logo-link {
+  border-radius: 20px;
+}
+
+[data-theme="BlessedBlur"] .logo-svg {
+  height: 20px;
+}
+
+/* Стили для мобилки в стиле iOS 26 - только для BlessedBlur темы */
+@media (max-width: 700px) {
+  [data-theme="BlessedBlur"] .header-logo {
+    background: var(--theme-background);
+    backdrop-filter: var(--theme-backdrop-filter) !important;
+    -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    margin-right: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  [data-theme="BlessedBlur"] .header-logo:hover {
+    background: var(--theme-background);
+    backdrop-filter: var(--theme-backdrop-filter) !important;
+    -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+  }
+
+  [data-theme="BlessedBlur"] .logo-link {
+    border-radius: 20px;
+  }
+
+  [data-theme="BlessedBlur"] .logo-svg {
+    height: 18px;
+  }
+}
+
+/* Дополнительные стили для BlessedBlur темы на мобилке */
+@media (max-width: 700px) {
+  [data-theme="BlessedBlur"] .header-logo {
+    border: 1px solid rgba(208, 188, 255, 0.2);
+  }
+
+  [data-theme="BlessedBlur"] .header-logo:hover {
+    border-color: rgba(208, 188, 255, 0.4);
+  }
+}

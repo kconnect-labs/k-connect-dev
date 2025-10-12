@@ -664,7 +664,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         </Typography>
       </Box>
 
-      {(subscription?.type === 'ultimate' || subscription?.type === 'max') && (
+      {(subscription?.type === 'ultimate' || subscription?.type === 'max' || subscription?.type === 'pick-me') && (
         <Box sx={sectionStyle}>
           <Typography
             variant='subtitle1'

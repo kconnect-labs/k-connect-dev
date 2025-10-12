@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type ThemeType = 'default' | 'blur' | 'amoled' | 'light' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme' | 'cube';
+export type ThemeType = 'default' | 'blur' | 'amoled' | 'light' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme' | 'cube' | 'BlessedBlur';
 
 interface ThemeSettings {
   type: ThemeType;
@@ -14,6 +14,11 @@ interface ThemeSettings {
     siteBackground: string;
   };
   amoled: {
+    background: string;
+    backdropFilter: string;
+    siteBackground: string;
+  };
+  BlessedBlur: {
     background: string;
     backdropFilter: string;
     siteBackground: string;
@@ -113,6 +118,17 @@ const THEME_SETTINGS: Record<ThemeType, {
     background: 'rgba(0, 0, 0, 1)',
     backdropFilter: 'none',
     siteBackground: '#000000',
+    themeColor: '#0a0a0a',
+    colorScheme: 'dark',
+    browserAccent: '#D0BCFF',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
+  },
+  BlessedBlur: {
+    background: 'rgba(15, 15, 15, 0.55)',
+    backdropFilter: 'blur(12px) brightness(1.22) contrast(1.11) saturate(2.2)',
+    siteBackground: '#0a0a0a',
     themeColor: '#0a0a0a',
     colorScheme: 'dark',
     browserAccent: '#D0BCFF',
@@ -442,6 +458,11 @@ export const useThemeManager = () => {
   }, [applyTheme]);
 
   
+  const switchToBlessedBlurTheme = useCallback(async () => {
+    await applyTheme('BlessedBlur');
+  }, [applyTheme]);
+
+  
   const switchToLightTheme = useCallback(async () => {
     await applyTheme('light');
   }, [applyTheme]);
@@ -563,6 +584,7 @@ export const useThemeManager = () => {
     switchToDefaultTheme: () => applyThemeWithNotification('default'),
     switchToBlurTheme: () => applyThemeWithNotification('blur'),
     switchToAmoledTheme: () => applyThemeWithNotification('amoled'),
+    switchToBlessedBlurTheme: () => applyThemeWithNotification('BlessedBlur'),
     switchToLightTheme: () => applyThemeWithNotification('light'),
     switchToMidnightTheme: () => applyThemeWithNotification('midnight'),
     switchToOceanTheme: () => applyThemeWithNotification('ocean'),

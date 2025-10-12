@@ -8,8 +8,6 @@ import {
   Grid,
   Avatar,
   Paper,
-  Tabs,
-  Tab,
   IconButton,
   Tooltip,
   Link as MuiLink,
@@ -27,6 +25,7 @@ import { AuthContext } from '../../context/AuthContext';
 import 'react-medium-image-zoom/dist/styles.css';
 import { ThemeSettingsContext } from '../../App';
 import { UsernameCard, VerificationBadge, Badge } from '../../UIKIT';
+import StyledTabs from '../../UIKIT/StyledTabs';
 import { MaxIcon } from '../../components/icons/CustomIcons';
 import InventoryItemCardPure from '../../UIKIT/InventoryItemCard';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -1035,44 +1034,21 @@ const ProfilePage = () => {
             }),
           }}
         >
-          <Paper
-            sx={{
-              borderRadius: 'var(--main-border-radius)',
-              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-              backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-              WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-              overflow: 'hidden',
-              mb: '5px',
-              boxShadow: 'none',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-            }}
-          >
-            <Tabs
+
+            <StyledTabs
               value={tabValue}
               onChange={handleTabChange}
-              indicatorColor='primary'
-              variant='fullWidth'
-              sx={{
-                '& .MuiTab-root': {
-                  color: theme =>
-                    theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.7)'
-                      : 'rgba(0, 0, 0, 0.7)',
-                  '&.Mui-selected': {
-                    color: theme => theme.palette.primary.main,
-                  },
-                },
-                '& .MuiTabs-indicator': {
-                  backgroundColor: 'primary.main',
-                },
-              }}
-            >
-              <Tab label={t('profile.tabs.posts')} />
-              <Tab label={t('profile.tabs.wall')} />
-              {user?.inventory_privacy !== 1 && <Tab label='Инвентарь' />}
-              <Tab label={t('profile.tabs.about')} />
-            </Tabs>
-          </Paper>
+              tabs={[
+                { value: 0, label: t('profile.tabs.posts') },
+                { value: 1, label: t('profile.tabs.wall') },
+                ...(user?.inventory_privacy !== 1 ? [{ value: 2, label: 'Инвентарь' }] : []),
+                { value: user?.inventory_privacy === 1 ? 2 : 3, label: t('profile.tabs.about') }
+              ]}
+              style={{marginBottom: '5px'}}
+              fullWidth
+              customStyle
+            />
+ 
 
           <TabPanel value={tabValue} index={0} sx={{ p: 0, mt: 1 }}>
             {isCurrentUser && <CreatePost onPostCreated={handlePostCreated} sx={{ mb: 0.5 }}/>}

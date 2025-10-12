@@ -1,0 +1,405 @@
+@import '../../../uikit.module.css';
+
+/* HeaderActions - Стили только для BlessedBlur темы */
+
+[data-theme="BlessedBlur"] .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-sizing: border-box;
+  contain: layout style paint;
+}
+
+[data-theme="BlessedBlur"] .action-tooltip {
+  position: relative;
+}
+
+[data-theme="BlessedBlur"] .action-tooltip:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: var(--theme-main-color);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+[data-theme="BlessedBlur"] .action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  min-width: 36px;
+  height: 36px;
+  box-sizing: border-box;
+}
+
+[data-theme="BlessedBlur"] .action-button:hover {
+  background-color: rgba(208, 188, 255, 0.08);
+  transform: scale(1.02);
+  opacity: 1;
+}
+
+[data-theme="BlessedBlur"] .action-button--active {
+  background-color: rgba(208, 188, 255, 0.1);
+  color: var(--primary-color, #d0bcff);
+}
+
+[data-theme="BlessedBlur"] .action-button--active:hover {
+  background-color: rgba(208, 188, 255, 0.15);
+}
+
+[data-theme="BlessedBlur"] .action-button--profile {
+  margin-left: 4px;
+  opacity: 1;
+}
+
+[data-theme="BlessedBlur"] .profile-notification-container {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  contain: layout style paint;
+  color: var(--theme-main-color);
+  gap: 8px;
+}
+
+/* Стили для объединенного блока на ПК - как у кнопок */
+[data-theme="BlessedBlur"] .profile-notification-container {
+  border-radius: 20px;
+  min-width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="BlessedBlur"] .profile-notification-container:hover {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
+}
+
+/* Стили для элементов внутри объединенного контейнера */
+[data-theme="BlessedBlur"] .profile-notification-container .notification-container {
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  background: transparent;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 16px;
+  border: none;
+  padding: 4px;
+  min-width: 32px;
+  height: 32px;
+  justify-content: center;
+}
+
+[data-theme="BlessedBlur"] .profile-notification-container .notification-container:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none;
+  transform: none;
+}
+
+[data-theme="BlessedBlur"] .profile-notification-container .action-button--profile {
+  background: transparent;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none;
+  border-radius: 16px;
+  padding: 4px;
+  min-width: 32px;
+  height: 32px;
+  margin: 0;
+}
+
+[data-theme="BlessedBlur"] .profile-notification-container .action-button--profile:hover {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none;
+  transform: none;
+}
+
+[data-theme="BlessedBlur"] .notification-container {
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  min-width: 40px;
+  height: 40px;
+  justify-content: center;
+}
+
+[data-theme="BlessedBlur"] .notification-container:hover {
+  opacity: 1;
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
+}
+
+[data-theme="BlessedBlur"] .profile-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--avatar-border-radius);
+  border: 1px solid rgba(208, 188, 255, 0.3);
+  object-fit: cover;
+  transition: all 0.2s ease;
+}
+
+[data-theme="BlessedBlur"] .action-button:hover .profile-avatar {
+  border-color: rgba(208, 188, 255, 0.5);
+  box-shadow: 0 2px 8px rgba(208, 188, 255, 0.2);
+}
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="BlessedBlur"] .action-button {
+    transition: none;
+  }
+
+  [data-theme="BlessedBlur"] .action-button:hover {
+    transform: none;
+  }
+
+  [data-theme="BlessedBlur"] .notification-container {
+    transition: none;
+  }
+
+  [data-theme="BlessedBlur"] .profile-avatar {
+    transition: none;
+  }
+}
+
+/* Оптимизации для производительности */
+[data-theme="BlessedBlur"] .header-actions {
+  will-change: transform;
+}
+
+[data-theme="BlessedBlur"] .action-button {
+  will-change: transform, opacity;
+}
+
+[data-theme="BlessedBlur"] .notification-container {
+  will-change: opacity;
+}
+
+/* Поддержка высокого DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  [data-theme="BlessedBlur"] .profile-avatar {
+    border-width: 0.5px;
+  }
+}
+
+/* Поддержка печати */
+@media print {
+  [data-theme="BlessedBlur"] .header-actions {
+    display: none !important;
+  }
+}
+
+
+
+
+/* Стили для кнопок на ПК */
+[data-theme="BlessedBlur"] .action-button {
+  border-radius: 20px;
+  min-width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="BlessedBlur"] .action-button:hover {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
+  border-radius: 20px;
+}
+
+[data-theme="BlessedBlur"] .action-button--active {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-color: rgba(208, 188, 255, 0.4);
+  border-radius: 20px;
+}
+
+[data-theme="BlessedBlur"] .action-button--active:hover {
+  background: var(--theme-background);
+  border-color: rgba(208, 188, 255, 0.5);
+}
+
+[data-theme="BlessedBlur"] .action-button--profile {
+  border-radius: 20px;
+}
+
+[data-theme="BlessedBlur"] .profile-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="BlessedBlur"] .action-button:hover .profile-avatar {
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="BlessedBlur"] .notification-container {
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  min-width: 40px;
+  height: 40px;
+  justify-content: center;
+}
+
+[data-theme="BlessedBlur"] .notification-container:hover {
+  opacity: 1;
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
+}
+
+/* Стили для мобилки в стиле iOS 26 - только для BlessedBlur темы */
+@media (max-width: 700px) {
+  /* Полностью убираем фон и блюр у хедера */
+  [data-theme="BlessedBlur"] .MuiAppBar-root {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Убираем блюр у всех элементов хедера, кроме кнопок */
+  [data-theme="BlessedBlur"] .MuiAppBar-root *:not(.action-button):not(.notification-container):not(.header-logo) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  [data-theme="BlessedBlur"] .header-actions {
+    gap: 8px;
+  }
+
+  [data-theme="BlessedBlur"] .action-button {
+    border-radius: 20px;
+    min-width: 40px;
+    height: 40px;
+    padding: 8px;
+    background: var(--theme-background);
+    backdrop-filter: var(--theme-backdrop-filter) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  [data-theme="BlessedBlur"] .action-button:hover {
+    background: var(--theme-background);
+    backdrop-filter: var(--theme-backdrop-filter) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.02);
+    border-radius: 20px;
+  }
+
+  [data-theme="BlessedBlur"] .action-button--active {
+    background: var(--theme-background);
+    backdrop-filter: var(--theme-backdrop-filter) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-color: rgba(208, 188, 255, 0.4);
+    border-radius: 20px;
+  }
+
+  [data-theme="BlessedBlur"] .action-button--active:hover {
+    background: var(--theme-background);
+    border-color: rgba(208, 188, 255, 0.5);
+  }
+
+  [data-theme="BlessedBlur"] .action-button--profile {
+    border-radius: 20px;
+  }
+
+  [data-theme="BlessedBlur"] .profile-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  [data-theme="BlessedBlur"] .action-button:hover .profile-avatar {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  [data-theme="BlessedBlur"] .notification-container {
+    display: flex;
+    align-items: center;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    background: var(--theme-background);
+    backdrop-filter: var(--theme-backdrop-filter) !important;
+    -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    min-width: 40px;
+    height: 40px;
+    justify-content: center;
+  }
+
+  [data-theme="BlessedBlur"] .notification-container:hover {
+    opacity: 1;
+    background: var(--theme-background);
+    backdrop-filter: var(--theme-backdrop-filter) !important;
+    -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.02);
+  }
+}

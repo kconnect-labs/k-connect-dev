@@ -7,6 +7,7 @@ import {
   CssBaseline,
 } from '@mui/material';
 import Header from './Header/Header';
+import HeaderBlessed from './HeaderBlessed/Header';
 import Sidebar from './Sidebar/Sidebar';
 import SidebarV2 from './SidebarV2/Sidebar';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -164,10 +165,18 @@ const PageTransitionWrapper = styled(Box)(({ theme }) => ({
 interface MemoizedHeaderProps {
   toggleSidebar: () => void;
   isMobile: boolean;
+  themeSettings: any;
 }
 
 const MemoizedHeader = memo<MemoizedHeaderProps>(
-  ({ toggleSidebar, isMobile }) => <Header toggleSidebar={toggleSidebar} />
+  ({ toggleSidebar, isMobile, themeSettings }) => {
+    // Если тема BlessedBlur, используем HeaderBlessed
+    if (themeSettings?.mode === 'BlessedBlur') {
+      return <HeaderBlessed toggleSidebar={toggleSidebar} />;
+    }
+    // Иначе используем стандартный Header
+    return <Header toggleSidebar={toggleSidebar} />;
+  }
 );
 
 interface MemoizedSidebarProps {
@@ -372,7 +381,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         `}
       </style>
       {shouldShowFullLayout && (
-        <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />
+         <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} themeSettings={themeSettings} />
       )}
 
       <ContentWrapper
@@ -490,7 +499,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         `}
       </style>
       {shouldShowFullLayout && (
-        <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />
+        <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} themeSettings={themeSettings} />
       )}
 
       <ContentWrapper

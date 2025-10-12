@@ -2,6 +2,86 @@
 
 /* StyledTabs - Точные стили панели рекомендаций из MainPage */
 
+/* Стили для BlessedBlur темы */
+[data-theme="BlessedBlur"] .styled-tabs-container {
+  background: var(--theme-background);
+  backdrop-filter:
+    blur(16px)
+    brightness(1.12)
+    contrast(1.13)
+    saturate(2.36)
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="360" height="60"><filter id="liquid"><feTurbulence id="turb" baseFrequency="0.018" numOctaves="2" seed="11" type="turbulence"/><feDisplacementMap in2="turb" in="SourceGraphic" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter><rect width="100%" height="100%" filter="url(%23liquid)" fill="transparent"/></svg>');
+  ;-webkit-backdrop-filter:
+    blur(16px)
+    brightness(1.12)
+    contrast(1.13)
+    saturate(1.36);
+  border-radius: 28px;
+  border-top: 1px solid rgba(240, 240, 240, 0.24);
+  border-right: 1px solid rgba(200, 200, 200, 0.322);
+  border-left: 1px solid rgba(200, 200, 200, 0.233);
+  border-bottom: 1px solid rgba(100, 100, 100, 0.486);
+  box-shadow:
+    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
+  overflow: visible;
+}
+
+[data-theme="BlessedBlur"] .styled-tabs {
+  padding: 8px;
+  border-radius: 20px;
+}
+
+[data-theme="BlessedBlur"] .styled-tab {
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.25s ease;
+  border-radius: 20px;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  border: none;
+  padding: 8px 16px;
+  margin: 0 2px;
+  min-width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-theme="BlessedBlur"] .styled-tab:hover {
+  color: #ffffff;
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="BlessedBlur"] .styled-tab--active {
+  color: rgba(255, 255, 255, 0.815);
+  transform: scale(1);
+  background: rgba(233, 228, 247, 0.2);
+  border: 1px solid rgba(242, 237, 255, 0.4);
+  border-radius: 25px;
+  width: auto;
+  min-width: 85px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-theme="BlessedBlur"] .styled-tab-content {
+  position: relative;
+  z-index: 1;
+}
+
+[data-theme="BlessedBlur"] .styled-tab-badge {
+  background: linear-gradient(135deg, #D0BCFF, #B19CD9);
+  color: #000;
+  border: 2px solid rgba(208, 188, 255, 0.8);
+  font-weight: 700;
+}
+
 .styled-tabs-container {
   border-radius:var(--main-border-radius);
   background: var(--theme-background, rgba(255, 255, 255, 0.03));

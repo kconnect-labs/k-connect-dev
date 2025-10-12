@@ -65,12 +65,7 @@
   will-change: transform;
 }
 
-/* Поддержка высокого DPI */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .logo-svg {
-    /* Более четкое отображение на retina дисплеях */
-  }
-}
+
 
 /* Поддержка печати */
 @media print {

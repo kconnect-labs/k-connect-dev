@@ -85,8 +85,6 @@ const PostInput = styled(TextField)(({ theme }) => ({
       theme.palette.mode === 'dark'
         ? 'rgba(0, 0, 0, 0.2)'
         : 'rgba(0, 0, 0, 0.03)',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
-    WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(0px))',
     borderRadius: 'var(--main-border-radius)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     fontSize: '0.95rem',

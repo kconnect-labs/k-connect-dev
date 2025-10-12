@@ -258,7 +258,7 @@ const PostsFeed = ({ userId, statusColor }) => {
 
   if (loading && posts.length === 0) {
     return (
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 1 }}>
         {[1, 2, 3].map((_, index) => (
           <PostSkeleton key={index} />
         ))}

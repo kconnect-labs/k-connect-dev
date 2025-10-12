@@ -24,6 +24,7 @@ import {
   Error as ErrorIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
+import NotificationService from '../../../../services/NotificationService';
 
 interface NotificationsFormProps {
   onSuccess?: () => void;
@@ -93,8 +94,7 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
       setPushSupported(isSupported);
 
       if (isSupported) {
-        const permission = await Notification.requestPermission();
-        setPushPermission(permission);
+        setPushPermission(Notification.permission);
 
         if ('serviceWorker' in navigator) {
           try {
@@ -104,12 +104,18 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
               reg =>
                 reg.active &&
                 reg.active.scriptURL &&
-                reg.active.scriptURL.includes('service-worker.js')
+                (reg.active.scriptURL.includes('service-worker.js') ||
+                 reg.active.scriptURL.includes('custom-sw.js'))
             );
 
             if (pushSW) {
+              console.log('Found service worker:', pushSW.active?.scriptURL);
               const subscription = await pushSW.pushManager.getSubscription();
+              console.log('Current subscription:', subscription);
               setPushSubscribed(!!subscription);
+            } else {
+              console.log('No service worker found');
+              setPushSubscribed(false);
             }
           } catch (err) {
             console.error('Error checking service worker registration:', err);
@@ -146,8 +152,11 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
         return;
       }
 
-      // Здесь должна быть логика подписки на push-уведомления
-      // Для простоты просто обновляем настройки
+
+      const subscription = await NotificationService.subscribeToPushNotifications();
+      console.log('Push subscription created:', subscription);
+
+      // Обновляем настройки на сервере
       await axios.post('/api/notifications/preferences', {
         push_notifications_enabled: true,
       });
@@ -158,10 +167,17 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
         pushNotificationsEnabled: true,
       }));
 
+      // Показываем успешное сообщение
+      alert('Push-уведомления успешно включены! Вам должно прийти тестовое уведомление.');
+
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error('Error enabling push notifications:', error);
-      alert('Ошибка при включении push-уведомлений');
+      let message = 'Неизвестная ошибка';
+      if (error instanceof Error) {
+        message = error.message;
+      }
+      alert('Ошибка при включении push-уведомлений: ' + message);
     } finally {
       setPushLoading(false);
     }
@@ -172,6 +188,11 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
     try {
       setPushLoading(true);
 
+      // Отписываемся от push-уведомлений через NotificationService
+      console.log('Unsubscribing from push notifications...');
+      await NotificationService.unsubscribeFromPushNotifications();
+
+      // Обновляем настройки на сервере
       await axios.post('/api/notifications/preferences', {
         push_notifications_enabled: false,
       });
@@ -185,6 +206,7 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error('Error disabling push notifications:', error);
+      alert('Ошибка при отключении push-уведомлений');
     } finally {
       setPushLoading(false);
     }

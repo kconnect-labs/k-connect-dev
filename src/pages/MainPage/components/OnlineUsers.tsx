@@ -136,7 +136,7 @@ const OnlineUsers: React.FC = () => {
             px: 1,
             py: 0.5,
             borderRadius: 'var(--main-border-radius)',
-            backgroundColor: 'var(--theme-background, rgba(76, 175, 80, 0.1))',
+            backgroundColor: 'rgba(255,255,255,0.03)',
             border: '1px solid rgba(76, 175, 80, 0.2)',
             minWidth: 'fit-content',
             height: 36,

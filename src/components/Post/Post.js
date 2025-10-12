@@ -1675,6 +1675,17 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   sx={{ display: 'block', fontSize: '0.75rem' }}
                 >
                   {formatTimeAgo(post.timestamp)}
+                  {post.edited && (
+                    <Typography
+                      component="span"
+                      variant='caption'
+                      sx={{ 
+                        ml: 0.5,
+                      }}
+                    >
+                      (изменено)
+                    </Typography>
+                  )}
                 </Typography>
               </Box>
             </Box>
@@ -2104,6 +2115,17 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       sx={{ fontSize: '0.7rem' }}
                     >
                       {formatTimeAgo(post.original_post.timestamp)}
+                      {post.original_post.edited && (
+                        <Typography
+                          component="span"
+                          variant='caption'
+                          sx={{ 
+                            ml: 0.5,
+                          }}
+                        >
+                          (изменено)
+                        </Typography>
+                      )}
                     </Typography>
 
                     <Box

@@ -100,7 +100,7 @@ const ProfileSkeleton = () => {
 
           {/* Скелетоны постов */}
           {Array.from({ length: 3 }).map((_, idx) => (
-            <PostSkeleton key={idx} />
+            <PostSkeleton key={idx}  />
           ))}
         </Grid>
       </Grid>

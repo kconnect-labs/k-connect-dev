@@ -34,7 +34,7 @@ const getColorFromImage = extractDominantColor;
 
 const PlayerContainer = styled(Paper)(({ theme, covercolor, isModalOpen }) => ({
   position: 'fixed',
-  bottom: isModalOpen ? 0 : 85,
+  bottom: isModalOpen ? 0 :60,
   left: 0,
   right: 0,
   zIndex: 99999,
