@@ -1,17 +1,41 @@
 @import '../../../uikit.module.css';
 
-/* HeaderLogo - Стили только для BlessedBlur темы */
+/* HeaderLogo - Общие стили для BlessedBlur и CursedBlur тем */
 
-[data-theme="BlessedBlur"] .header-logo {
+[data-theme="BlessedBlur"] .header-logo,
+[data-theme="CursedBlur"] .header-logo {
   display: flex;
   align-items: center;
   margin-right: 8px;
   box-sizing: border-box;
+  margin-top: 4px;
   contain: layout style paint;
   color: var(--theme-main-color);
+  border-top: 1px solid rgba(240, 240, 240, 0.24);
+  border-right: 1px solid rgba(200, 200, 200, 0.322);
+  border-left: 1px solid rgba(200, 200, 200, 0.233);
+  border-bottom: 1px solid rgba(100, 100, 100, 0.486);
+  box-shadow:
+    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
 }
 
-[data-theme="BlessedBlur"] .logo-link {
+/* Упрощенные стили для CursedBlur темы */
+[data-theme="CursedBlur"] .header-logo {
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.25s ease;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding:12px;
+}
+
+[data-theme="BlessedBlur"] .logo-link,
+[data-theme="CursedBlur"] .logo-link {
   text-decoration: none;
   color: inherit;
   display: flex;
@@ -19,13 +43,15 @@
   transition: all 0.2s ease;
 }
 
-[data-theme="BlessedBlur"] .logo-svg {
+[data-theme="BlessedBlur"] .logo-svg,
+[data-theme="CursedBlur"] .logo-svg {
   height: 20px;
   width: auto;
   transition: all 0.2s ease;
 }
 
-[data-theme="BlessedBlur"] .logo-text {
+[data-theme="BlessedBlur"] .logo-text,
+[data-theme="CursedBlur"] .logo-text {
   font-weight: var(--font-weight-black);
   font-size: 1.2rem;
   margin-left: 8px;
@@ -34,7 +60,8 @@
   color: #ffffff;
 }
 
-[data-theme="BlessedBlur"] .logo-text-content {
+[data-theme="BlessedBlur"] .logo-text-content,
+[data-theme="CursedBlur"] .logo-text-content {
   color: #ffffff;
   opacity: 0.9;
   line-height: 1.2;
@@ -43,59 +70,120 @@
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  [data-theme="BlessedBlur"] .logo-link {
+  [data-theme="BlessedBlur"] .logo-link,
+[data-theme="CursedBlur"] .logo-link {
     transition: none;
   }
 
-  [data-theme="BlessedBlur"] .logo-link:hover {
+  [data-theme="BlessedBlur"] .logo-link:hover,
+[data-theme="CursedBlur"] .logo-link:hover {
     transform: none;
-  }
-
-  [data-theme="BlessedBlur"] .logo-svg {
-    transition: none;
   }
 }
 
+/* Hover эффекты для CursedBlur темы */
+[data-theme="CursedBlur"] .logo-link:hover {
+  color: #D0BCFF;
+  transform: scale(1.05);
+}
+
+[data-theme="CursedBlur"] .music-note-button {
+  background: var(--theme-background) !important;
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-radius: 50% !important;
+  padding: 8px 12px !important;
+  margin-right: 8px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
+  opacity: 1 !important;
+  border-top: 1px solid rgba(240, 240, 240, 0.24);
+  border-right: 1px solid rgba(200, 200, 200, 0.322);
+  border-left: 1px solid rgba(200, 200, 200, 0.233);
+  border-bottom: 1px solid rgba(100, 100, 100, 0.486);
+  box-shadow:
+    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
+  height: 100%;
+  margin-top:4px;
+}
+
+[data-theme="CursedBlur"] .music-note-button:hover {
+  background: var(--theme-background) !important;
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  transform: scale(1.05) !important;
+  color: #D0BCFF !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Принудительный белый цвет для иконки музыкальной ноты */
+[data-theme="CursedBlur"] .music-note-button svg,
+[data-theme="CursedBlur"] .music-note-button .MuiSvgIcon-root {
+  color: rgba(255, 255, 255, 0.7) !important;
+  fill: rgba(255, 255, 255, 0.7) !important;
+}
+
+  [data-theme="BlessedBlur"] .logo-svg,
+[data-theme="CursedBlur"] .logo-svg {
+    transition: none;
+  }
+
 /* Оптимизации для производительности */
-[data-theme="BlessedBlur"] .header-logo {
+[data-theme="BlessedBlur"] .header-logo,
+[data-theme="CursedBlur"] .header-logo {
   will-change: transform;
 }
 
-[data-theme="BlessedBlur"] .logo-link {
+[data-theme="BlessedBlur"] .logo-link,
+[data-theme="CursedBlur"] .logo-link {
   will-change: transform;
 }
 
 /* Поддержка высокого DPI */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  [data-theme="BlessedBlur"] .logo-svg {
+  [data-theme="BlessedBlur"] .logo-svg,
+[data-theme="CursedBlur"] .logo-svg {
     image-rendering: -webkit-optimize-contrast;
   }
 }
 
 /* Поддержка печати */
 @media print {
-  [data-theme="BlessedBlur"] .header-logo {
+  [data-theme="BlessedBlur"] .header-logo,
+[data-theme="CursedBlur"] .header-logo {
     color: black !important;
   }
 
-  [data-theme="BlessedBlur"] .logo-text-content {
+  [data-theme="BlessedBlur"] .logo-text-content,
+[data-theme="CursedBlur"] .logo-text-content {
     color: black !important;
   }
 }
 
 /* Стили для логотипа на ПК */
-[data-theme="BlessedBlur"] .header-logo {
+[data-theme="BlessedBlur"] .header-logo,
+[data-theme="CursedBlur"] .header-logo {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter) !important;
   -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 8px 12px;
+  border-top: 1px solid rgba(240, 240, 240, 0.24);
+  border-right: 1px solid rgba(200, 200, 200, 0.322);
+  border-left: 1px solid rgba(200, 200, 200, 0.233);
+  border-bottom: 1px solid rgba(100, 100, 100, 0.486);
+  box-shadow:
+    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;  padding: 8px 12px;
   margin-right: 8px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-[data-theme="BlessedBlur"] .header-logo:hover {
+[data-theme="BlessedBlur"] .header-logo:hover,
+[data-theme="CursedBlur"] .header-logo:hover {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter) !important;
   -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
@@ -103,17 +191,20 @@
   transform: scale(1.05);
 }
 
-[data-theme="BlessedBlur"] .logo-link {
+[data-theme="BlessedBlur"] .logo-link,
+[data-theme="CursedBlur"] .logo-link {
   border-radius: 20px;
 }
 
-[data-theme="BlessedBlur"] .logo-svg {
+[data-theme="BlessedBlur"] .logo-svg,
+[data-theme="CursedBlur"] .logo-svg {
   height: 20px;
 }
 
 /* Стили для мобилки в стиле iOS 26 - только для BlessedBlur темы */
 @media (max-width: 700px) {
-  [data-theme="BlessedBlur"] .header-logo {
+  [data-theme="BlessedBlur"] .header-logo,
+[data-theme="CursedBlur"] .header-logo {
     background: var(--theme-background);
     backdrop-filter: var(--theme-backdrop-filter) !important;
     -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
@@ -124,7 +215,8 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  [data-theme="BlessedBlur"] .header-logo:hover {
+  [data-theme="BlessedBlur"] .header-logo:hover,
+[data-theme="CursedBlur"] .header-logo:hover {
     background: var(--theme-background);
     backdrop-filter: var(--theme-backdrop-filter) !important;
     -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
@@ -132,22 +224,26 @@
     transform: scale(1.05);
   }
 
-  [data-theme="BlessedBlur"] .logo-link {
+  [data-theme="BlessedBlur"] .logo-link,
+[data-theme="CursedBlur"] .logo-link {
     border-radius: 20px;
   }
 
-  [data-theme="BlessedBlur"] .logo-svg {
-    height: 18px;
+  [data-theme="BlessedBlur"] .logo-svg,
+[data-theme="CursedBlur"] .logo-svg {
+    height: 28px;
   }
 }
 
 /* Дополнительные стили для BlessedBlur темы на мобилке */
 @media (max-width: 700px) {
-  [data-theme="BlessedBlur"] .header-logo {
+  [data-theme="BlessedBlur"] .header-logo,
+[data-theme="CursedBlur"] .header-logo {
     border: 1px solid rgba(208, 188, 255, 0.2);
   }
 
-  [data-theme="BlessedBlur"] .header-logo:hover {
+  [data-theme="BlessedBlur"] .header-logo:hover,
+[data-theme="CursedBlur"] .header-logo:hover {
     border-color: rgba(208, 188, 255, 0.4);
   }
 }

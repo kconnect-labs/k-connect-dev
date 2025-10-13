@@ -1,55 +1,86 @@
 @import '../../../uikit.module.css';
 
-/* HeaderPlayer - Стили только для BlessedBlur темы */
+/* HeaderPlayer - Общие стили для BlessedBlur и CursedBlur тем */
 
-[data-theme="BlessedBlur"] .header-player {
+[data-theme="BlessedBlur"] .header-player,
+[data-theme="CursedBlur"] .header-player {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   position: relative;
   box-sizing: border-box;
   contain: layout style paint;
-  justify-content: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  border-top: 1px solid rgba(240, 240, 240, 0.24);
+  border-right: 1px solid rgba(200, 200, 200, 0.322);
+  border-left: 1px solid rgba(200, 200, 200, 0.233);
+  border-bottom: 1px solid rgba(100, 100, 100, 0.486);
+  box-shadow:
+    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
 }
 
-[data-theme="BlessedBlur"] .MINI-track-info {
+/* Фиксируем контент к левой стороне */
+[data-theme="BlessedBlur"] .header-player > *,
+[data-theme="CursedBlur"] .header-player > * {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+
+
+[data-theme="BlessedBlur"] .MINI-track-info,
+[data-theme="CursedBlur"] .MINI-track-info {
   min-width: 0;
   display: flex;
   flex-direction: row;
+  flex-shrink: 0;
+  width: auto;
+  position: relative;
+  z-index: 2;
 }
 
-[data-theme="BlessedBlur"] .MINI-track-info--clickable {
+[data-theme="BlessedBlur"] .MINI-track-info--clickable,
+[data-theme="CursedBlur"] .MINI-track-info--clickable {
   cursor: pointer;
 }
 
-[data-theme="BlessedBlur"] .MINI-track-info--clickable:hover {
+[data-theme="BlessedBlur"] .MINI-track-info--clickable:hover,
+[data-theme="CursedBlur"] .MINI-track-info--clickable:hover {
   background-color: rgba(208, 188, 255, 0.08);
   transform: scale(1.02);
 }
 
-[data-theme="BlessedBlur"] .track-cover {
+[data-theme="BlessedBlur"] .track-cover,
+[data-theme="CursedBlur"] .track-cover {
   width: 32px;
   height: 32px;
   margin-right: 8px;
-  border-radius: 4px;
+  border-radius: 50%;
   transition: all 0.2s ease;
   object-fit: cover;
 }
 
-[data-theme="BlessedBlur"] .MINI-track-info--clickable:hover .track-cover {
+[data-theme="BlessedBlur"] .MINI-track-info--clickable:hover .track-cover,
+[data-theme="CursedBlur"] .MINI-track-info--clickable:hover .track-cover {
   box-shadow: 0 4px 12px rgba(208, 188, 255, 0.3);
 }
 
-[data-theme="BlessedBlur"] .track-details {
+[data-theme="BlessedBlur"] .track-details,
+[data-theme="CursedBlur"] .track-details {
   min-width: 0;
   max-width: 180px;
 }
 
-[data-theme="BlessedBlur"] .track-title {
+[data-theme="BlessedBlur"] .track-title,
+[data-theme="CursedBlur"] .track-title {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--theme-main-color);
+  color: var(--theme-text-primary);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -57,7 +88,8 @@
   line-height: 1.2;
 }
 
-[data-theme="BlessedBlur"] .track-artist {
+[data-theme="BlessedBlur"] .track-artist,
+[data-theme="CursedBlur"] .track-artist {
   font-size: 0.75rem;
   color: var(--theme-secondary-color);
   margin: 0;
@@ -68,14 +100,21 @@
   opacity: 0.8;
 }
 
-[data-theme="BlessedBlur"] .player-controls {
+[data-theme="BlessedBlur"] .player-controls,
+[data-theme="CursedBlur"] .player-controls {
   display: flex;
   align-items: center;
   gap: 4px;
   margin-left: 8px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  width: auto;
+  min-width: auto;
 }
 
-[data-theme="BlessedBlur"] .control-button {
+[data-theme="BlessedBlur"] .control-button,
+[data-theme="CursedBlur"] .control-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,24 +122,27 @@
   height: 28px;
   border: none;
   background: transparent;
-  color: var(--theme-main-color);
+  color: var(--theme-text-primary);
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
   opacity: 0.7;
 }
 
-[data-theme="BlessedBlur"] .control-button:hover {
+[data-theme="BlessedBlur"] .control-button:hover,
+[data-theme="CursedBlur"] .control-button:hover {
   background-color: rgba(208, 188, 255, 0.1);
   opacity: 1;
   transform: scale(1.1);
 }
 
-[data-theme="BlessedBlur"] .control-button:active {
+[data-theme="BlessedBlur"] .control-button:active,
+[data-theme="CursedBlur"] .control-button:active {
   transform: scale(0.95);
 }
 
-[data-theme="BlessedBlur"] .play-pause-button {
+[data-theme="BlessedBlur"] .play-pause-button,
+[data-theme="CursedBlur"] .play-pause-button {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -109,20 +151,29 @@
   opacity: 1;
 }
 
-[data-theme="BlessedBlur"] .play-pause-button:hover {
+[data-theme="BlessedBlur"] .play-pause-button:hover,
+[data-theme="CursedBlur"] .play-pause-button:hover {
   background: var(--primary-color, #d0bcff);
   transform: scale(1.05);
 }
 
-[data-theme="BlessedBlur"] .progress-container {
+[data-theme="BlessedBlur"] .progress-container,
+[data-theme="CursedBlur"] .progress-container {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-left: 8px;
   min-width: 0;
+  flex-shrink: 0;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
 }
 
-[data-theme="BlessedBlur"] .progress-bar {
+[data-theme="BlessedBlur"] .progress-bar,
+[data-theme="CursedBlur"] .progress-bar {
   width: 100px;
   height: 4px;
   background: rgba(255, 255, 255, 0.2);
@@ -132,152 +183,264 @@
   transition: all 0.2s ease;
 }
 
-[data-theme="BlessedBlur"] .progress-bar:hover {
+[data-theme="BlessedBlur"] .progress-bar:hover,
+[data-theme="CursedBlur"] .progress-bar:hover {
   height: 6px;
   background: rgba(255, 255, 255, 0.3);
 }
 
-[data-theme="BlessedBlur"] .progress-fill {
+[data-theme="BlessedBlur"] .progress-fill,
+[data-theme="CursedBlur"] .progress-fill {
   height: 100%;
   background: var(--primary-color, #d0bcff);
   border-radius: 2px;
   transition: width 0.1s ease;
 }
 
-[data-theme="BlessedBlur"] .time-display {
+[data-theme="BlessedBlur"] .time-display,
+[data-theme="CursedBlur"] .time-display {
   font-size: 0.75rem;
   color: var(--theme-secondary-color);
   white-space: nowrap;
   opacity: 0.8;
 }
 
+/* Кнопка закрытия плеера */
+[data-theme="BlessedBlur"] .close-button,
+[data-theme="CursedBlur"] .close-button {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 32px !important;
+  height: 32px !important;
+  border: none;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--theme-text-primary) !important;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+  flex-shrink: 0;
+  opacity: 1 !important;
+  z-index: 10;
+  position: relative;
+}
+
+[data-theme="BlessedBlur"] .close-button:hover,
+[data-theme="CursedBlur"] .close-button:hover {
+  color: var(--theme-text-primary) !important;
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  [data-theme="BlessedBlur"] .MINI-track-info--clickable:hover {
+  [data-theme="BlessedBlur"] .MINI-track-info--clickable:hover,
+  [data-theme="CursedBlur"] .MINI-track-info--clickable:hover {
     transform: none;
   }
 
-  [data-theme="BlessedBlur"] .track-cover {
+  [data-theme="BlessedBlur"] .track-cover,
+  [data-theme="CursedBlur"] .track-cover {
     transition: none;
   }
 
-  [data-theme="BlessedBlur"] .control-button {
+  [data-theme="BlessedBlur"] .control-button,
+  [data-theme="CursedBlur"] .control-button {
     transition: none;
   }
 
-  [data-theme="BlessedBlur"] .control-button:hover {
+  [data-theme="BlessedBlur"] .control-button:hover,
+  [data-theme="CursedBlur"] .control-button:hover {
     transform: none;
   }
 
-  [data-theme="BlessedBlur"] .control-button:active {
+  [data-theme="BlessedBlur"] .control-button:active,
+  [data-theme="CursedBlur"] .control-button:active {
     transform: none;
   }
 
-  [data-theme="BlessedBlur"] .play-pause-button:hover {
+  [data-theme="BlessedBlur"] .play-pause-button:hover,
+  [data-theme="CursedBlur"] .play-pause-button:hover {
     transform: none;
   }
 
-  [data-theme="BlessedBlur"] .progress-bar {
+  [data-theme="BlessedBlur"] .progress-bar,
+  [data-theme="CursedBlur"] .progress-bar {
     transition: none;
   }
 
-  [data-theme="BlessedBlur"] .progress-fill {
+  [data-theme="BlessedBlur"] .progress-fill,
+  [data-theme="CursedBlur"] .progress-fill {
     transition: none;
   }
 }
 
 /* Оптимизации для производительности */
-[data-theme="BlessedBlur"] .header-player {
+[data-theme="BlessedBlur"] .header-player,
+[data-theme="CursedBlur"] .header-player {
   will-change: transform;
 }
 
-[data-theme="BlessedBlur"] .MINI-track-info {
+[data-theme="BlessedBlur"] .MINI-track-info,
+[data-theme="CursedBlur"] .MINI-track-info {
   will-change: transform;
 }
 
-[data-theme="BlessedBlur"] .control-button {
+[data-theme="BlessedBlur"] .control-button,
+[data-theme="CursedBlur"] .control-button {
   will-change: transform, opacity;
 }
 
-[data-theme="BlessedBlur"] .progress-fill {
+[data-theme="BlessedBlur"] .progress-fill,
+[data-theme="CursedBlur"] .progress-fill {
   will-change: width;
 }
 
 /* Поддержка высокого DPI */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  [data-theme="BlessedBlur"] .track-cover {
+  [data-theme="BlessedBlur"] .track-cover,
+  [data-theme="CursedBlur"] .track-cover {
     image-rendering: -webkit-optimize-contrast;
   }
 }
 
 /* Поддержка печати */
 @media print {
-  [data-theme="BlessedBlur"] .header-player {
+  [data-theme="BlessedBlur"] .header-player,
+  [data-theme="CursedBlur"] .header-player {
     display: none !important;
   }
 }
 
 /* Стили для плеера на ПК */
-[data-theme="BlessedBlur"] .header-player {
-  padding: 8px 12px;
+[data-theme="BlessedBlur"] .header-player,
+[data-theme="CursedBlur"] .header-player {
+  padding: 4px 8px;
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter) !important;
   -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  margin: 4px 8px;
+  border-top: 1px solid rgba(240, 240, 240, 0.24);
+  border-right: 1px solid rgba(200, 200, 200, 0.322);
+  border-left: 1px solid rgba(200, 200, 200, 0.233);
+  border-bottom: 1px solid rgba(100, 100, 100, 0.486);
+  box-shadow:
+    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 200px;
+  max-width: 300px;
+  width: auto;
 }
 
-/* Стили для мобилки в стиле iOS 26 - только для BlessedBlur темы */
+/* Увеличение ширины плеера при наведении на звук */
+[data-theme="BlessedBlur"] .header-player:hover,
+[data-theme="CursedBlur"] .header-player:hover {
+  min-width: 400px;
+}
+
+/* Показываем прогресс-бар при наведении */
+[data-theme="BlessedBlur"] .header-player:hover .progress-container,
+[data-theme="CursedBlur"] .header-player:hover .progress-container {
+  display: flex !important;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 3;
+}
+
+/* Скрываем прогресс-бар по умолчанию на ПК */
+@media (min-width: 701px) {
+  [data-theme="BlessedBlur"] .progress-container,
+  [data-theme="CursedBlur"] .progress-container {
+    display: none;
+    opacity: 0;
+  }
+  
+  /* Ограничиваем максимальную ширину плеера на ПК */
+  [data-theme="BlessedBlur"] .header-player,
+  [data-theme="CursedBlur"] .header-player {
+    max-width: min(400px, 50vw);
+  }
+  
+  [data-theme="BlessedBlur"] .header-player:hover,
+  [data-theme="CursedBlur"] .header-player:hover {
+    max-width: min(450px, 60vw);
+  }
+}
+
+/* Стили для мобилки в стиле iOS 26 - для обеих тем */
 @media (max-width: 700px) {
-  [data-theme="BlessedBlur"] .header-player {
+  [data-theme="BlessedBlur"] .header-player,
+  [data-theme="CursedBlur"] .header-player {
     padding: 8px 12px;
     background: var(--theme-background);
     backdrop-filter: var(--theme-backdrop-filter) !important;
     -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin: 4px 8px;
+    border-top: 1px solid rgba(240, 240, 240, 0.24);
+    border-right: 1px solid rgba(200, 200, 200, 0.322);
+    border-left: 1px solid rgba(200, 200, 200, 0.233);
+    border-bottom: 1px solid rgba(100, 100, 100, 0.486);    box-shadow:
+    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
+    margin-top: 4px;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
   }
 
-  [data-theme="BlessedBlur"] .MINI-track-info {
+  [data-theme="BlessedBlur"] .MINI-track-info,
+  [data-theme="CursedBlur"] .MINI-track-info {
     flex-direction: row;
     align-items: center;
   }
 
-  [data-theme="BlessedBlur"] .track-cover {
+  [data-theme="BlessedBlur"] .track-cover,
+  [data-theme="CursedBlur"] .track-cover {
     width: 28px;
     height: 28px;
-    border-radius: 6px;
+    border-radius: 50%;
   }
 
-  [data-theme="BlessedBlur"] .track-details {
+  [data-theme="BlessedBlur"] .track-details,
+  [data-theme="CursedBlur"] .track-details {
     max-width: 120px;
   }
 
-  [data-theme="BlessedBlur"] .track-title {
+  [data-theme="BlessedBlur"] .track-title,
+  [data-theme="CursedBlur"] .track-title {
     font-size: 0.8rem;
   }
 
-  [data-theme="BlessedBlur"] .track-artist {
+  [data-theme="BlessedBlur"] .track-artist,
+  [data-theme="CursedBlur"] .track-artist {
     font-size: 0.7rem;
   }
 
-  [data-theme="BlessedBlur"] .player-controls {
+  [data-theme="BlessedBlur"] .player-controls,
+  [data-theme="CursedBlur"] .player-controls {
     gap: 2px;
+    margin-left: 8px;
   }
 
-  [data-theme="BlessedBlur"] .control-button {
+  [data-theme="BlessedBlur"] .control-button,
+  [data-theme="CursedBlur"] .control-button {
     width: 24px;
     height: 24px;
   }
 
-  [data-theme="BlessedBlur"] .play-pause-button {
+  [data-theme="BlessedBlur"] .play-pause-button,
+  [data-theme="CursedBlur"] .play-pause-button {
     width: 28px;
     height: 28px;
   }
 
-  [data-theme="BlessedBlur"] .progress-container {
-    display: none; /* Скрываем прогресс на мобилке для экономии места */
+  [data-theme="BlessedBlur"] .progress-container,
+  [data-theme="CursedBlur"] .progress-container {
+    display: flex; /* Показываем прогресс на мобилке */
+    opacity: 1;
   }
 }

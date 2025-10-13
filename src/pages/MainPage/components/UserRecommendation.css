@@ -103,3 +103,111 @@
   color: #ff5252;
   border-color: rgba(255, 82, 82, 0.2);
 }
+
+/* Стили для BlessedBlur темы - iOS 26 Glass */
+[data-theme="BlessedBlur"] .follow-button,
+[data-theme="CursedBlur"] .follow-button {
+  min-width: auto;
+  height: 36px;
+  border-radius: 18px;
+  text-transform: none;
+  padding: 0 20px;
+  margin-left: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px) saturate(180%) brightness(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.1);
+  color: #ffffff;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    0 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="BlessedBlur"] .follow-button::before,
+[data-theme="CursedBlur"] .follow-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.2) 0%, 
+    rgba(255, 255, 255, 0.05) 50%, 
+    rgba(255, 255, 255, 0.1) 100%);
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+[data-theme="BlessedBlur"] .follow-button:hover,
+[data-theme="CursedBlur"] .follow-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(25px) saturate(200%) brightness(1.2);
+  -webkit-backdrop-filter: blur(25px) saturate(200%) brightness(1.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="BlessedBlur"] .follow-button:active,
+[data-theme="CursedBlur"] .follow-button:active {
+  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="BlessedBlur"] .follow-button.following,
+[data-theme="CursedBlur"] .follow-button.following {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px) saturate(120%) brightness(0.9);
+  -webkit-backdrop-filter: blur(15px) saturate(120%) brightness(0.9);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="BlessedBlur"] .follow-button.following:hover,
+[data-theme="CursedBlur"] .follow-button.following:hover {
+  background: rgba(255, 82, 82, 0.15);
+  backdrop-filter: blur(20px) saturate(150%) brightness(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(150%) brightness(1.1);
+  border-color: rgba(255, 82, 82, 0.3);
+  color: #ff6b6b;
+  transform: scale(1.02);
+  box-shadow: 
+    0 4px 16px rgba(255, 82, 82, 0.2),
+    0 1px 4px rgba(255, 82, 82, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="BlessedBlur"] .follow-button,
+  [data-theme="CursedBlur"] .follow-button {
+    transition: none;
+  }
+  
+  [data-theme="BlessedBlur"] .follow-button:hover,
+  [data-theme="CursedBlur"] .follow-button:hover {
+    transform: none;
+  }
+  
+  [data-theme="BlessedBlur"] .follow-button:active,
+  [data-theme="CursedBlur"] .follow-button:active {
+    transform: none;
+  }
+}

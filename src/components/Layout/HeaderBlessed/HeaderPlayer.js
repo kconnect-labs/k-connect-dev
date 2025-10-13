@@ -29,6 +29,7 @@ const HeaderPlayer = ({
   isMobile = false,
   onClose,
   onOpenFullscreen,
+  clearPlayer,
 }) => {
   if (!currentTrack) return null;
 
@@ -101,8 +102,21 @@ const HeaderPlayer = ({
         </div>
       </div>
 
-      {isMobile && false && (
-        <button className='close-button' onClick={onClose}>
+      {isMobile && clearPlayer && (
+        <button className='close-button' onClick={() => {
+          // Сначала останавливаем музыку
+          if (isPlaying) {
+            togglePlay();
+          }
+          // Затем закрываем плеер (как повторное нажатие на ноту)
+          if (onClose) {
+            onClose();
+          }
+          // И наконец очищаем музыку
+          setTimeout(() => {
+            clearPlayer();
+          }, 100);
+        }}>
           <Icon icon='solar:close-circle-bold' width='24' height='24' />
         </button>
       )}

@@ -1,8 +1,9 @@
 @import '../../../uikit.module.css';
 
-/* HeaderActions - Стили только для BlessedBlur темы */
+/* HeaderActions - Стили для BlessedBlur и CursedBlur тем */
 
-[data-theme="BlessedBlur"] .header-actions {
+[data-theme="BlessedBlur"] .header-actions,
+[data-theme="CursedBlur"] .header-actions {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -10,11 +11,36 @@
   contain: layout style paint;
 }
 
-[data-theme="BlessedBlur"] .action-tooltip {
+/* Стили для CursedBlur темы - как BottomNavigation */
+[data-theme="CursedBlur"] .header-actions {
+  /* Liquid glass effect (distortion as in iOS 26 "liquid glass") */
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-radius: 28px;
+  width: calc(100% - 16px);
+  position: relative;
+  overflow: visible;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  border-top: 1px solid rgba(240, 240, 240, 0.24);
+  border-right: 1px solid rgba(200, 200, 200, 0.322);
+  border-left: 1px solid rgba(200, 200, 200, 0.233);
+  border-bottom: 1px solid rgba(100, 100, 100, 0.486);
+  box-shadow:
+    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
+  background: var(--theme-background);
+}
+
+[data-theme="BlessedBlur"] .action-tooltip,
+[data-theme="CursedBlur"] .action-tooltip {
   position: relative;
 }
 
-[data-theme="BlessedBlur"] .action-tooltip:hover::after {
+[data-theme="BlessedBlur"] .action-tooltip:hover::after,
+[data-theme="CursedBlur"] .action-tooltip:hover::after {
   content: attr(title);
   position: absolute;
   bottom: -30px;
@@ -30,7 +56,8 @@
   pointer-events: none;
 }
 
-[data-theme="BlessedBlur"] .action-button {
+[data-theme="BlessedBlur"] .action-button,
+[data-theme="CursedBlur"] .action-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,27 +74,93 @@
   box-sizing: border-box;
 }
 
-[data-theme="BlessedBlur"] .action-button:hover {
-  background-color: rgba(208, 188, 255, 0.08);
+/* Упрощенные стили для CursedBlur темы */
+[data-theme="CursedBlur"] .action-button {
+  color: rgba(255, 255, 255, 0.7) !important;
+  transition: all 0.25s ease;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  border: none;
+  opacity: 1;
+}
+
+/* Принудительный белый цвет для всех иконок в CursedBlur теме */
+[data-theme="CursedBlur"] .action-button svg,
+[data-theme="CursedBlur"] .action-button .MuiSvgIcon-root,
+[data-theme="CursedBlur"] .notification-container svg,
+[data-theme="CursedBlur"] .notification-container .MuiSvgIcon-root {
+  color: rgba(255, 255, 255, 0.7) !important;
+  fill: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Стили для кнопки уведомлений в CursedBlur теме */
+[data-theme="CursedBlur"] .notification-container {
+  color: rgba(255, 255, 255, 0.7) !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+[data-theme="BlessedBlur"] .action-button:hover,
+[data-theme="CursedBlur"] .action-button:hover {
   transform: scale(1.02);
   opacity: 1;
 }
 
-[data-theme="BlessedBlur"] .action-button--active {
+/* Hover эффекты для CursedBlur темы */
+[data-theme="CursedBlur"] .action-button:hover {
+  color: #D0BCFF;
+  transform: scale(1.05);
+}
+
+/* Hover эффекты для кнопки уведомлений в CursedBlur теме */
+[data-theme="CursedBlur"] .notification-container:hover {
+  color: #D0BCFF !important;
+  transform: scale(1.05);
+}
+
+/* Размеры SVG иконок в CursedBlur теме */
+[data-theme="CursedBlur"] .action-button svg,
+[data-theme="CursedBlur"] .notification-container svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Размеры кнопок в CursedBlur теме */
+[data-theme="CursedBlur"] .action-button,
+[data-theme="CursedBlur"] .notification-container {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+[data-theme="BlessedBlur"] .action-button--active,
+[data-theme="CursedBlur"] .action-button--active {
   background-color: rgba(208, 188, 255, 0.1);
   color: var(--primary-color, #d0bcff);
 }
 
-[data-theme="BlessedBlur"] .action-button--active:hover {
+[data-theme="BlessedBlur"] .action-button--active:hover,
+[data-theme="CursedBlur"] .action-button--active:hover {
   background-color: rgba(208, 188, 255, 0.15);
 }
 
-[data-theme="BlessedBlur"] .action-button--profile {
+[data-theme="BlessedBlur"] .action-button--profile,
+[data-theme="CursedBlur"] .action-button--profile {
   margin-left: 4px;
   opacity: 1;
 }
 
-[data-theme="BlessedBlur"] .profile-notification-container {
+[data-theme="BlessedBlur"] .profile-notification-container,
+[data-theme="CursedBlur"] .profile-notification-container {
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -77,19 +170,16 @@
 }
 
 /* Стили для объединенного блока на ПК - как у кнопок */
-[data-theme="BlessedBlur"] .profile-notification-container {
+[data-theme="BlessedBlur"] .profile-notification-container,
+[data-theme="CursedBlur"] .profile-notification-container {
   border-radius: 20px;
   min-width: 40px;
   height: 40px;
-  padding: 8px;
-  background: var(--theme-background);
-  backdrop-filter: var(--theme-backdrop-filter) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-[data-theme="BlessedBlur"] .profile-notification-container:hover {
+[data-theme="BlessedBlur"] .profile-notification-container:hover,
+[data-theme="CursedBlur"] .profile-notification-container:hover {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter) !important;
   -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
@@ -98,10 +188,11 @@
 }
 
 /* Стили для элементов внутри объединенного контейнера */
-[data-theme="BlessedBlur"] .profile-notification-container .notification-container {
+[data-theme="BlessedBlur"] .profile-notification-container .notification-container,
+[data-theme="CursedBlur"] .profile-notification-container .notification-container {
   display: flex;
   align-items: center;
-  opacity: 0.6;
+  opacity: 1;
   transition: opacity 0.2s ease;
   background: transparent;
   backdrop-filter: none !important;
@@ -114,7 +205,8 @@
   justify-content: center;
 }
 
-[data-theme="BlessedBlur"] .profile-notification-container .notification-container:hover {
+[data-theme="BlessedBlur"] .profile-notification-container .notification-container:hover,
+[data-theme="CursedBlur"] .profile-notification-container .notification-container:hover {
   opacity: 1;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: none !important;
@@ -123,7 +215,8 @@
   transform: none;
 }
 
-[data-theme="BlessedBlur"] .profile-notification-container .action-button--profile {
+[data-theme="BlessedBlur"] .profile-notification-container .action-button--profile,
+[data-theme="CursedBlur"] .profile-notification-container .action-button--profile {
   background: transparent;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -135,7 +228,8 @@
   margin: 0;
 }
 
-[data-theme="BlessedBlur"] .profile-notification-container .action-button--profile:hover {
+[data-theme="BlessedBlur"] .profile-notification-container .action-button--profile:hover,
+[data-theme="CursedBlur"] .profile-notification-container .action-button--profile:hover {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -143,14 +237,13 @@
   transform: none;
 }
 
-[data-theme="BlessedBlur"] .notification-container {
+[data-theme="BlessedBlur"] .notification-container,
+[data-theme="CursedBlur"] .notification-container {
   display: flex;
   align-items: center;
   opacity: 0.6;
   transition: opacity 0.2s ease;
-  background: var(--theme-background);
-  backdrop-filter: var(--theme-backdrop-filter) !important;
-  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 8px;
@@ -159,16 +252,10 @@
   justify-content: center;
 }
 
-[data-theme="BlessedBlur"] .notification-container:hover {
-  opacity: 1;
-  background: var(--theme-background);
-  backdrop-filter: var(--theme-backdrop-filter) !important;
-  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: scale(1.02);
-}
 
-[data-theme="BlessedBlur"] .profile-avatar {
+
+[data-theme="BlessedBlur"] .profile-avatar,
+[data-theme="CursedBlur"] .profile-avatar {
   width: 30px;
   height: 30px;
   border-radius: var(--avatar-border-radius);
@@ -177,53 +264,63 @@
   transition: all 0.2s ease;
 }
 
-[data-theme="BlessedBlur"] .action-button:hover .profile-avatar {
+[data-theme="BlessedBlur"] .action-button:hover .profile-avatar,
+[data-theme="CursedBlur"] .action-button:hover .profile-avatar {
   border-color: rgba(208, 188, 255, 0.5);
   box-shadow: 0 2px 8px rgba(208, 188, 255, 0.2);
 }
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  [data-theme="BlessedBlur"] .action-button {
+  [data-theme="BlessedBlur"] .action-button,
+  [data-theme="CursedBlur"] .action-button {
     transition: none;
   }
 
-  [data-theme="BlessedBlur"] .action-button:hover {
+  [data-theme="BlessedBlur"] .action-button:hover,
+  [data-theme="CursedBlur"] .action-button:hover {
     transform: none;
   }
 
-  [data-theme="BlessedBlur"] .notification-container {
+  [data-theme="BlessedBlur"] .notification-container,
+  [data-theme="CursedBlur"] .notification-container {
     transition: none;
   }
 
-  [data-theme="BlessedBlur"] .profile-avatar {
+  [data-theme="BlessedBlur"] .profile-avatar,
+  [data-theme="CursedBlur"] .profile-avatar {
     transition: none;
   }
 }
 
 /* Оптимизации для производительности */
-[data-theme="BlessedBlur"] .header-actions {
+[data-theme="BlessedBlur"] .header-actions,
+[data-theme="CursedBlur"] .header-actions {
   will-change: transform;
 }
 
-[data-theme="BlessedBlur"] .action-button {
+[data-theme="BlessedBlur"] .action-button,
+[data-theme="CursedBlur"] .action-button {
   will-change: transform, opacity;
 }
 
-[data-theme="BlessedBlur"] .notification-container {
+[data-theme="BlessedBlur"] .notification-container,
+[data-theme="CursedBlur"] .notification-container {
   will-change: opacity;
 }
 
 /* Поддержка высокого DPI */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  [data-theme="BlessedBlur"] .profile-avatar {
+  [data-theme="BlessedBlur"] .profile-avatar,
+  [data-theme="CursedBlur"] .profile-avatar {
     border-width: 0.5px;
   }
 }
 
 /* Поддержка печати */
 @media print {
-  [data-theme="BlessedBlur"] .header-actions {
+  [data-theme="BlessedBlur"] .header-actions,
+  [data-theme="CursedBlur"] .header-actions {
     display: none !important;
   }
 }
@@ -232,28 +329,20 @@
 
 
 /* Стили для кнопок на ПК */
-[data-theme="BlessedBlur"] .action-button {
+[data-theme="BlessedBlur"] .action-button,
+[data-theme="CursedBlur"] .action-button {
   border-radius: 20px;
   min-width: 40px;
   height: 40px;
   padding: 8px;
-  background: var(--theme-background);
-  backdrop-filter: var(--theme-backdrop-filter) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-[data-theme="BlessedBlur"] .action-button:hover {
-  background: var(--theme-background);
-  backdrop-filter: var(--theme-backdrop-filter) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: scale(1.02);
-  border-radius: 20px;
-}
 
-[data-theme="BlessedBlur"] .action-button--active {
+
+[data-theme="BlessedBlur"] .action-button--active,
+[data-theme="CursedBlur"] .action-button--active {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter) !important;
   -webkit-backdrop-filter: blur(20px) !important;
@@ -261,28 +350,32 @@
   border-radius: 20px;
 }
 
-[data-theme="BlessedBlur"] .action-button--active:hover {
+[data-theme="BlessedBlur"] .action-button--active:hover,
+[data-theme="CursedBlur"] .action-button--active:hover {
   background: var(--theme-background);
   border-color: rgba(208, 188, 255, 0.5);
 }
 
-[data-theme="BlessedBlur"] .action-button--profile {
+[data-theme="BlessedBlur"] .action-button--profile,
+[data-theme="CursedBlur"] .action-button--profile {
   border-radius: 20px;
 }
 
-[data-theme="BlessedBlur"] .profile-avatar {
+[data-theme="BlessedBlur"] .profile-avatar,
+[data-theme="CursedBlur"] .profile-avatar {
   width: 32px;
   height: 32px;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-[data-theme="BlessedBlur"] .action-button:hover .profile-avatar {
+[data-theme="BlessedBlur"] .action-button:hover .profile-avatar,
+[data-theme="CursedBlur"] .action-button:hover .profile-avatar {
   border-color: rgba(255, 255, 255, 0.4);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 
-[data-theme="BlessedBlur"] .notification-container {
+[data-theme="BlessedBlur"] .notification-container,
+[data-theme="CursedBlur"] .notification-container {
   display: flex;
   align-items: center;
   opacity: 0.6;
@@ -298,19 +391,12 @@
   justify-content: center;
 }
 
-[data-theme="BlessedBlur"] .notification-container:hover {
-  opacity: 1;
-  background: var(--theme-background);
-  backdrop-filter: var(--theme-backdrop-filter) !important;
-  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: scale(1.02);
-}
 
 /* Стили для мобилки в стиле iOS 26 - только для BlessedBlur темы */
 @media (max-width: 700px) {
   /* Полностью убираем фон и блюр у хедера */
-  [data-theme="BlessedBlur"] .MuiAppBar-root {
+  [data-theme="BlessedBlur"] .MuiAppBar-root,
+  [data-theme="CursedBlur"] .MuiAppBar-root {
     background: transparent !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -320,32 +406,24 @@
   
 
 
-  [data-theme="BlessedBlur"] .header-actions {
+  [data-theme="BlessedBlur"] .header-actions,
+  [data-theme="CursedBlur"] .header-actions {
     gap: 8px;
+    height: 100%;
+    margin-top:4px;
   }
 
-  [data-theme="BlessedBlur"] .action-button {
+  [data-theme="BlessedBlur"] .action-button,
+  [data-theme="CursedBlur"] .action-button {
     border-radius: 20px;
     min-width: 40px;
-    height: 40px;
     padding: 8px;
-    background: var(--theme-background);
-    backdrop-filter: var(--theme-backdrop-filter) !important;
-    -webkit-backdrop-filter: blur(18px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  [data-theme="BlessedBlur"] .action-button:hover {
-    background: var(--theme-background);
-    backdrop-filter: var(--theme-backdrop-filter) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.02);
-    border-radius: 20px;
-  }
 
-  [data-theme="BlessedBlur"] .action-button--active {
+  [data-theme="BlessedBlur"] .action-button--active,
+  [data-theme="CursedBlur"] .action-button--active {
     background: var(--theme-background);
     backdrop-filter: var(--theme-backdrop-filter) !important;
     -webkit-backdrop-filter: blur(20px) !important;
@@ -353,49 +431,42 @@
     border-radius: 20px;
   }
 
-  [data-theme="BlessedBlur"] .action-button--active:hover {
+  [data-theme="BlessedBlur"] .action-button--active:hover,
+  [data-theme="CursedBlur"] .action-button--active:hover {
     background: var(--theme-background);
     border-color: rgba(208, 188, 255, 0.5);
   }
 
-  [data-theme="BlessedBlur"] .action-button--profile {
+  [data-theme="BlessedBlur"] .action-button--profile,
+  [data-theme="CursedBlur"] .action-button--profile {
     border-radius: 20px;
   }
 
-  [data-theme="BlessedBlur"] .profile-avatar {
+  [data-theme="BlessedBlur"] .profile-avatar,
+  [data-theme="CursedBlur"] .profile-avatar {
     width: 32px;
     height: 32px;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  [data-theme="BlessedBlur"] .action-button:hover .profile-avatar {
+  [data-theme="BlessedBlur"] .action-button:hover .profile-avatar,
+  [data-theme="CursedBlur"] .action-button:hover .profile-avatar {
     border-color: rgba(255, 255, 255, 0.4);
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
   }
 
-  [data-theme="BlessedBlur"] .notification-container {
+  [data-theme="BlessedBlur"] .notification-container,
+  [data-theme="CursedBlur"] .notification-container {
     display: flex;
     align-items: center;
     opacity: 0.6;
     transition: opacity 0.2s ease;
-    background: var(--theme-background);
-    backdrop-filter: var(--theme-backdrop-filter) !important;
-    -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 8px;
     min-width: 40px;
     height: 40px;
     justify-content: center;
-  }
-
-  [data-theme="BlessedBlur"] .notification-container:hover {
-    opacity: 1;
-    background: var(--theme-background);
-    backdrop-filter: var(--theme-backdrop-filter) !important;
-    -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.02);
   }
 }

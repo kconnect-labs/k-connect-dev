@@ -3,19 +3,13 @@
 /* StyledTabs - Точные стили панели рекомендаций из MainPage */
 
 /* Стили для BlessedBlur темы */
-[data-theme="BlessedBlur"] .styled-tabs-container {
+[data-theme="BlessedBlur"] .styled-tabs-container,
+[data-theme="CursedBlur"] .styled-tabs-container {
   background: var(--theme-background);
   backdrop-filter:
-    blur(16px)
-    brightness(1.12)
-    contrast(1.13)
-    saturate(2.36)
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="360" height="60"><filter id="liquid"><feTurbulence id="turb" baseFrequency="0.018" numOctaves="2" seed="11" type="turbulence"/><feDisplacementMap in2="turb" in="SourceGraphic" scale="10" xChannelSelector="R" yChannelSelector="G"/></filter><rect width="100%" height="100%" filter="url(%23liquid)" fill="transparent"/></svg>');
-  ;-webkit-backdrop-filter:
-    blur(16px)
-    brightness(1.12)
-    contrast(1.13)
-    saturate(1.36);
+    var(--theme-backdrop-filter);
+    -webkit-backdrop-filter:
+    var(--theme-backdrop-filter);
   border-radius: 28px;
   border-top: 1px solid rgba(240, 240, 240, 0.24);
   border-right: 1px solid rgba(200, 200, 200, 0.322);
@@ -28,12 +22,14 @@
   overflow: visible;
 }
 
-[data-theme="BlessedBlur"] .styled-tabs {
+[data-theme="BlessedBlur"] .styled-tabs,
+[data-theme="CursedBlur"] .styled-tabs {
   padding: 8px;
   border-radius: 20px;
 }
 
-[data-theme="BlessedBlur"] .styled-tab {
+[data-theme="BlessedBlur"] .styled-tab,
+[data-theme="CursedBlur"] .styled-tab {
   color: rgba(255, 255, 255, 0.7);
   transition: all 0.25s ease;
   border-radius: 20px;
@@ -50,13 +46,15 @@
   justify-content: center;
 }
 
-[data-theme="BlessedBlur"] .styled-tab:hover {
+[data-theme="BlessedBlur"] .styled-tab:hover,
+[data-theme="CursedBlur"] .styled-tab:hover {
   color: #ffffff;
   transform: scale(1.05);
   background: rgba(255, 255, 255, 0.05);
 }
 
-[data-theme="BlessedBlur"] .styled-tab--active {
+[data-theme="BlessedBlur"] .styled-tab--active,
+[data-theme="CursedBlur"] .styled-tab--active {
   color: rgba(255, 255, 255, 0.815);
   transform: scale(1);
   background: rgba(233, 228, 247, 0.2);
@@ -70,12 +68,14 @@
   justify-content: center;
 }
 
-[data-theme="BlessedBlur"] .styled-tab-content {
+[data-theme="BlessedBlur"] .styled-tab-content,
+[data-theme="CursedBlur"] .styled-tab-content {
   position: relative;
   z-index: 1;
 }
 
-[data-theme="BlessedBlur"] .styled-tab-badge {
+[data-theme="BlessedBlur"] .styled-tab-badge,
+[data-theme="CursedBlur"] .styled-tab-badge {
   background: linear-gradient(135deg, #D0BCFF, #B19CD9);
   color: #000;
   border: 2px solid rgba(208, 188, 255, 0.8);
@@ -96,10 +96,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.styled-tabs--default {
-  background: var(--theme-background, rgba(255, 255, 255, 0.03));
-}
-
+.styled-tabs--default,
 .styled-tabs--custom {
   background: var(--theme-background, rgba(255, 255, 255, 0.03));
 }
@@ -127,7 +124,8 @@
   overflow: hidden;
 }
 
-.styled-tab {
+.styled-tab,
+.styled-tab--custom {
   background: transparent;
   border: none;
   outline: none;
@@ -160,12 +158,14 @@
   flex: 1;
 }
 
-.styled-tab:hover {
+.styled-tab:hover,
+.styled-tab--custom:hover {
   color: rgba(255, 255, 255, 0.9);
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-.styled-tab--active {
+.styled-tab--active,
+.styled-tab--custom--active {
   color: #1a1a1a;
   background-color: #d0bcff;
 }

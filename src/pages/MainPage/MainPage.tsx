@@ -221,8 +221,10 @@ const MainPage: React.FC = React.memo(() => {
             recommendations={recommendations}
             loadingRecommendations={loadingRecommendations}
           />
-
-          <TelegramSubscribeBlock />
+          {(!window.document.documentElement.dataset.theme ||
+            window.document.documentElement.dataset.theme !== "CursedBlur") && (
+            <TelegramSubscribeBlock />
+          )}
 
           {latestUpdate && (
             <Box

@@ -158,11 +158,13 @@
   background: rgba(0, 0, 0, 0.95);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
-[data-theme="BlessedBlur"] .bottom-nav-container{
+[data-theme="BlessedBlur"] .bottom-nav-container,
+[data-theme="CursedBlur"] .bottom-nav-container{
   padding: 0 0px;
   margin:0;
 }
-[data-theme="BlessedBlur"] .bottom-navigation {
+[data-theme="BlessedBlur"] .bottom-navigation,
+[data-theme="CursedBlur"] .bottom-navigation {
   /* Liquid glass effect (distortion as in iOS 26 "liquid glass") */
   backdrop-filter:
     blur(16px)
@@ -192,7 +194,8 @@
 }
 
 
-[data-theme="BlessedBlur"] .bottom-nav-item {
+[data-theme="BlessedBlur"] .bottom-nav-item,
+[data-theme="CursedBlur"] .bottom-nav-item {
   color: rgba(255, 255, 255, 0.7);
   transition: all 0.25s ease;
   border-radius: 50%;
@@ -202,12 +205,14 @@
   border: none;
 }
 
-[data-theme="BlessedBlur"] .bottom-nav-item:hover {
+[data-theme="BlessedBlur"] .bottom-nav-item:hover,
+[data-theme="CursedBlur"] .bottom-nav-item:hover {
   color: #D0BCFF;
   transform: scale(1.05);
 }
 
-[data-theme="BlessedBlur"] .bottom-nav-item.active {
+[data-theme="BlessedBlur"] .bottom-nav-item.active,
+[data-theme="CursedBlur"] .bottom-nav-item.active {
   color: rgba(255, 255, 255, 0.815);
   transform: scale(1);
   background: rgba(233, 228, 247, 0.2);
@@ -216,12 +221,14 @@
   width: 85px;height: 45px;
 }
 
-[data-theme="BlessedBlur"] .bottom-nav-icon {
+[data-theme="BlessedBlur"] .bottom-nav-icon,
+[data-theme="CursedBlur"] .bottom-nav-icon {
   position: relative;
   z-index: 1;
 }
 
-[data-theme="BlessedBlur"] .badge-content {
+[data-theme="BlessedBlur"] .badge-content,
+[data-theme="CursedBlur"] .badge-content {
   background: linear-gradient(135deg, #D0BCFF, #B19CD9);
   color: #000;
   border: 2px solid rgba(208, 188, 255, 0.8);

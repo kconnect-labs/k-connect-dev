@@ -55,7 +55,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   padding: theme.spacing(0, 1),
   height: 48,
   [theme.breakpoints.up('md')]: {
-    padding: theme.spacing(0, '19%'),
+    padding: theme.spacing(0, '10%'),
     width: '100%',
     margin: '0 auto',
   },
@@ -137,6 +137,7 @@ const Header = ({ toggleSidebar }) => {
     toggleMute,
     setVolume,
     openFullScreenPlayer,
+    clearPlayer,
   } = useMusic();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -539,6 +540,7 @@ const Header = ({ toggleSidebar }) => {
           <IconButton
             color={showMobilePlayer ? 'primary' : 'inherit'}
             onClick={() => setShowMobilePlayer(v => !v)}
+            className="music-note-button"
             sx={{
               mr: 1,
               opacity: 0.6,
@@ -553,7 +555,12 @@ const Header = ({ toggleSidebar }) => {
               icon='solar:music-note-2-bold'
               width='24'
               height='24'
-              sx={{ color: theme.palette.primary.main }}
+              sx={{ 
+                color: theme.palette.primary.main,
+                '[data-theme="CursedBlur"] &': {
+                  color: 'rgba(255, 255, 255, 0.7) !important',
+                },
+              }}
             />
           </IconButton>
         )}
@@ -576,9 +583,11 @@ const Header = ({ toggleSidebar }) => {
                 toggleMute={toggleMute}
                 setVolume={setVolume}
                 theme={theme}
+                clearPlayer={clearPlayer}
                 truncateTitle={truncateTitle}
                 isMobile={true}
                 onOpenFullscreen={openFullScreenPlayer}
+                onClose={() => setShowMobilePlayer(false)}
               />
             </Box>
           </Collapse>
@@ -709,22 +718,25 @@ const Header = ({ toggleSidebar }) => {
                       toggleSearch={toggleSearch}
                     />
 
-                    {!showSearch && !isMobile && layoutVersion !== 'v2' && (
-                      <HeaderPlayer
-                        currentTrack={currentTrack}
-                        isPlaying={isPlaying}
-                        isMuted={isMuted}
-                        volume={volume}
-                        togglePlay={togglePlay}
-                        nextTrack={nextTrack}
-                        prevTrack={prevTrack}
-                        toggleMute={toggleMute}
-                        setVolume={setVolume}
-                        theme={theme}
-                        truncateTitle={truncateTitle}
-                        onOpenFullscreen={openFullScreenPlayer}
-                        isMobile={isMobile}
-                      />
+                    {!isMobile && (
+                      <Box sx={{ mr: 1 }}>
+                        <HeaderPlayer
+                          currentTrack={currentTrack}
+                          isPlaying={isPlaying}
+                          isMuted={isMuted}
+                          volume={volume}
+                          togglePlay={togglePlay}
+                          nextTrack={nextTrack}
+                          prevTrack={prevTrack}
+                          toggleMute={toggleMute}
+                          setVolume={setVolume}
+                          theme={theme}
+                          clearPlayer={clearPlayer}
+                          truncateTitle={truncateTitle}
+                          onOpenFullscreen={openFullScreenPlayer}
+                          isMobile={isMobile}
+                        />
+                      </Box>
                     )}
                   </Box>
                 </Box>

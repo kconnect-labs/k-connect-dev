@@ -174,6 +174,9 @@ const MemoizedHeader = memo<MemoizedHeaderProps>(
     if (themeSettings?.mode === 'BlessedBlur') {
       return <HeaderBlessed toggleSidebar={toggleSidebar} />;
     }
+    if (themeSettings?.mode === 'CursedBlur') {
+      return <HeaderBlessed toggleSidebar={toggleSidebar} />;
+    }
     // Иначе используем стандартный Header
     return <Header toggleSidebar={toggleSidebar} />;
   }

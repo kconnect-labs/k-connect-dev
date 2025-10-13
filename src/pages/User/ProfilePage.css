@@ -21,24 +21,7 @@
   margin-bottom: 8px;
 }
 
-.online-users-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  overflow-x: auto;
-  padding-bottom: 2px;
-}
 
-.online-users-container::-webkit-scrollbar {
-  height: 0px;
-  display: none;
-}
-
-.online-users-container {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
 
 .online-count-badge {
   display: flex;

@@ -16,15 +16,26 @@ import { handleImageError as safeImageError } from '../../../utils/imageUtils';
 import { User } from '../types';
 
 const OnlineUsersCard = styled(Card)(({ theme }) => ({
-  borderRadius: 'var(--main-border-radius)',
+  borderRadius: 'var(--large-border-radius)',
   overflow: 'hidden',
   boxShadow: 'none',
-  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border:
-    theme.palette.mode === 'dark'
-      ? '1px solid rgba(255, 255, 255, 0.12)'
-      : '1px solid rgba(0, 0, 0, 0.1)',
+  background: 'var(--theme-background)',
+  backdropFilter: 'var(--theme-backdrop-filter)',
+  WebkitBackdropFilter: 'var(--theme-backdrop-filter)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  padding: '2px 2px',
+  gap: '2px',
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  flexWrap: 'nowrap',
+  overflowX: 'auto',
+  '&::-webkit-scrollbar': { 
+    height: '0px', 
+    display: 'none' 
+  },
+  msOverflowStyle: 'none',
+  scrollbarWidth: 'none',
 }));
 
 const OnlineUsers: React.FC = () => {
@@ -90,13 +101,13 @@ const OnlineUsers: React.FC = () => {
 
   if (loading) {
     return (
-      <OnlineUsersCard
-        sx={{ p: 1, minHeight: 56, display: 'flex', alignItems: 'center' }}
-      >
-        <CircularProgress size={18} sx={{ mr: 1 }} />
-        <Typography variant='body2' sx={{ fontSize: '0.95rem' }}>
-          {t('main_page.loading')}
-        </Typography>
+      <OnlineUsersCard>
+        <Box sx={{ p: 1, minHeight: 56, display: 'flex', alignItems: 'center' }}>
+          <CircularProgress size={18} sx={{ mr: 1 }} />
+          <Typography variant='body2' sx={{ fontSize: '0.95rem' }}>
+            {t('main_page.loading')}
+          </Typography>
+        </Box>
       </OnlineUsersCard>
     );
   }
@@ -106,23 +117,15 @@ const OnlineUsers: React.FC = () => {
   }
 
   return (
-    <OnlineUsersCard
-      sx={{
-        p: 1,
-        minHeight: 56,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1,
-      }}
-    >
+    <OnlineUsersCard>
       <Box
         className="online-users-container"
         sx={{
           display: 'flex',
           flexWrap: 'nowrap',
-          gap: 1,
+          gap: '4px !important',
           overflowX: 'auto',
-          pb: 0,
+          py: 0.2,
           '&::-webkit-scrollbar': { height: '0px', display: 'none' },
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
@@ -134,62 +137,80 @@ const OnlineUsers: React.FC = () => {
             alignItems: 'center',
             gap: 0.5,
             px: 1,
-            py: 0.5,
-            borderRadius: 'var(--main-border-radius)',
-            backgroundColor: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(76, 175, 80, 0.2)',
+            py: 0.2,
             minWidth: 'fit-content',
-            height: 36,
+            height: '45px',
+            maxHeight: '53px',
             mr: 0.5,
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',            
+            // Скрытие счетчика для CursedBlur темы
+            '[data-theme="CursedBlur"] &': {
+              display: 'none',
+            },
           }}
         >
           <Box
             sx={{
-              width: 8,
-              height: 8,
-              borderRadius: 'var(--avatar-border-radius)',
+              width: 10,
+              height: 10,
+              borderRadius: '50%',
               backgroundColor: '#4caf50',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 0 8px rgba(76, 175, 80, 0.4)',
             }}
           />
           <Typography
             variant='body2'
             sx={{
-              fontSize: '0.75rem',
-              fontWeight: 500,
+              fontSize: '0.9rem',
+              fontWeight: 600,
               color: '#4caf50',
+              textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
+              letterSpacing: '0.5px',
             }}
           >
-            {t('main_page.online_count', { count: onlineUsers.length })}
+             { onlineUsers.length }
           </Typography>
         </Box>
         {onlineUsers.slice(0, visibleCount).map((user) => (
           <Box
             key={user.id}
-            sx={{ position: 'relative', cursor: 'pointer', mx: 0.25 }}
+            sx={{ 
+              position: 'relative', 
+              cursor: 'pointer', 
+              mx: 0.25,
+              minWidth: '55px',
+              height: '45px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
             onClick={() => handleUserClick(user.username)}
           >
             <Avatar
               src={user?.photo ? `${user.photo}?w=72&h=72&fit=crop&q=60` : '/static/uploads/system/avatar.png'}
               alt={user?.username || 'User'}
               sx={{
-                width: 36,
-                height: 36,
-                border: `2px solid ${theme.palette.background.paper}`,
+                width: '56px',
+                height: '46px',
+                borderRadius: '25px',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
                 boxSizing: 'border-box',
-                background: '#222',
+                background: 'rgba(181, 142, 244, 0.65)',
               }}
               onError={(e) => safeImageError(e as any)}
             />
             <Box
               sx={{
                 position: 'absolute',
-                bottom: 2,
-                right: 2,
-                width: 9,
-                height: 9,
-                borderRadius: 'var(--avatar-border-radius)',
+                bottom: '5px',
+                right: '5px',
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
                 backgroundColor: '#4caf50',
-                border: `1.5px solid ${theme.palette.background.paper}`,
+                border: '1px solid rgba(255, 255, 255, 0.2)',
                 boxSizing: 'border-box',
               }}
             />

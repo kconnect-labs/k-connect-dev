@@ -123,6 +123,28 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 24px;
+  --small-border-radius: 18px;
+  --large-border-radius: 32px;
+}
+[data-theme="CursedBlur"] {
+  --theme-background: rgba(255, 255, 255, 0.3);
+  --theme-backdrop-filter: blur(5px) brightness(0.96) contrast(1.11) saturate(1);
+  --theme-site-background: #0a0a0a;
+  --theme-background-full: rgba(10, 10, 10, 1);
+  --theme-button-main: #D0BCFF;
+  --theme-main-color: #d0bcff;
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgb(212, 212, 212);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
+  --theme-text-accent: #D0BCFF;
+  --theme-text-error: #f44336;
+  --theme-text-success: #4caf50;
+  --theme-text-warning: #ff9800;
+  --theme-text-info: #2196f3;
+  --main-border-radius: 24px;
+  --small-border-radius: 18px;
+  --large-border-radius: 32px;
 }
 
 /* Белая тема */

@@ -63,6 +63,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switchToLightTheme,
     switchToCubeTheme,
     switchToBlessedBlurTheme,
+    switchToCursedBlurTheme,
   } = useThemeManager();
 
   const handleClose = () => {
@@ -115,6 +116,9 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
         break;
       case 'BlessedBlur':
         await switchToBlessedBlurTheme();
+        break;
+      case 'CursedBlur':
+        await switchToCursedBlurTheme();
         break;
     }
   };
@@ -183,6 +187,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'pickme': return 'rgba(131, 61, 96, 0.93)';
       case 'cube': return 'rgba(33, 33, 33, 1)';
       case 'BlessedBlur': return 'rgba(0, 0, 0, 0.5)';
+      case 'CursedBlur': return 'rgba(255, 255, 255, 0.3)';
       default: return 'rgba(15, 15, 15, 0.98)';
     }
   };
@@ -204,6 +209,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'pickme': return 'blur(20px)';
       case 'cube': return 'none';
       case 'BlessedBlur': return 'blur(20px)';
+      case 'CursedBlur': return 'blur(20px)';
       default: return 'none';
     }
   };
@@ -225,6 +231,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'pickme': return <Favorite />;
       case 'cube': return <Square />;
       case 'BlessedBlur': return <BlurOn />;
+      case 'CursedBlur': return <BlurOn />;
       default: return <BlurOff />;
     }
   };
@@ -246,6 +253,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'pickme': return 'pickme';
       case 'cube': return 'Cube';
       case 'BlessedBlur': return 'BlessedBlur';
+      case 'CursedBlur': return 'CursedBlur';
       default: return 'Классическая';
     }
   };
@@ -267,6 +275,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'pickme': return 'Нежно-розовый приятный';
       case 'cube': return 'Темная тема без эффектов';
       case 'BlessedBlur': return 'Темная тема с размытием';
+      case 'CursedBlur': return 'Светлая тема с размытием';
       default: return 'Темная тема c квадратами';
     }
   };
@@ -295,7 +304,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     );
   }
 
-  const themes: ThemeType[] = ['default', 'blur', 'amoled', 'light', 'midnight', 'ocean', 'sunset', 'forest', 'aurora', 'cosmic', 'neon', 'vintage', 'pickme', 'cube', 'BlessedBlur'];
+  const themes: ThemeType[] = ['default', 'blur', 'amoled', 'light', 'midnight', 'ocean', 'sunset', 'forest', 'aurora', 'cosmic', 'neon', 'vintage', 'pickme', 'cube', 'BlessedBlur', 'CursedBlur'  ];
 
   return (
     <Dialog

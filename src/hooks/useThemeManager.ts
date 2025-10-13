@@ -1,10 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type ThemeType = 'default' | 'blur' | 'amoled' | 'light' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme' | 'cube' | 'BlessedBlur';
+export type ThemeType = 'default' | 'blur' | 'amoled' | 'light' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme' | 'cube' | 'BlessedBlur' | 'CursedBlur';
 
 interface ThemeSettings {
   type: ThemeType;
   blurGlass: {
+    background: string;
+    backdropFilter: string;
+    siteBackground: string;
+  };
+  CursedBlur: {
     background: string;
     backdropFilter: string;
     siteBackground: string;
@@ -132,9 +137,20 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#0a0a0a',
     colorScheme: 'dark',
     browserAccent: '#D0BCFF',
-    mainBorderRadius: '18px',
-    smallBorderRadius: '14px',
-    largeBorderRadius: '22px',
+    mainBorderRadius: '24px',
+    smallBorderRadius: '18px',
+    largeBorderRadius: '32px',
+  },
+  CursedBlur: {
+    background: 'rgba(255, 255, 255, 0.01)',
+    backdropFilter: 'blur(12px) brightness(1.02) contrast(1.11) saturate(1.4)',
+    siteBackground: '#0a0a0a',
+    themeColor: '#0a0a0a',
+    colorScheme: 'dark',
+    browserAccent: '#D0BCFF',
+    mainBorderRadius: '24px',
+    smallBorderRadius: '18px',
+    largeBorderRadius: '32px',
   },
   light: {
     background: 'rgba(255, 255, 255, 1)',
@@ -507,7 +523,10 @@ export const useThemeManager = () => {
     await applyTheme('vintage');
   }, [applyTheme]);
 
-  
+  const switchToCursedBlurTheme = useCallback(async () => {
+    await applyTheme('CursedBlur');
+  }, [applyTheme]);
+
   const switchToPickmeTheme = useCallback(async () => {
     await applyTheme('pickme');
   }, [applyTheme]);
@@ -585,6 +604,7 @@ export const useThemeManager = () => {
     switchToBlurTheme: () => applyThemeWithNotification('blur'),
     switchToAmoledTheme: () => applyThemeWithNotification('amoled'),
     switchToBlessedBlurTheme: () => applyThemeWithNotification('BlessedBlur'),
+    switchToCursedBlurTheme: () => applyThemeWithNotification('CursedBlur'),
     switchToLightTheme: () => applyThemeWithNotification('light'),
     switchToMidnightTheme: () => applyThemeWithNotification('midnight'),
     switchToOceanTheme: () => applyThemeWithNotification('ocean'),
