@@ -21,7 +21,6 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Avatar,
   IconButton,
   Tooltip,
   useTheme,
@@ -41,6 +40,7 @@ import {
   useMediaQuery,
   TableRow,
   TableCell,
+  Avatar,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../context/AuthContext';
@@ -58,6 +58,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PaymentIcon from '@mui/icons-material/Payment';
 import SendIcon from '@mui/icons-material/Send';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
@@ -668,19 +669,41 @@ const BalancePage = () => {
   const [selectedDecoration, setSelectedDecoration] = useState(null);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const [subscriptionPlans, setSubscriptionPlans] = useState({});
-                  const [activeTab, setActiveTab] = useState(0); // 0 - подписки, 1 - декорации, 2 - конвертация, 3 - пополнение
-                  const [availableDecorations, setAvailableDecorations] = useState([]);
-                const [convertAmount, setConvertAmount] = useState(1);
-                const [convertLoading, setConvertLoading] = useState(false);
-                const [depositAmount, setDepositAmount] = useState(100);
-                const [depositLoading, setDepositLoading] = useState(false);
-                const [paymentUrl, setPaymentUrl] = useState('');
-                const [showPaymentLink, setShowPaymentLink] = useState(false);
+  const [activeTab, setActiveTab] = useState(0); // 0 - подписки, 1 - декорации, 2 - конвертация, 3 - подарок
+  const [availableDecorations, setAvailableDecorations] = useState([]);
+  const [convertAmount, setConvertAmount] = useState(1);
+  const [convertLoading, setConvertLoading] = useState(false);
+  const [depositAmount, setDepositAmount] = useState(100);
+  const [subscriptionMonthsModalOpen, setSubscriptionMonthsModalOpen] = useState(false);
+  const [selectedSubscriptionType, setSelectedSubscriptionType] = useState(null);
+  const [selectedMonths, setSelectedMonths] = useState(1);
+  
+   // Состояния для подарка подписки
+   const [giftSubscriptionModalOpen, setGiftSubscriptionModalOpen] = useState(false);
+   const [giftUserSearch, setGiftUserSearch] = useState('');
+   const [giftUserResults, setGiftUserResults] = useState([]);
+   const [selectedGiftUser, setSelectedGiftUser] = useState(null);
+   const [giftSubscriptionType, setGiftSubscriptionType] = useState(null);
+   const [giftMonths, setGiftMonths] = useState(1);
+   const [giftLoading, setGiftLoading] = useState(false);
+   const [giftUserSearchLoading, setGiftUserSearchLoading] = useState(false);
+   const [recipientSubscriptions, setRecipientSubscriptions] = useState({});
+   const [loadingRecipientSubscriptions, setLoadingRecipientSubscriptions] = useState(false);
+  const [depositLoading, setDepositLoading] = useState(false);
+  const [paymentUrl, setPaymentUrl] = useState('');
+  const [showPaymentLink, setShowPaymentLink] = useState(false);
 
   const debounceTimerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
   const [isPointsInfoExpanded, setIsPointsInfoExpanded] = useState(false);
+  
+  // Состояния для истории подарков
+  const [giftHistoryTab, setGiftHistoryTab] = useState(0);
+  const [sentGifts, setSentGifts] = useState([]);
+  const [receivedGifts, setReceivedGifts] = useState([]);
+  const [giftHistoryLoading, setGiftHistoryLoading] = useState(false);
+  
   const { language } = useLanguage();
 
   const allTransactions = React.useMemo(() => {
@@ -1082,6 +1105,14 @@ const BalancePage = () => {
     console.log('Subscription state changed:', subscription);
   }, [subscription]);
 
+  // Загружаем историю подарков при переключении на вкладку "Подарки"
+  useEffect(() => {
+    if (tabValue === 2) {
+      fetchSentGifts();
+      fetchReceivedGifts();
+    }
+  }, [tabValue]);
+
   const fetchUserPoints = async () => {
     try {
       const response = await axios.get('/api/user/points');
@@ -1151,14 +1182,19 @@ const BalancePage = () => {
     });
     
     const requestedPriority = priorities[subscriptionType] || 0;
-    return requestedPriority > maxActivePriority;
+    
+    // Разрешаем покупку если:
+    // 1. Запрашиваемая подписка выше текущей активной
+    // 2. Или это та же подписка (для продления)
+    return requestedPriority >= maxActivePriority;
   };
 
-  const handlePurchaseSubscription = async (subscriptionType) => {
+  const handlePurchaseSubscription = async (subscriptionType, months = 1) => {
     setPurchaseLoading(true);
     try {
       const response = await axios.post('/api/mcoin/purchase-subscription', {
-        subscription_type: subscriptionType
+        subscription_type: subscriptionType,
+        months: months
       });
       
       if (response.data.success) {
@@ -1184,6 +1220,19 @@ const BalancePage = () => {
     } finally {
       setPurchaseLoading(false);
     }
+  };
+
+  // Функция для открытия модалки выбора месяцев
+  const handleOpenSubscriptionMonthsModal = (subscriptionType) => {
+    setSelectedSubscriptionType(subscriptionType);
+    setSelectedMonths(1);
+    setSubscriptionMonthsModalOpen(true);
+  };
+
+  // Функция для подтверждения покупки с выбранными месяцами
+  const handleConfirmSubscriptionPurchase = async () => {
+    setSubscriptionMonthsModalOpen(false);
+    await handlePurchaseSubscription(selectedSubscriptionType, selectedMonths);
   };
 
   const handlePurchaseDecoration = async (decorationId) => {
@@ -1265,6 +1314,123 @@ const BalancePage = () => {
       );
     } finally {
       setConvertLoading(false);
+    }
+  };
+
+  // Функция поиска пользователей для подарка
+  const searchUsers = useCallback((query) => {
+    // Очищаем предыдущий таймер
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Если запрос пустой, сбрасываем результаты
+    if (!query || query.length < 3) {
+      setGiftUserResults([]);
+      setGiftUserSearchLoading(false);
+      return;
+    }
+
+    // Устанавливаем новый таймер
+    debounceTimerRef.current = setTimeout(async () => {
+      setGiftUserSearchLoading(true);
+      
+      try {
+        const response = await axios.get(`/api/user/search-recipients?query=${encodeURIComponent(query)}`);
+        if (response.data && response.data.users) {
+          setGiftUserResults(response.data.users);
+        }
+      } catch (error) {
+        console.error('Ошибка при поиске пользователей:', error);
+        setGiftUserResults([]);
+      } finally {
+        setGiftUserSearchLoading(false);
+      }
+    }, 300); // 300ms debounce
+  }, []);
+
+  // Функция получения подписок получателя
+  const fetchRecipientSubscriptions = async (userId) => {
+    try {
+      setLoadingRecipientSubscriptions(true);
+      // Используем существующий API для получения подписок пользователя
+      const response = await axios.get(`/api/user/${userId}/subscriptions`);
+      if (response.data.success) {
+        // Преобразуем данные в формат, аналогичный subscriptionPlans
+        const userSubscriptions = {};
+        response.data.subscriptions.forEach(sub => {
+          userSubscriptions[sub.subscription_type] = {
+            is_active: sub.is_active,
+            subscription_type: sub.subscription_type,
+            expires_at: sub.expiration_date
+          };
+        });
+        setRecipientSubscriptions(userSubscriptions);
+      }
+    } catch (error) {
+      console.error('Ошибка при получении подписок получателя:', error);
+      setRecipientSubscriptions({});
+    } finally {
+      setLoadingRecipientSubscriptions(false);
+    }
+  };
+
+  // Функция отправки подарка подписки
+  const handleGiftSubscription = async () => {
+    if (!selectedGiftUser || !giftSubscriptionType || giftLoading) return;
+
+    try {
+      setGiftLoading(true);
+
+      const response = await axios.post('/api/mcoin/gift-subscription', {
+        subscription_type: giftSubscriptionType,
+        friend_id: selectedGiftUser.id,
+        months: giftMonths
+      });
+
+      if (response.data.success) {
+        // Обновляем баланс MCoin
+        setMCoinBalance(response.data.new_mcoin_balance);
+        
+        // Обновляем транзакции
+        fetchMCoinTransactions();
+        
+        // Сбрасываем форму
+        setGiftSubscriptionModalOpen(false);
+        setGiftUserSearch('');
+        setGiftUserResults([]);
+        setSelectedGiftUser(null);
+        setGiftSubscriptionType(null);
+        setGiftMonths(1);
+        setGiftUserSearchLoading(false);
+        setRecipientSubscriptions({});
+        setLoadingRecipientSubscriptions(false);
+
+        // Показываем уведомление об успехе
+        window.dispatchEvent(
+          new CustomEvent('show-error', {
+            detail: {
+              message: response.data.message,
+              shortMessage: 'Подарок отправлен',
+              notificationType: 'success',
+              animationType: 'pill',
+            },
+          })
+        );
+      }
+    } catch (error) {
+      console.error('Ошибка при отправке подарка:', error);
+      window.dispatchEvent(
+        new CustomEvent('show-error', {
+          detail: {
+            message: error.response?.data?.error || 'Ошибка при отправке подарка',
+            shortMessage: 'Ошибка',
+            notificationType: 'error',
+          },
+        })
+      );
+    } finally {
+      setGiftLoading(false);
     }
   };
 
@@ -1684,6 +1850,56 @@ const BalancePage = () => {
   };
 
   const weekRange = useMemo(() => getCurrentWeekRange(), [language]);
+
+  // Функции для загрузки истории подарков
+  const fetchSentGifts = async () => {
+    try {
+      setGiftHistoryLoading(true);
+      const response = await axios.get('/api/mcoin/gift-history/sent');
+      if (response.data.success) {
+        // Преобразуем данные для отображения
+        const formattedGifts = response.data.gifts.map(gift => ({
+          subscription_type: gift.subscription_type,
+          recipient_username: gift.recipient.username,
+          recipient: gift.recipient, // Добавляем полный объект получателя
+          months: Math.ceil(gift.days_remaining / 30) || 1, // Примерное количество месяцев
+          gift_date: gift.subscription_date,
+          mcoin_cost: 0, // API не возвращает стоимость, можно добавить в будущем
+          is_active: gift.is_active,
+          days_remaining: gift.days_remaining
+        }));
+        setSentGifts(formattedGifts);
+      }
+    } catch (error) {
+      console.error('Ошибка при загрузке отправленных подарков:', error);
+    } finally {
+      setGiftHistoryLoading(false);
+    }
+  };
+
+  const fetchReceivedGifts = async () => {
+    try {
+      setGiftHistoryLoading(true);
+      const response = await axios.get('/api/mcoin/gift-history/received');
+      if (response.data.success) {
+        // Преобразуем данные для отображения
+        const formattedGifts = response.data.gifts.map(gift => ({
+          subscription_type: gift.subscription_type,
+          sender_username: gift.gifter.username,
+          sender: gift.gifter, // Добавляем полный объект отправителя
+          months: Math.ceil(gift.days_remaining / 30) || 1, // Примерное количество месяцев
+          gift_date: gift.subscription_date,
+          is_active: gift.is_active,
+          days_remaining: gift.days_remaining
+        }));
+        setReceivedGifts(formattedGifts);
+      }
+    } catch (error) {
+      console.error('Ошибка при загрузке полученных подарков:', error);
+    } finally {
+      setGiftHistoryLoading(false);
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -2429,11 +2645,11 @@ const BalancePage = () => {
             iconPosition: 'start',
           },
           {
-            label: t('balance.tabs.subscription'),
+            label: 'Подарки',
             value: 2,
             icon: FlashOnIcon,
             iconPosition: 'start',
-            key: 'subscription-tab',
+            key: 'gifts-tab',
           },
         ]}
       />
@@ -3507,185 +3723,169 @@ const BalancePage = () => {
             padding: '2.5px',
           }}
         >
-          {user && (user.account_type === 'channel' || user.is_channel === true) ? (
-            <Card
-              elevation={3}
-              sx={{
-                backgroundImage: `unset`,
-              }}
-            >
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <DiamondIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography component='div' variant='h6' fontWeight='bold'>
-                    Канал
-                  </Typography>
-                </Box>
-                <Typography component='div' variant='body2' color='text.secondary'>
-                  Это канал. Каналы имеют специкацию акканута. В дальнейшейм тут будет краткий дашборд с информацией о канале.
-                </Typography>
-              </CardContent>
-            </Card>
-          ) : subscription && subscription.active ? (
-            <Paper
-              elevation={0}
-              sx={{
-                p: 3,
-                mb: 4,
-                borderRadius: 'var(--main-border-radius)',
-                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
-        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
-        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
-        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
-                position: 'relative',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '3px',
-                  background: '#D0BCFF',
-                  borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
-                },
-              }}
-            >
-              <Box display='flex' alignItems='center' flexWrap='wrap' gap={2}>
-                <DiamondIcon sx={{ color: '#D0BCFF', fontSize: 28 }} />
-                <Box>
-                  <Typography
-                    variant='h6'
-                    sx={{ fontWeight: 600, color: '#D0BCFF' }}
-                  >
-                    {subscription.type === 'premium'
-                      ? 'Premium'
-                      : subscription.type === 'ultimate'
-                        ? 'Ultimate'
-                        : subscription.type === 'max'
-                          ? 'MAX'
-                          : 'Подписка'}
-                  </Typography>
-                  <Typography variant='body2' color='text.secondary'>
-                    Активна до: {new Date(subscription.expires_at).toLocaleDateString()}
-                  </Typography>
-                </Box>
-                <Chip
-                  label='Активна'
-                  sx={{
-                    ml: 'auto',
-                    backgroundColor: '#D0BCFF',
-                    color: '#fff',
-                    fontWeight: 'bold',
-                  }}
-                />
-              </Box>
-              <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
-              <Typography
-                variant='subtitle2'
-                gutterBottom
-                sx={{ color: '#D0BCFF', fontWeight: 600 }}
-              >
-                Ваши преимущества:
+          <Box sx={{ mb: 3 }}>
+            <Typography variant='h6' gutterBottom sx={{ color: '#D0BCFF', fontWeight: 600 }}>
+              История подарков
+            </Typography>
+            <Typography variant='body2' sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
+              Здесь отображаются все подаренные и полученные подписки
+            </Typography>
+          </Box>
+
+          <StyledTabs
+            value={giftHistoryTab}
+            onChange={(e, newValue) => setGiftHistoryTab(newValue)}
+            tabs={[
+              { value: 0, label: 'Отправленные', icon: SendIcon },
+              { value: 1, label: 'Полученные', icon: ReceiptIcon },
+            ]}
+            fullWidth
+            style={{ marginBottom: '16px' }}
+          />
+
+          {giftHistoryTab === 0 ? (
+            <Box>
+              <Typography variant='h6' gutterBottom sx={{ color: '#D0BCFF', fontWeight: 600, mb: 2 }}>
+                Отправленные подарки
               </Typography>
-              <Grid container spacing={2}>
-                {(() => {
-                  const subscriptionFeatures = {
-                    premium: [
-                      '8 бейджиков',
-                      '8 никнеймов',
-                      'Приоритетная поддержка',
-                      'Установка статуса',
-                      'Цвет профиля',
-                      '3 предмета на профиле',
-                      'X4 к баллам активности',
-                    ],
-                    ultimate: [
-                      'Все преимущества Premium',
-                      'Неограниченные никнеймы',
-                      'Неограниченные бейджики',
-                      'Анимированные бейджики',
-                      'Любой цвет профиля',
-                      'Ультима чат',
-                      'Ультима Канал',
-                      'Новый вид профиля',
-                      'Кастомные Темы',
-                      'Обои в профиле',
-                      'X8 к баллам активности',
-                    ],
-                    max: [
-                      'Все преимущества Ultimate',
-                      '🔥 Эксклюзивный MAX значок',
-                      '🔒 Доступ к закрытым функциям',
-                      '∞ Максимальные лимиты на все',
-                      '🚀 Ранний доступ к новым функциям',
-                      '✨ Специальные анимации профиля',
-                      '🎨 Неограниченные возможности кастомизации',
-                      '🔑 Безлимитное обращение к API',
-                      '💬 Консультации с разработчиками',
-                      '🎁 150,000 баллов в подарок',
-                      'X12 к баллам активности',
-                    ],
-                  };
-                  
-                  const features = subscriptionFeatures[subscription.type?.toLowerCase()];
-                  
-                  return features?.map(
-                    (feature, index) => (
-                      <Grid item xs={12} sm={6} md={4} key={index}>
-                        <Box display='flex' alignItems='center' gap={1}>
-                          <CheckIcon sx={{ color: '#D0BCFF', fontSize: '0.9rem' }} />
-                          <Typography variant='body2'>{feature}</Typography>
-                        </Box>
-                      </Grid>
-                    )
-                  );
-                })()}
-              </Grid>
-            </Paper>
+              {sentGifts.length > 0 ? (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {sentGifts.map((gift, index) => (
+                    <Card key={index} className="theme-card" sx={{ 
+                      p: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2
+                    }}>
+                      <Avatar 
+                        src={gift.recipient?.avatar_url} 
+                        sx={{ 
+                          width: 48, 
+                          height: 48,
+                          border: '2px solid var(--theme-main-color)'
+                        }}
+                      >
+                        {gift.recipient_username?.charAt(0).toUpperCase()}
+                      </Avatar>
+                      
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant='subtitle1' sx={{ 
+                          color: 'var(--theme-text-accent)', 
+                          fontWeight: 600,
+                          lineHeight: 0.75,
+                        }}>
+                          {gift.subscription_type} подписка
+                        </Typography>
+                        <Typography variant='body2' sx={{ 
+                          color: 'var(--theme-text-secondary)',
+                          fontWeight: 500,
+                        }}>
+                          {gift.recipient_username}
+                        </Typography>
+                        <Typography variant='body2' sx={{ 
+                          color: 'var(--theme-text-primary)',
+                          fontSize: '0.8rem'
+                        }}>
+                          {gift.months} мес. • {new Date(gift.gift_date).toLocaleDateString('ru-RU')}
+                          {gift.is_active && (
+                            <span style={{ 
+                              color: 'var(--theme-text-success)', 
+                              marginLeft: '8px',
+                              fontWeight: 500
+                            }}>
+                              • Активна ({gift.days_remaining} дн.)
+                            </span>
+                          )}
+                        </Typography>
+                      </Box>
+                      
+
+                    </Card>
+                  ))}
+                </Box>
+              ) : (
+                <Box sx={{ textAlign: 'center', py: 4 }}>
+                  <Typography variant='body1' sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                    Вы еще не отправляли подарки
+                  </Typography>
+                </Box>
+              )}
+            </Box>
           ) : (
-            <Box
-              sx={{
-                textAlign: 'center',
-                py: 5,
-                px: 3,
-                bgcolor: alpha(theme.palette.background.paper, 0.4),
-                borderRadius: 4,
-              }}
-            >
-              <FlashOnIcon
-                sx={{
-                  fontSize: 60,
-                  color: 'primary.main',
-                  opacity: 0.7,
-                  mb: 2,
-                }}
-              />
-              <Typography component='div' variant='h6' gutterBottom>
-                У вас нет активной подписки
+            <Box>
+              <Typography variant='h6' gutterBottom sx={{ color: '#D0BCFF', fontWeight: 600, mb: 2 }}>
+                Полученные подарки
               </Typography>
-              <Typography
-                component='div'
-                variant='body2'
-                color='text.secondary'
-                sx={{ mb: 3 }}
-              >
-                Активируйте подписку, чтобы получить доступ к расширенным
-                возможностям платформы
-              </Typography>
-              <Button
-                variant='contained'
-                color='primary'
-                onClick={() => {
-                  setOpenKeyDialog(true);
-                  setKeySuccess(null);
-                  setActiveTopupTab(0);
-                }}
-                startIcon={<AddIcon />}
-              >
-                Активировать ключ
-              </Button>
+              {receivedGifts.length > 0 ? (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {receivedGifts.map((gift, index) => (
+                    <Card key={index} className="theme-card" sx={{ 
+                      p: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2
+                    }}>
+                      <Avatar 
+                        src={gift.sender?.avatar_url} 
+                        sx={{ 
+                          width: 48, 
+                          height: 48,
+                          border: '2px solid var(--theme-main-color)'
+                        }}
+                      >
+                        {gift.sender_username?.charAt(0).toUpperCase()}
+                      </Avatar>
+                      
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant='subtitle1' sx={{ 
+                          color: 'var(--theme-text-accent)', 
+                          fontWeight: 600,
+                          lineHeight: 0.75,
+                        }}>
+                          {gift.subscription_type} подписка
+                        </Typography>
+                        <Typography variant='body2' sx={{ 
+                          color: 'var(--theme-text-secondary)',
+                          fontWeight: 500,
+                        }}>
+                          От: {gift.sender_username}
+                        </Typography>
+                        <Typography variant='body2' sx={{ 
+                          color: 'var(--theme-text-primary)',
+                          fontSize: '0.8rem'
+                        }}>
+                          {gift.months} мес. • {new Date(gift.gift_date).toLocaleDateString('ru-RU')}
+                          {gift.is_active && (
+                            <span style={{ 
+                              color: 'var(--theme-text-success)', 
+                              marginLeft: '8px',
+                              fontWeight: 500
+                            }}>
+                              • Активна ({gift.days_remaining} дн.)
+                            </span>
+                          )}
+                        </Typography>
+                      </Box>
+                      
+                      <Box sx={{ textAlign: 'right' }}>
+                        <Typography variant='body2' sx={{ 
+                          color: gift.is_active ? 'var(--theme-text-success)' : 'var(--theme-text-error)', 
+                          fontWeight: 600,
+                          fontSize: '0.9rem'
+                        }}>
+                          {gift.is_active ? 'Активна' : 'Истекла'}
+                        </Typography>
+                      </Box>
+                    </Card>
+                  ))}
+                </Box>
+              ) : (
+                <Box sx={{ textAlign: 'center', py: 4 }}>
+                  <Typography variant='body1' sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                    Вы еще не получали подарки
+                  </Typography>
+                </Box>
+              )}
             </Box>
           )}
         </InfoBlock>
@@ -4492,6 +4692,134 @@ const BalancePage = () => {
         </Box>
       </UniversalModal>
 
+      {/* Модалка выбора месяцев для подписки */}
+      <UniversalModal
+        open={subscriptionMonthsModalOpen}
+        onClose={() => setSubscriptionMonthsModalOpen(false)}
+        title={selectedSubscriptionType && subscriptionPlans[selectedSubscriptionType]?.is_active ? "Продлить подписку" : "Выберите срок подписки"}
+        maxWidth="sm"
+        fullWidth
+      >
+        <Box sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
+            {selectedSubscriptionType && subscriptionPlans[selectedSubscriptionType] && (
+              <>
+                {subscriptionPlans[selectedSubscriptionType].is_active ? 'Продлить' : 'Подписка'} {subscriptionPlans[selectedSubscriptionType].name}
+                <br />
+                <Typography variant="body2" color="text.secondary">
+                  {subscriptionPlans[selectedSubscriptionType].description}
+                </Typography>
+                {subscriptionPlans[selectedSubscriptionType].is_active && subscriptionPlans[selectedSubscriptionType].expires_at && (
+                  <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
+                    Текущая подписка активна до: {new Date(subscriptionPlans[selectedSubscriptionType].expires_at).toLocaleDateString()}
+                  </Typography>
+                )}
+              </>
+            )}
+          </Typography>
+
+          <Typography variant="body1" sx={{ mb: 3, textAlign: 'center' }}>
+            Выберите количество месяцев:
+          </Typography>
+
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3, justifyContent: 'center' }}>
+            {[1, 2, 3, 6, 12].map((months) => {
+              const plan = selectedSubscriptionType && subscriptionPlans[selectedSubscriptionType];
+              if (!plan) return null;
+              
+              const baseCost = plan.price * months;
+              const discount = months > 1 ? 0.15 : 0;
+              const finalCost = Math.floor(baseCost * (1 - discount));
+              const discountAmount = baseCost - finalCost;
+              
+              return (
+                <Box
+                  key={months}
+                  onClick={() => setSelectedMonths(months)}
+                  sx={{
+                    p: 2,
+                    border: selectedMonths === months ? '2px solid #cfbcfb' : '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: 'var(--main-border-radius)',
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    minWidth: 80,
+                    bgcolor: selectedMonths === months ? 'rgba(207, 188, 251, 0.1)' : 'transparent',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      bgcolor: 'rgba(207, 188, 251, 0.05)',
+                    }
+                  }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {months} {months === 1 ? 'месяц' : months < 5 ? 'месяца' : 'месяцев'}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {finalCost} MCoin
+                  </Typography>
+                  {discount > 0 && (
+                    <Typography variant="caption" color="success.main">
+                      -{discountAmount} MCoin (скидка 15%)
+                    </Typography>
+                  )}
+                </Box>
+              );
+            })}
+          </Box>
+
+          {selectedSubscriptionType && subscriptionPlans[selectedSubscriptionType] && (
+            <Box sx={{ 
+              p: 2, 
+              bgcolor: 'rgba(207, 188, 251, 0.1)', 
+              borderRadius: 'var(--main-border-radius)',
+              mb: 3,
+              textAlign: 'center'
+            }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                Итого к оплате:
+              </Typography>
+              <Typography variant="h5" sx={{ fontWeight: 600, color: '#cfbcfb' }}>
+                {(() => {
+                  const plan = subscriptionPlans[selectedSubscriptionType];
+                  const baseCost = plan.price * selectedMonths;
+                  const discount = selectedMonths > 1 ? 0.15 : 0;
+                  return Math.floor(baseCost * (1 - discount));
+                })()} MCoin
+              </Typography>
+              {selectedMonths > 1 && (
+                <Typography variant="caption" color="success.main">
+                  Экономия: {Math.floor(subscriptionPlans[selectedSubscriptionType].price * selectedMonths * 0.15)} MCoin
+                </Typography>
+              )}
+            </Box>
+          )}
+
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+            <Button
+              variant="outlined"
+              onClick={() => setSubscriptionMonthsModalOpen(false)}
+              sx={{ minWidth: 120 }}
+            >
+              Отмена
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleConfirmSubscriptionPurchase}
+              disabled={purchaseLoading || !selectedSubscriptionType}
+              sx={{
+                bgcolor: '#cfbcfb',
+                color: 'white',
+                minWidth: 120,
+                '&:hover': {
+                  bgcolor: '#b8a8f0',
+                }
+              }}
+            >
+              {purchaseLoading ? <CircularProgress size={20} color="inherit" /> : (selectedSubscriptionType && subscriptionPlans[selectedSubscriptionType]?.is_active ? 'Продлить' : 'Оплатить')}
+            </Button>
+          </Box>
+        </Box>
+      </UniversalModal>
+
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -4548,6 +4876,7 @@ const BalancePage = () => {
               <Tab label="Подписки" />
               <Tab label="Декорации" />
               <Tab label="Конвертация" />
+              <Tab label="Подарить" />
             </Tabs>
           </Box>
 
@@ -4575,11 +4904,11 @@ const BalancePage = () => {
                       backgroundColor: '#1e1e1e',
                       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                       transition: 'all 0.3s ease',
-                      cursor: plan.is_active || !isSubscriptionAvailable(type) ? 'default' : 'pointer',
-                      opacity: plan.is_active || !isSubscriptionAvailable(type) ? 0.6 : 1,
+                      cursor: !isSubscriptionAvailable(type) ? 'default' : 'pointer',
+                      opacity: !isSubscriptionAvailable(type) ? 0.6 : 1,
                       position: 'relative',
                       overflow: 'hidden',
-                      '&:hover': plan.is_active || !isSubscriptionAvailable(type) ? {} : {
+                      '&:hover': !isSubscriptionAvailable(type) ? {} : {
                         transform: 'translateY(-3px)',
                         boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
                       },
@@ -4648,21 +4977,7 @@ const BalancePage = () => {
 
                     {/* Статус покупки */}
                     <Box sx={{ marginLeft: 'auto' }}>
-                      {plan.is_active ? (
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 1,
-                            color: '#4caf50',
-                          }}
-                        >
-                          <CheckCircleIcon sx={{ fontSize: 20 }} />
-                          <Typography variant='body2' sx={{ fontWeight: 500 }}>
-                            Активна
-                          </Typography>
-                        </Box>
-                      ) : !isSubscriptionAvailable(type) ? (
+                      {!isSubscriptionAvailable(type) ? (
                         <Box
                           sx={{
                             display: 'flex',
@@ -4680,7 +4995,7 @@ const BalancePage = () => {
                           variant="contained"
                           size="small"
                           disabled={purchaseLoading || mcoinBalance < plan.price}
-                          onClick={() => handlePurchaseSubscription(type)}
+                          onClick={() => handleOpenSubscriptionMonthsModal(type)}
                           sx={{
                             bgcolor: type === 'max' ? '#FF4D50' : '#cfbcfb',
                             color: 'white',
@@ -4701,7 +5016,7 @@ const BalancePage = () => {
                           {purchaseLoading ? (
                             <CircularProgress size={16} color="inherit" />
                           ) : (
-                            'Купить'
+                            plan.is_active ? 'Продлить' : 'Купить'
                           )}
                         </Button>
                       )}
@@ -5019,6 +5334,318 @@ const BalancePage = () => {
             </Box>
           )}
 
+          {/* Таб Подарить */}
+          {activeTab === 3 && (
+            <Box>
+              <Typography
+                component='div'
+                variant='body1'
+                color='text.secondary'
+                sx={{ mb: 3, textAlign: 'center' }}
+              >
+                Подарите подписку другу
+              </Typography>
+
+
+                {/* Поиск пользователя */}
+                  <Box sx={{ width: '100%', maxWidth: 400 }}>
+                    <Typography variant="h6" sx={{ mb: 2, textAlign: 'center', color: '#cfbcfb' }}>
+                      Найдите пользователя
+                    </Typography>
+                    
+                    <TextField
+                      fullWidth
+                      label="Введите username пользователя"
+                      value={giftUserSearch}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setGiftUserSearch(value);
+                        searchUsers(value);
+                      }}
+                      variant="outlined"
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          color: 'rgba(255, 255, 255, 0.87)',
+                          '& fieldset': {
+                            borderColor: 'rgba(255, 255, 255, 0.23)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(255, 255, 255, 0.4)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#cfbcfb',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'rgba(255, 255, 255, 0.6)',
+                          '&.Mui-focused': {
+                            color: '#cfbcfb',
+                          },
+                        },
+                      }}
+                    />
+
+                    {/* Результаты поиска */}
+                    {giftUserSearchLoading && (
+                      <Box sx={{ mt: 2, textAlign: 'center', p: 2 }}>
+                        <CircularProgress size={20} />
+                        <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+                          Поиск пользователей...
+                        </Typography>
+                      </Box>
+                    )}
+                    
+                    {giftUserResults.length > 0 && !giftUserSearchLoading && (
+                      <Box sx={{ mt: 2, maxHeight: 200, overflowY: 'auto' }}>
+                        {giftUserResults.map((user) => (
+                          <Box
+                            key={user.id}
+                            onClick={() => {
+                              setSelectedGiftUser(user);
+                              setGiftUserSearch(user.username);
+                              setGiftUserResults([]);
+                              // Загружаем подписки получателя
+                              fetchRecipientSubscriptions(user.id);
+                            }}
+                            sx={{
+                              p: 2,
+                              border: '1px solid rgba(255, 255, 255, 0.2)',
+                              borderRadius: 'var(--main-border-radius)',
+                              cursor: 'pointer',
+                              mb: 1,
+                              transition: 'all 0.2s ease',
+                              '&:hover': {
+                                bgcolor: 'rgba(207, 188, 251, 0.1)',
+                              }
+                            }}
+                          >
+                            <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                              @{user.username}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {user.first_name} {user.last_name}
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    )}
+                    
+                    {giftUserSearch.length >= 3 && giftUserResults.length === 0 && !giftUserSearchLoading && !selectedGiftUser && (
+                      <Box sx={{ mt: 2, textAlign: 'center', p: 2 }}>
+                        <Typography variant="body2" color="text.secondary">
+                          Пользователи не найдены
+                        </Typography>
+                      </Box>
+                    )}
+
+                    {/* Выбранный пользователь */}
+                    {selectedGiftUser && (
+                      <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(207, 188, 251, 0.1)', borderRadius: 'var(--main-border-radius)' }}>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                          Выбран: @{selectedGiftUser.username}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {selectedGiftUser.first_name} {selectedGiftUser.last_name}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+
+                {/* Выбор подписки для подарка */}
+                {selectedGiftUser && (
+                  <Box sx={{ width: '100%', maxWidth: 400 }}>
+                    <Typography variant="h6" sx={{ mb: 2, textAlign: 'center', color: '#cfbcfb' }}>
+                      Выберите подписку для подарка
+                    </Typography>
+                    
+                    {loadingRecipientSubscriptions ? (
+                      <Box sx={{ textAlign: 'center', p: 2 }}>
+                        <CircularProgress size={20} />
+                        <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+                          Загрузка подписок получателя...
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        {Object.entries(subscriptionPlans).map(([type, plan]) => {
+                          // Определяем приоритеты подписок
+                          const subscriptionPriorities = {
+                            'premium': 1,
+                            'ultimate': 2,
+                            'max': 3
+                          };
+                          
+                          // Находим максимальную активную подписку получателя
+                          let maxRecipientPriority = 0;
+                          Object.entries(recipientSubscriptions).forEach(([subType, subData]) => {
+                            if (subData.is_active) {
+                              maxRecipientPriority = Math.max(maxRecipientPriority, subscriptionPriorities[subType] || 0);
+                            }
+                          });
+                          
+                          const requestedPriority = subscriptionPriorities[type] || 0;
+                          
+                          // Можно дарить если:
+                          // 1. У получателя нет активных подписок
+                          // 2. Запрашиваемая подписка выше или равна максимальной активной
+                          const canGift = maxRecipientPriority === 0 || requestedPriority >= maxRecipientPriority;
+                          
+                          // Проверяем, есть ли у получателя именно эта подписка
+                          const recipientHasThisType = recipientSubscriptions[type]?.is_active;
+                          
+                          return (
+                            <Box
+                              key={type}
+                              onClick={() => canGift && setGiftSubscriptionType(type)}
+                              sx={{
+                                p: 2,
+                                border: giftSubscriptionType === type ? '2px solid #cfbcfb' : '1px solid rgba(255, 255, 255, 0.2)',
+                                borderRadius: 'var(--main-border-radius)',
+                                cursor: canGift ? 'pointer' : 'not-allowed',
+                                bgcolor: giftSubscriptionType === type ? 'rgba(207, 188, 251, 0.1)' : 'transparent',
+                                opacity: canGift ? 1 : 0.5,
+                                transition: 'all 0.2s ease',
+                                '&:hover': canGift ? {
+                                  bgcolor: 'rgba(207, 188, 251, 0.05)',
+                                } : {}
+                              }}
+                            >
+                              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                {plan.name}
+                                {recipientHasThisType && (
+                                  <Typography component="span" variant="caption" sx={{ ml: 1, color: 'success.main' }}>
+                                    (у получателя уже есть - будет продление)
+                                  </Typography>
+                                )}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {plan.description}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#cfbcfb', mt: 1 }}>
+                                {plan.price} MCoin/месяц
+                              </Typography>
+                              {!canGift && (
+                                <Typography variant="caption" color="error.main">
+                                  Нельзя подарить подписку ниже текущей
+                                </Typography>
+                              )}
+                            </Box>
+                          );
+                        })}
+                      </Box>
+                    )}
+                  </Box>
+                )}
+
+                {/* Выбор срока подарка */}
+                {selectedGiftUser && giftSubscriptionType && (
+                  <Box sx={{ width: '100%', maxWidth: 400 }}>
+                    <Typography variant="h6" sx={{ mb: 2, textAlign: 'center', color: '#cfbcfb' }}>
+                      Выберите срок подарка
+                    </Typography>
+                    
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'center' }}>
+                      {[1, 2, 3, 6, 12].map((months) => {
+                        const plan = subscriptionPlans[giftSubscriptionType];
+                        if (!plan) return null;
+                        
+                        const baseCost = plan.price * months;
+                        const discount = months > 1 ? 0.15 : 0;
+                        const finalCost = Math.floor(baseCost * (1 - discount));
+                        
+                        return (
+                          <Box
+                            key={months}
+                            onClick={() => setGiftMonths(months)}
+                            sx={{
+                              p: 2,
+                              border: giftMonths === months ? '2px solid #cfbcfb' : '1px solid rgba(255, 255, 255, 0.2)',
+                              borderRadius: 'var(--main-border-radius)',
+                              cursor: 'pointer',
+                              textAlign: 'center',
+                              minWidth: 80,
+                              bgcolor: giftMonths === months ? 'rgba(207, 188, 251, 0.1)' : 'transparent',
+                              transition: 'all 0.2s ease',
+                              '&:hover': {
+                                bgcolor: 'rgba(207, 188, 251, 0.05)',
+                              }
+                            }}
+                          >
+                            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                              {months} {months === 1 ? 'месяц' : months < 5 ? 'месяца' : 'месяцев'}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {finalCost} MCoin
+                            </Typography>
+                            {discount > 0 && (
+                              <Typography variant="caption" color="success.main">
+                                -{Math.floor(baseCost * discount)} MCoin (скидка 15%)
+                              </Typography>
+                            )}
+                          </Box>
+                        );
+                      })}
+                    </Box>
+
+                    {/* Итоговая информация */}
+                    {giftSubscriptionType && selectedGiftUser && (
+                      <Box sx={{ 
+                        p: 2, 
+                        bgcolor: 'rgba(207, 188, 251, 0.1)', 
+                        borderRadius: 'var(--main-border-radius)',
+                        mt: 2,
+                        textAlign: 'center'
+                      }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Подарок для: @{selectedGiftUser.username}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Подписка: {subscriptionPlans[giftSubscriptionType].name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Срок: {giftMonths} {giftMonths === 1 ? 'месяц' : giftMonths < 5 ? 'месяца' : 'месяцев'}
+                        </Typography>
+                        <Typography variant="h6" sx={{ color: '#cfbcfb' }}>
+                          Итого: {Math.floor(subscriptionPlans[giftSubscriptionType].price * giftMonths * (giftMonths > 1 ? 0.85 : 1))} MCoin
+                        </Typography>
+                      </Box>
+                    )}
+
+                    {/* Кнопка отправки подарка */}
+                    {selectedGiftUser && giftSubscriptionType && (
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        disabled={giftLoading || mcoinBalance < Math.floor(subscriptionPlans[giftSubscriptionType].price * giftMonths * (giftMonths > 1 ? 0.85 : 1))}
+                        onClick={handleGiftSubscription}
+                        sx={{
+                          bgcolor: '#cfbcfb',
+                          color: 'white',
+                          fontWeight: 600,
+                          textTransform: 'none',
+                          py: 1.5,
+                          borderRadius: 'var(--small-border-radius)',
+                          mt: 2,
+                          '&:hover': {
+                            bgcolor: '#cfbcfb',
+                          },
+                          '&:disabled': {
+                            bgcolor: 'rgba(207, 188, 251, 0.3)',
+                            color: 'rgba(255, 255, 255, 0.5)',
+                          },
+                        }}
+                      >
+                        {giftLoading ? (
+                          <CircularProgress size={20} color="inherit" />
+                        ) : (
+                          `Подарить подписку за ${Math.floor(subscriptionPlans[giftSubscriptionType].price * giftMonths * (giftMonths > 1 ? 0.85 : 1))} MCoin`
+                        )}
+                      </Button>
+                    )}
+                  </Box>
+                )}
+            </Box>
+          )}
 
         </Box>
       </UniversalModal>

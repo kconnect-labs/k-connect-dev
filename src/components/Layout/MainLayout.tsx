@@ -14,6 +14,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { ThemeSettingsContext } from '../../App';
+import { useClientSettings } from '../../context/ClientSettingsContext';
 import { DesktopPlayer } from '../Music';
 import { useMusic } from '../../context/MusicContext';
 import AppBottomNavigation from '../BottomNavigation';
@@ -217,9 +218,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const location = useLocation();
   const { currentTrack } = useMusic() as MusicContextType;
   
+  // Получаем настройки клиента
+  const { settings: clientSettings } = useClientSettings();
+  
   // Состояние для версии MainLayout
   const [layoutVersion, setLayoutVersion] = useState(
-    () => localStorage.getItem('mainLayoutVersion') || 'v1'
+    () => clientSettings.sidebar_version || 'v1'
   );
 
   const sidebarWidth = 280;
@@ -323,6 +327,18 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       handleLayoutVersionChange as EventListener
     );
 
+    // Слушатель для изменения версии сайдбара из настроек клиента
+    const handleSidebarVersionChange = (event: CustomEvent) => {
+      const newVersion = event.detail.version;
+      setLayoutVersion(newVersion);
+      localStorage.setItem('mainLayoutVersion', newVersion);
+    };
+
+    document.addEventListener(
+      'sidebarVersionChanged',
+      handleSidebarVersionChange as EventListener
+    );
+
     return () => {
       document.removeEventListener(
         'messenger-layout-change',
@@ -332,8 +348,20 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         'layoutVersionChanged',
         handleLayoutVersionChange as EventListener
       );
+      document.removeEventListener(
+        'sidebarVersionChanged',
+        handleSidebarVersionChange as EventListener
+      );
     };
   }, []);
+
+  // Синхронизируем версию сайдбара с настройками клиента
+  useEffect(() => {
+    if (clientSettings.sidebar_version && clientSettings.sidebar_version !== layoutVersion) {
+      setLayoutVersion(clientSettings.sidebar_version);
+      localStorage.setItem('mainLayoutVersion', clientSettings.sidebar_version);
+    }
+  }, [clientSettings.sidebar_version, layoutVersion]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);

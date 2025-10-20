@@ -541,10 +541,11 @@ body.no-blur .theme-menu,
 
 /* Классы для карточек */
 .theme-card {
-  background: var(--theme-background);
-  backdrop-filter: var(--theme-backdrop-filter);
-  border-radius: var(--main-border-radius);
-  border: 1px solid rgba(66, 66, 66, 0.5);
+  background: var(--theme-background) !important;
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  border-radius: var(--main-border-radius) !important;
+  box-shadow:0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset !important;
 }
 
 

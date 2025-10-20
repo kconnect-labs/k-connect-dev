@@ -44,6 +44,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1; /* Добавляем flex: 1 для равномерного распределения */
 }
 
 [data-theme="BlessedBlur"] .styled-tab:hover,
@@ -66,6 +67,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1; /* Добавляем flex: 1 для равномерного распределения */
 }
 
 [data-theme="BlessedBlur"] .styled-tab-content,

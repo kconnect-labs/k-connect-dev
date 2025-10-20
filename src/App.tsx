@@ -15,6 +15,7 @@ import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider, AuthContext } from './context/AuthContext.js';
 import { MusicProvider } from './context/MusicContext';
+import { ClientSettingsProvider, useClientSettings } from './context/ClientSettingsContext';
 
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -160,10 +161,10 @@ const AppProviders: React.FC<AppProvidersProps> = ({ children, themeContextValue
   </HelmetProvider>
 );
 
-function App() {
-  // Убрали неиспользуемые useTransition и isAppLoading
-
+// Компонент для работы с настройками клиента
+const AppContent: React.FC = () => {
   const { isInitialized: isThemeInitialized, currentTheme } = useThemeManager();
+  const { settings: clientSettings } = useClientSettings();
 
   const authContext = useContext(AuthContext);
   const { isAuthenticated = false, loading = false, user: currentUser } = authContext || {};
@@ -271,7 +272,7 @@ function App() {
     }
   };
 
-  const setGlobalProfileBackgroundEnabled = (enabled: boolean) => {
+  const setGlobalProfileBackgroundEnabled = async (enabled: boolean) => {
     if (globalProfileBackgroundEnabled !== enabled) {
       setGlobalProfileBackgroundEnabledState(enabled);
 
@@ -387,6 +388,26 @@ function App() {
     localStorage.setItem('themeMode', themeSettings.mode);
   }, [themeSettings.mode]);
 
+  // Синхронизируем настройки клиента с глобальным фоном профиля
+  useEffect(() => {
+    if (clientSettings) {
+      // Устанавливаем настройку глобального фона профиля
+      setGlobalProfileBackgroundEnabled(clientSettings.global_profile_bg);
+      
+      // Если глобальные обои включены и есть URL фона, устанавливаем его
+      if (clientSettings.global_profile_bg && clientSettings.background_url) {
+        saveUserBackground(clientSettings.background_url);
+        setProfileBackground(clientSettings.background_url);
+      }
+      
+      // Отправляем событие для обновления сайдбара
+      const event = new CustomEvent('sidebarPlayerToggled', { 
+        detail: { enabled: clientSettings.player_sidebar === 1 } 
+      });
+      document.dispatchEvent(event);
+    }
+  }, [clientSettings]);
+
   useEffect(() => {
     if (isInitialized.current) return; 
 
@@ -464,36 +485,6 @@ function App() {
         }));
       }
 
-      
-      try {
-        const bgResponse = await axios.get(
-          '/api/user/settings/global-profile-bg'
-        );
-
-        if (bgResponse.data && bgResponse.data.success) {
-          setGlobalProfileBackgroundEnabled(bgResponse.data.enabled);
-
-          
-          if (bgResponse.data.background_url) {
-            if (bgResponse.data.enabled) {
-              
-              saveUserBackground(bgResponse.data.background_url);
-              setProfileBackground(bgResponse.data.background_url);
-            } else {
-              
-              const savedBg = localStorage.getItem('myProfileBackgroundUrl');
-              if (savedBg) {
-                localStorage.removeItem('myProfileBackgroundUrl');
-                document.cookie =
-                  'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
-              }
-              clearProfileBackground();
-            }
-          }
-        }
-      } catch (error) {
-        
-      }
     };
 
     
@@ -663,6 +654,15 @@ function App() {
         </Suspense>
       </ErrorBoundary>
     </AppProviders>
+  );
+};
+
+// Основной компонент App
+function App() {
+  return (
+    <ClientSettingsProvider>
+      <AppContent />
+    </ClientSettingsProvider>
   );
 }
 

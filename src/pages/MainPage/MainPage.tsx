@@ -13,6 +13,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { usePostActions } from '../User/ProfilePage/hooks/usePostActions';
 import StyledTabs from '../../UIKIT/StyledTabs';
 import { Post } from '../../components/Post';
+import { useClientSettings } from '../../context/ClientSettingsContext';
 
 import PostSkeleton from '../../components/Post/PostSkeleton';
 import CreatePost from '../../components/CreatePost/CreatePost';
@@ -36,6 +37,9 @@ const MainPage: React.FC = React.memo(() => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const { handlePostCreated } = usePostActions();
+
+  // Получаем настройки клиента из контекста
+  const { settings: clientSettings } = useClientSettings();
 
   const {
     // State
@@ -82,6 +86,7 @@ const MainPage: React.FC = React.memo(() => {
     setRequestId,
     loadMorePosts,
   });
+
 
   // Intersection Observer для бесконечной прокрутки
   useEffect(() => {
@@ -221,12 +226,13 @@ const MainPage: React.FC = React.memo(() => {
             recommendations={recommendations}
             loadingRecommendations={loadingRecommendations}
           />
-          {(!window.document.documentElement.dataset.theme ||
+          {clientSettings.ads === 1 && 
+           (!window.document.documentElement.dataset.theme ||
             window.document.documentElement.dataset.theme !== "CursedBlur") && (
             <TelegramSubscribeBlock />
           )}
 
-          {latestUpdate && (
+          {latestUpdate && clientSettings.update === 1 && (
             <Box
               sx={{
                 mb: 2,

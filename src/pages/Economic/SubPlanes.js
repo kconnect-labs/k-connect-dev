@@ -75,7 +75,7 @@ const PopularBadge = styled(Chip)(({ theme }) => ({
   top: theme.spacing(1.5),
   right: theme.spacing(1.5),
   backgroundColor: '#D0BCFF',
-  color: '#fff',
+  color: '#000',
   fontWeight: 'bold',
   fontSize: '0.7rem',
   borderRadius: 'var(--small-border-radius)',
@@ -139,9 +139,9 @@ const SubPlanes = () => {
   };
 
   const subscriptionPrices = {
-    premium: '99₽',
-    ultimate: '199₽',
-    max: '399₽',
+    premium: 'Free',
+    ultimate: '99₽',
+    max: '199₽',
   };
 
   const subscriptionDescriptions = {
@@ -379,7 +379,7 @@ const SubPlanes = () => {
           {/* Ultimate */}
           <Grid item xs={12} sm={6} md={4}>
             <SubscriptionCard type='ultimate'>
-              <PopularBadge label='Популярный' />
+              <PopularBadge label='Дешевле всех' />
               <Box
                 sx={{
                   p: 2.5,
@@ -465,7 +465,7 @@ const SubPlanes = () => {
               }}
             >
               <PopularBadge 
-                label='Эксклюзив' 
+                label='Максимум возможностей' 
                 sx={{
                   backgroundColor: '#FF4D50',
                   color: '#fff',

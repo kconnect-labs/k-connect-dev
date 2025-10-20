@@ -6,6 +6,7 @@ import axios from 'axios';
 import SidebarNavigation from './SidebarNavigation';
 import SidebarFooter from './SidebarFooter';
 import MiniPlayer from './MiniPlayer';
+import { useClientSettings } from '../../../context/ClientSettingsContext';
 import './Sidebar.css';
 
 const areEqual = (prevProps, nextProps) => {
@@ -20,6 +21,11 @@ const Sidebar = memo(({ isMobile }) => {
   const { user } = useContext(AuthContext);
   const { themeSettings } = useContext(ThemeSettingsContext);
   const [isModeratorUser, setIsModeratorUser] = useState(false);
+  // Получаем настройки клиента из контекста
+  const { settings: clientSettings } = useClientSettings();
+  const [sidebarPlayerEnabled, setSidebarPlayerEnabled] = useState(
+    () => clientSettings.player_sidebar === 1
+  );
 
   const themeValues = useMemo(() => {
     const primaryColor = themeSettings.primaryColor || '#D0BCFF';
@@ -40,6 +46,24 @@ const Sidebar = memo(({ isMobile }) => {
       checkModeratorStatus();
     }
   }, [user]);
+
+  // Слушаем событие переключения плеера
+  useEffect(() => {
+    const handleSidebarPlayerToggle = (event) => {
+      setSidebarPlayerEnabled(event.detail.enabled);
+    };
+
+    document.addEventListener('sidebarPlayerToggled', handleSidebarPlayerToggle);
+    
+    return () => {
+      document.removeEventListener('sidebarPlayerToggled', handleSidebarPlayerToggle);
+    };
+  }, []);
+
+  // Синхронизируем с контекстом
+  useEffect(() => {
+    setSidebarPlayerEnabled(clientSettings.player_sidebar === 1);
+  }, [clientSettings]);
 
   const [lastModeratorCheck, setLastModeratorCheck] = useState(0);
 
@@ -93,7 +117,7 @@ const Sidebar = memo(({ isMobile }) => {
         </div>
       </SidebarProvider>
 
-      <MiniPlayer />
+      {sidebarPlayerEnabled && <MiniPlayer />}
     </div>
   );
 }, areEqual);

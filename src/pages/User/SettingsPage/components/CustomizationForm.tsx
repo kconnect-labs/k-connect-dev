@@ -35,6 +35,7 @@ import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import ProfileKonnectModal from './ProfileKonnectModal';
 import { ThemeSettingsContext } from '../../../../App';
+import { useClientSettings } from '../../../../context/ClientSettingsContext';
 
 // Компонент для отображения декорации
 const DecorationItem = styled('img')(
@@ -163,9 +164,22 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     message: string;
   } | null>(null);
   
-  // Состояние для версии MainLayout
-  const [layoutVersion, setLayoutVersion] = useState(
-    () => localStorage.getItem('mainLayoutVersion') || 'v1'
+  
+  // Получаем настройки клиента из контекста
+  const { settings: clientSettings, updateSetting } = useClientSettings();
+  
+  // Локальные состояния для UI
+  const [sidebarPlayerEnabled, setSidebarPlayerEnabled] = useState(
+    () => clientSettings.player_sidebar === 1
+  );
+  const [adsEnabled, setAdsEnabled] = useState(
+    () => clientSettings.ads === 1
+  );
+  const [updateEnabled, setUpdateEnabled] = useState(
+    () => clientSettings.update === 1
+  );
+  const [sidebarVersion, setSidebarVersion] = useState(
+    () => clientSettings.sidebar_version || 'v1'
   );
   
 
@@ -187,6 +201,14 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     );
   }, [profileData, subscription]);
 
+  // Синхронизируем локальные состояния с контекстом
+  useEffect(() => {
+    setSidebarPlayerEnabled(clientSettings.player_sidebar === 1);
+    setAdsEnabled(clientSettings.ads === 1);
+    setUpdateEnabled(clientSettings.update === 1);
+    setSidebarVersion(clientSettings.sidebar_version || 'v1');
+  }, [clientSettings]);
+
   // Функция для показа уведомлений
   const showNotification = (type: 'success' | 'error', message: string) => {
     setNotification({ type, message });
@@ -204,21 +226,101 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
   };
 
   // Обработчик смены версии MainLayout
-  const handleLayoutVersionChange = (version: string) => {
-    console.log('Changing layout version to:', version);
-    setLayoutVersion(version);
-    localStorage.setItem('mainLayoutVersion', version);
+
+  // Обработчик переключения плеера в сайдбаре
+  const handleSidebarPlayerToggle = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const enabled = event.target.checked;
+    setSidebarPlayerEnabled(enabled);
     
-    // Отправляем событие для обновления MainLayout
-    const event = new CustomEvent('layoutVersionChanged', { 
-      detail: { version } 
-    });
-    document.dispatchEvent(event);
-    
-    console.log('Event dispatched:', event);
-    showNotification('success', `Версия изменена на ${version.toUpperCase()}`);
+    try {
+      // Обновляем настройку через контекст
+      const success = await updateSetting('player_sidebar', enabled ? 1 : 0);
+      
+      if (success) {
+        showNotification('success', `Плеер в сайдбаре ${enabled ? 'включен' : 'выключен'}`);
+      } else {
+        showNotification('error', 'Ошибка при обновлении настройки');
+      }
+    } catch (error) {
+      console.error('Error updating sidebar player setting:', error);
+      showNotification('error', 'Ошибка при обновлении настройки');
+    }
   };
 
+  // Обработчик переключения рекламы
+  const handleAdsToggle = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Проверяем подписку
+    if (!(subscription?.type === 'ultimate' || subscription?.type === 'max' || subscription?.type === 'pick-me')) {
+      showNotification('error', 'Для изменения настройки рекламы необходима подписка Ultimate или выше');
+      return;
+    }
+
+    const enabled = event.target.checked;
+    setAdsEnabled(enabled);
+    
+    try {
+      const success = await updateSetting('ads', enabled ? 1 : 0);
+      if (success) {
+        showNotification('success', `Реклама ${enabled ? 'включена' : 'отключена'}`);
+      } else {
+        showNotification('error', 'Ошибка при обновлении настройки рекламы');
+      }
+    } catch (error) {
+      console.error('Error updating ads setting:', error);
+      showNotification('error', 'Ошибка при обновлении настройки рекламы');
+    }
+  };
+
+  // Обработчик переключения обновлений
+  const handleUpdateToggle = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Проверяем подписку
+    if (!(subscription?.type === 'ultimate' || subscription?.type === 'max' || subscription?.type === 'pick-me')) {
+      showNotification('error', 'Для изменения настройки обновлений необходима подписка Ultimate или выше');
+      return;
+    }
+
+    const enabled = event.target.checked;
+    setUpdateEnabled(enabled);
+    
+    try {
+      const success = await updateSetting('update', enabled ? 1 : 0);
+      if (success) {
+        showNotification('success', `Обновления ${enabled ? 'включены' : 'отключены'}`);
+      } else {
+        showNotification('error', 'Ошибка при обновлении настройки обновлений');
+      }
+    } catch (error) {
+      console.error('Error updating update setting:', error);
+      showNotification('error', 'Ошибка при обновлении настройки обновлений');
+    }
+  };
+
+  // Обработчик изменения версии сайдбара
+  const handleSidebarVersionChange = async (event: React.MouseEvent<HTMLElement> | null, newVersion: string | null) => {
+    if (!newVersion) return;
+    
+    console.log('CustomizationForm: Changing sidebar version to:', newVersion);
+    console.log('CustomizationForm: Current clientSettings:', clientSettings);
+    setSidebarVersion(newVersion);
+    
+    try {
+      console.log('CustomizationForm: Calling updateSetting for sidebar_version:', newVersion);
+      console.log('CustomizationForm: updateSetting function:', typeof updateSetting);
+      const success = await updateSetting('sidebar_version', newVersion);
+      console.log('CustomizationForm: Update result:', success);
+      
+      if (success) {
+        showNotification('success', `Версия сайдбара изменена на ${newVersion.toUpperCase()}`);
+        console.log('CustomizationForm: Sidebar version updated successfully');
+      } else {
+        showNotification('error', 'Ошибка при обновлении версии сайдбара');
+        console.log('CustomizationForm: Failed to update sidebar version');
+      }
+    } catch (error) {
+      console.error('CustomizationForm: Error updating sidebar version:', error);
+      showNotification('error', 'Ошибка при обновлении версии сайдбара');
+    }
+  };
 
   const fetchUserDecorations = async () => {
     setLoadingDecorations(true);
@@ -332,9 +434,12 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
   ) => {
     const enabled = event.target.checked;
     try {
-      await axios.post('/api/user/settings/global-profile-bg', { enabled });
-      setGlobalProfileBackgroundEnabled(enabled);
-      if (onSuccess) onSuccess();
+      // Обновляем настройку через контекст
+      const success = await updateSetting('global_profile_bg', enabled);
+      if (success) {
+        setGlobalProfileBackgroundEnabled(enabled);
+        if (onSuccess) onSuccess();
+      }
     } catch (error) {
       console.error('Error saving global background setting:', error);
     }
@@ -387,10 +492,10 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         // Если глобальные обои включены, выключаем их
         if (globalProfileBackgroundEnabled) {
           try {
-            await axios.post('/api/user/settings/global-profile-bg', {
-              enabled: false,
-            });
-            setGlobalProfileBackgroundEnabled(false);
+            const success = await updateSetting('global_profile_bg', false);
+            if (success) {
+              setGlobalProfileBackgroundEnabled(false);
+            }
           } catch (error) {
             console.error('Error disabling global background:', error);
           }
@@ -547,7 +652,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           <Typography
             variant='body2'
-            sx={{ minWidth: 120, color: 'text.secondary' }}
+            sx={{  color: 'text.secondary' }}
           >
             Цвет профиля
           </Typography>
@@ -590,7 +695,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           <Typography
             variant='body2'
-            sx={{ minWidth: 120, color: 'text.secondary' }}
+            sx={{  color: 'text.secondary' }}
           >
             Hex код
           </Typography>
@@ -648,27 +753,225 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
           Выберите версию сайдбара приложения
         </Typography>
 
-        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-          <Button
-            variant={layoutVersion === 'v1' ? 'contained' : 'outlined'}
-            onClick={() => handleLayoutVersionChange('v1')}
-            sx={{ borderRadius: 'var(--main-border-radius)' }}
+        <Box sx={{ display: 'flex', gap: 1, mb: 2, justifyContent:'center'}}>
+          <Box
+            onClick={() => handleSidebarVersionChange(null, sidebarVersion === 'v1' ? 'v2' : 'v1')}
+            sx={{
+              display: 'flex',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '25px',
+              padding: '4px',
+              cursor: 'pointer',
+              minWidth: 200,
+              position: 'relative',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+              }
+            }}
           >
-            Большой
-          </Button>
-          <Button
-            variant={layoutVersion === 'v2' ? 'contained' : 'outlined'}
-            onClick={() => handleLayoutVersionChange('v2')}
-            sx={{ borderRadius: 'var(--main-border-radius)' }}
-          >
-            Минималистный 
-          </Button>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '4px',
+                left: sidebarVersion === 'v1' ? '4px' : '50%',
+                width: 'calc(50% - 4px)',
+                height: 'calc(100% - 8px)',
+                backgroundColor: 'primary.main',
+                borderRadius: '20px',
+                transition: 'left 0.3s ease',
+                
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+              }}
+            />
+            <Box
+              sx={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '8px 16px',
+                position: 'relative',
+                zIndex: 1,
+                color: sidebarVersion === 'v1' ? 'white' : 'text.secondary',
+                fontWeight: sidebarVersion === 'v1' ? 600 : 400,
+                fontSize: '14px',
+                transition: 'color 0.3s ease',
+              }}
+            >
+              V1
+            </Box>
+            <Box
+              sx={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '8px 16px',
+                position: 'relative',
+                zIndex: 1,
+                color: sidebarVersion === 'v2' ? 'white' : 'text.secondary',
+                fontWeight: sidebarVersion === 'v2' ? 600 : 400,
+                fontSize: '14px',
+                transition: 'color 0.3s ease',
+              }}
+            >
+              V2
+            </Box>
+          </Box>
         </Box>
 
         <Typography variant='caption' sx={{ color: 'text.secondary' }}>
-          Большой - текущая версия макета. Минималистный - новая версия (в разработке)
+          V1 - текущая версия макета. V2 - новая версия (в разработке)
         </Typography>
       </Box>
+
+      {/* Настройка плеера в сайдбаре */}
+      <Box sx={sectionStyle}>
+        <Typography
+          variant='subtitle1'
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <PaletteIcon />
+          Плеер в сайдбаре
+        </Typography>
+
+        <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
+          Включить мини-плеер в боковой панели
+        </Typography>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+          <Typography
+            variant='body2'
+            sx={{  color: 'text.secondary' }}
+          >
+            Плеер в сайдбаре
+          </Typography>
+          <Switch
+            checked={sidebarPlayerEnabled}
+            onChange={handleSidebarPlayerToggle}
+            sx={{
+              '& .MuiSwitch-switchBase.Mui-checked': {
+                color: 'primary.main',
+                '& + .MuiSwitch-track': {
+                  backgroundColor: 'primary.main',
+                },
+              },
+            }}
+          />
+        </Box>
+
+        <Typography variant='caption' sx={{ color: 'text.secondary' }}>
+          Показывать мини-плеер в боковой панели при воспроизведении музыки
+        </Typography>
+      </Box>
+
+      {/* Настройки рекламы и обновлений - всегда видимы */}
+      <Box sx={sectionStyle}>
+        <Typography
+          variant='subtitle1'
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <PaletteIcon />
+          Дополнительные настройки
+        </Typography>
+
+        {/* Баннер с предупреждением для пользователей без Ultimate */}
+        {!(subscription?.type === 'ultimate' || subscription?.type === 'max' || subscription?.type === 'pick-me') && (
+          <Box
+            sx={{
+              backgroundColor: 'rgba(255, 193, 7, 0.1)',
+              border: '1px solid rgba(255, 193, 7, 0.3)',
+              borderRadius: 'var(--main-border-radius)',
+              padding: 2,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
+            <Typography
+              variant='body2'
+              sx={{
+                color: 'warning.main',
+                fontWeight: 500,
+                flex: 1,
+              }}
+            >
+              Для изменения данных настроек необходима подписка не ниже Ultimate
+            </Typography>
+          </Box>
+        )}
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2,justifyContent: 'space-between' }}>
+          <Typography
+            variant='body2'
+            sx={{  color: 'text.secondary' }}
+          >
+            Реклама
+          </Typography>
+          <Switch
+            checked={adsEnabled}
+            onChange={handleAdsToggle}
+            disabled={!(subscription?.type === 'ultimate' || subscription?.type === 'max' || subscription?.type === 'pick-me')}
+            sx={{
+              '& .MuiSwitch-switchBase.Mui-checked': {
+                color: 'primary.main',
+                '& + .MuiSwitch-track': {
+                  backgroundColor: 'primary.main',
+                },
+              },
+              '& .MuiSwitch-switchBase.Mui-disabled': {
+                color: 'text.disabled',
+                '& + .MuiSwitch-track': {
+                  backgroundColor: 'action.disabled',
+                },
+              },
+            }}
+          />
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
+          <Typography
+            variant='body2'
+            sx={{  color: 'text.secondary' }}
+          >
+            Обновления
+          </Typography>
+          <Switch
+            checked={updateEnabled}
+            onChange={handleUpdateToggle}
+            disabled={!(subscription?.type === 'ultimate' || subscription?.type === 'max' || subscription?.type === 'pick-me')}
+            sx={{
+              '& .MuiSwitch-switchBase.Mui-checked': {
+                color: 'primary.main',
+                '& + .MuiSwitch-track': {
+                  backgroundColor: 'primary.main',
+                },
+              },
+              '& .MuiSwitch-switchBase.Mui-disabled': {
+                color: 'text.disabled',
+                '& + .MuiSwitch-track': {
+                  backgroundColor: 'action.disabled',
+                },
+              },
+            }}
+          />
+        </Box>
+
+        <Typography variant='caption' sx={{ color: 'text.secondary' }}>
+          Отключение рекламы и обновлений доступно только с подпиской Ultimate или выше
+        </Typography>
+      </Box>
+
 
       {(subscription?.type === 'ultimate' || subscription?.type === 'max' || subscription?.type === 'pick-me') && (
         <Box sx={sectionStyle}>
@@ -685,7 +988,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
             <WallpaperIcon />
             Фоновая картинка профиля
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
             {profileBackgroundUrl ? (
               <Box sx={{ position: 'relative' }}>
                 <Avatar
@@ -919,7 +1222,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           <Typography
             variant='body2'
-            sx={{ minWidth: 120, color: 'text.secondary' }}
+            sx={{  color: 'text.secondary' }}
           >
             Цвет акцента
           </Typography>
@@ -959,20 +1262,6 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
           </Tooltip>
         </Box>
 
-        <Box sx={{ mb: 2 }}>
-          <Typography variant='body2' sx={{ mb: 1 }}>
-            Цвет оформления
-          </Typography>
-          <ToggleButtonGroup
-            value={pendingTextColorMode}
-            exclusive
-            onChange={(_, val) => val && setPendingTextColorMode(val)}
-            size='small'
-          >
-            <ToggleButton value='light'>Светлый текст</ToggleButton>
-            <ToggleButton value='dark'>Тёмный текст</ToggleButton>
-          </ToggleButtonGroup>
-        </Box>
 
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button
