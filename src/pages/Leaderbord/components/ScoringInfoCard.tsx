@@ -11,12 +11,17 @@ import InfoIcon from '@mui/icons-material/Info';
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: 'var(--small-border-radius)',
   color: 'white',
   position: 'relative',
   overflow: 'hidden',
-  boxShadow: 'none',
+  boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
   marginTop: theme.spacing(4),
   width: '100%',
   maxWidth: 750,
@@ -78,7 +83,10 @@ export const ScoringInfoCard: React.FC = () => {
             p: 2,
             bgcolor: 'rgba(208, 188, 255, 0.05)',
             borderRadius: 'var(--main-border-radius)',
-            border: '1px solid rgba(208, 188, 255, 0.1)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           <Typography

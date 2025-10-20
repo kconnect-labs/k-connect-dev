@@ -88,7 +88,10 @@ const SidebarNavigation = memo(
               sx={{
                 '& .MuiBadge-badge': {
                   backgroundColor: '#2f2f2f',
-                  border: '1px solid #b1b1b1',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   color: '#fff',
                 },
               }}

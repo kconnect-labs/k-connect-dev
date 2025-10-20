@@ -442,7 +442,10 @@ const Login = () => {
             borderRadius: 3,
             background: 'rgba(30, 30, 40, 0.95)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           },
         }}
       >
@@ -465,7 +468,10 @@ const Login = () => {
                   p: 3,
                   mb: 3,
                   backgroundColor: 'rgba(211, 47, 47, 0.1)',
-                  border: '1px solid rgba(211, 47, 47, 0.3)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 3,
                 }}
               >
@@ -717,7 +723,10 @@ const Login = () => {
               borderRadius: 'var(--main-border-radius)',
               background: 'rgba(255, 255, 255, 0.03)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mt: isMobile ? '70px' : 0,
             }}
           >

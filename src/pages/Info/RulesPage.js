@@ -58,7 +58,10 @@ const RuleCard = styled(Card)(({ theme }) => ({
   overflow: 'hidden',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
   [theme.breakpoints.down('sm')]: {
     borderRadius: 'var(--main-border-radius)',
@@ -77,7 +80,10 @@ const NavigationBar = styled(Paper)(({ theme }) => ({
   borderRadius: 'var(--small-border-radius)',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
   [theme.breakpoints.down('sm')]: {
     margin: '0 0 5px 0',
@@ -388,7 +394,10 @@ const RulesPage = () => {
           borderRadius: 'var(--main-border-radius)',
           background:
             'linear-gradient(to right, rgba(156, 39, 176, 0.15), rgba(103, 58, 183, 0.1))',
-          border: '1px solid rgba(156, 39, 176, 0.3)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -2424,7 +2433,10 @@ const RulesPage = () => {
                     p: 2,
                     borderRadius: 'var(--main-border-radius)',
                     backgroundColor: 'rgba(255, 193, 7, 0.1)',
-                    border: '1px solid rgba(255, 193, 7, 0.3)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     mb: 2,
                   }}
                 >

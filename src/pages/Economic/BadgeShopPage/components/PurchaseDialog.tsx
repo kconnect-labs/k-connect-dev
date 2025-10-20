@@ -61,7 +61,10 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
   const modalStyle = {
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: '550px',
     width: '100%',
@@ -151,7 +154,10 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
               p: 2,
               bgcolor: 'rgba(255, 255, 255, 0.03)',
               borderRadius: 'var(--main-border-radius)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             {badge.is_upgraded || badge.upgrade ? (
@@ -192,7 +198,10 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
               p: 3,
               bgcolor: 'rgba(255, 255, 255, 0.03)',
               borderRadius: 'var(--main-border-radius)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             <Typography
@@ -227,7 +236,10 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
           sx={{
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             padding: '20px',
             marginBottom: '20px',
@@ -324,7 +336,10 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
                   p: 2,
                   bgcolor: 'rgba(255, 255, 255, 0.03)',
                   borderRadius: 'var(--small-border-radius)',
-                  border: '1px solid rgba(76, 175, 80, 0.3)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   '&:hover': {
                     bgcolor: 'rgba(76, 175, 80, 0.05)',
                   },

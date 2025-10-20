@@ -134,17 +134,26 @@ const AlbumTypeChip = styled(Chip)(({ theme }) => ({
   '&.single': {
     backgroundColor: 'rgba(76, 175, 80, 0.2)',
     color: '#4CAF50',
-    border: '1px solid rgba(76, 175, 80, 0.3)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
   '&.ep': {
     backgroundColor: 'rgba(255, 152, 0, 0.2)',
     color: '#FF9800',
-    border: '1px solid rgba(255, 152, 0, 0.3)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
   '&.album': {
     backgroundColor: 'rgba(156, 39, 176, 0.2)',
     color: '#9C27B0',
-    border: '1px solid rgba(156, 39, 176, 0.3)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
 }));
 
@@ -188,7 +197,10 @@ const TracksList = styled(List)(({ theme }) => ({
     },
     '&.current-track': {
       background: 'linear-gradient(135deg, rgba(182, 157, 248, 0.2) 0%, rgba(208, 188, 255, 0.1) 100%)',
-      border: '1px solid rgba(182, 157, 248, 0.3)',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     },
   },
 }));
@@ -396,10 +408,14 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                         mr: 1,
                         background: 'rgba(182,157,248,0.12)',
                         color: '#B69DF8',
-                        boxShadow: 'none',
+                        boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
                         '&:hover': {
                           background: 'rgba(182,157,248,0.22)',
-                          boxShadow: 'none',
+                          boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
 
                         },
                       }}

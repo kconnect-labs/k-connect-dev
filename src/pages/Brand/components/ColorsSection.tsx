@@ -44,7 +44,10 @@ const ColorsSection: React.FC = () => {
     <Box
       sx={{
         p: 3,
-        border: '1px solid rgba(66, 66, 66, 0.5)',
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         borderRadius: 'var(--main-border-radius)',
         backgroundColor: 'rgba(255, 255, 255, 0.02)',
         height: '100%',
@@ -57,7 +60,10 @@ const ColorsSection: React.FC = () => {
           backgroundColor: hex,
           borderRadius: 'var(--main-border-radius)',
           mb: 2,
-          border: '1px solid rgba(66, 66, 66, 0.5)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         }}
       />
       <Typography
@@ -84,7 +90,10 @@ const ColorsSection: React.FC = () => {
         sx={{
           backgroundColor: 'rgba(208, 188, 255, 0.1)',
           color: '#D0BCFF',
-          border: '1px solid rgba(208, 188, 255, 0.3)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           fontFamily: 'monospace',
         }}
       />
@@ -100,7 +109,10 @@ const ColorsSection: React.FC = () => {
     <Box
       sx={{
         p: 3,
-        border: '1px solid rgba(66, 66, 66, 0.5)',
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         borderRadius: 'var(--main-border-radius)',
         backgroundColor: 'rgba(255, 255, 255, 0.02)',
         height: '100%',
@@ -113,7 +125,10 @@ const ColorsSection: React.FC = () => {
           background: `linear-gradient(135deg, ${start} 0%, ${end} 100%)`,
           borderRadius: 'var(--main-border-radius)',
           mb: 2,
-          border: '1px solid rgba(66, 66, 66, 0.5)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         }}
       />
       <Typography
@@ -142,7 +157,10 @@ const ColorsSection: React.FC = () => {
           sx={{
             backgroundColor: 'rgba(208, 188, 255, 0.1)',
             color: '#D0BCFF',
-            border: '1px solid rgba(208, 188, 255, 0.3)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             fontFamily: 'monospace',
           }}
         />
@@ -152,7 +170,10 @@ const ColorsSection: React.FC = () => {
           sx={{
             backgroundColor: 'rgba(208, 188, 255, 0.1)',
             color: '#D0BCFF',
-            border: '1px solid rgba(208, 188, 255, 0.3)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             fontFamily: 'monospace',
           }}
         />

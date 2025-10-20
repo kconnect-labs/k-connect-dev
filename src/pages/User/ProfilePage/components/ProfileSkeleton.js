@@ -90,7 +90,9 @@ const ProfileSkeleton = () => {
         {/* Правая колонка (лента постов) */}
         <Grid item xs={12} lg={7}>
           {/* Таббар */}
-          <Paper sx={{ borderRadius: 'var(--main-border-radius)', mb: '5px', overflow: 'hidden', boxShadow: 'none', background: 'var(--theme-background, rgba(255,255,255,0.03))', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
+          <Paper sx={{ borderRadius: 'var(--main-border-radius)', mb: '5px', overflow: 'hidden', boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`, background: 'var(--theme-background, rgba(255,255,255,0.03))', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
             <Box sx={{ display: 'flex' }}>
               {Array.from({ length: 4 }).map((_, idx) => (
                 <Skeleton key={idx} variant='rectangular' width='25%' height={48} animation='wave' sx={{ bgcolor: skeletonBgColor }} />

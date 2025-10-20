@@ -44,7 +44,10 @@ const PageHeader = styled(Box)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   borderRadius: 'var(--main-border-radius)',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   position: 'relative',
   overflow: 'hidden',
 }));
@@ -119,7 +122,10 @@ const StatsCard = styled(Paper)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   borderRadius: 'var(--main-border-radius)',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.1)}`,
   minWidth: 120,
 }));
@@ -138,7 +144,10 @@ const BetInput = styled(TextField)(({ theme }) => ({
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: 'blur(20px)',
     borderRadius: 'var(--main-border-radius)',
-    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     '& fieldset': {
       border: 'none',
     },
@@ -161,7 +170,10 @@ const GameSetupCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   borderRadius: 'var(--main-border-radius)',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.1)}`,
   marginBottom: theme.spacing(3),
 }));
@@ -553,7 +565,10 @@ const PixelMinerPage: React.FC = () => {
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             borderRadius: isMobile ? 0 : 'var(--main-border-radius) !important',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }
         }}
       >
@@ -586,7 +601,10 @@ const PixelMinerPage: React.FC = () => {
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             borderRadius: isMobile ? 0 : 'var(--main-border-radius) !important',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }
         }}
       >
@@ -608,12 +626,18 @@ const PixelMinerPage: React.FC = () => {
                 <Typography variant="body1" fontWeight="bold">{formatNumber(cashoutInfo.bet)} баллов</Typography>
               </Box>
               
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 'var(--main-border-radius)', border: '1px solid rgba(76, 175, 80, 0.3)' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 'var(--main-border-radius)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)' }}>
                 <Typography variant="body1" color="#4CAF50">Выигрыш:</Typography>
                 <Typography variant="body1" fontWeight="bold" color="#4CAF50">+{formatNumber(cashoutInfo.winnings)} баллов</Typography>
               </Box>
               
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, bgcolor: 'rgba(255, 255, 255, 0.1)', borderRadius: 'var(--main-border-radius)', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, bgcolor: 'rgba(255, 255, 255, 0.1)', borderRadius: 'var(--main-border-radius)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)' }}>
                 <Typography variant="h6">Итого получите:</Typography>
                 <Typography variant="h6" fontWeight="bold" color="primary">{formatNumber(cashoutInfo.total)} баллов</Typography>
               </Box>

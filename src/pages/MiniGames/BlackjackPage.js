@@ -363,7 +363,10 @@ const BlackjackPage = () => {
             fontSize: '14px',
             fontWeight: '500',
             borderRadius: 'var(--small-border-radius)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             background: 'transparent',
             color: 'white',
             cursor: 'pointer',
@@ -393,7 +396,10 @@ const BlackjackPage = () => {
             fontSize: '14px',
             fontWeight: '500',
             borderRadius: 'var(--small-border-radius)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             background: 'transparent',
             color: 'white',
             cursor: 'pointer',
@@ -410,7 +416,10 @@ const BlackjackPage = () => {
         style={{
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--main-border-radius)',
           padding: '16px',
         }}
@@ -446,7 +455,10 @@ const BlackjackPage = () => {
           style={{
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             display: 'flex',
             flexDirection: 'column',
@@ -481,7 +493,10 @@ const BlackjackPage = () => {
                   width: '150px',
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   color: 'var(--theme-text-primary)',
-                  border: '1px solid #333333',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 }}
               />
             </div>
@@ -537,7 +552,10 @@ const BlackjackPage = () => {
                 style={{
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   padding: '16px',
                 }}
@@ -568,7 +586,10 @@ const BlackjackPage = () => {
                 style={{
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   padding: '16px',
                 }}
@@ -667,7 +688,10 @@ const BlackjackPage = () => {
                   className={`${styles.card} ${styles['mt-4']} ${styles['p-3']}`}
                   style={{
                     background: 'rgba(33, 150, 243, 0.1)',
-                    border: '1px solid rgba(33, 150, 243, 0.3)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     borderRadius: 'var(--small-border-radius)',
                     textAlign: 'center',
                   }}
@@ -692,7 +716,10 @@ const BlackjackPage = () => {
             left: '50%',
             transform: 'translateX(-50%)',
             backgroundColor: 'rgba(244, 67, 54, 0.1)',
-            border: '1px solid rgba(244, 67, 54, 0.3)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             color: '#f44336',
             zIndex: 1000,
             maxWidth: '90%',

@@ -18,12 +18,18 @@ import { User } from '../types';
 const OnlineUsersCard = styled(Card)(({ theme }) => ({
   borderRadius: 'var(--large-border-radius)',
   overflow: 'hidden',
-  boxShadow: 'none',
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
   WebkitBackdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  padding: '2px 2px',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+  borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+  borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+  borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+  boxShadow: `
+    
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset
+  `,  padding: '2px 2px',
   gap: '2px',
   display: 'flex',
   flexDirection: 'row',
@@ -155,7 +161,10 @@ const OnlineUsers: React.FC = () => {
               height: 10,
               borderRadius: '50%',
               backgroundColor: '#4caf50',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               boxShadow: '0 0 8px rgba(76, 175, 80, 0.4)',
             }}
           />
@@ -195,7 +204,10 @@ const OnlineUsers: React.FC = () => {
                 width: '56px',
                 height: '46px',
                 borderRadius: '25px',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 boxSizing: 'border-box',
                 background: 'rgba(181, 142, 244, 0.65)',
               }}
@@ -210,7 +222,10 @@ const OnlineUsers: React.FC = () => {
                 height: '10px',
                 borderRadius: '50%',
                 backgroundColor: '#4caf50',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 boxSizing: 'border-box',
               }}
             />

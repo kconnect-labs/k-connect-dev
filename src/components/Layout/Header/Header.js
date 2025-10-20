@@ -45,7 +45,9 @@ const StyledAppBar = styled(AppBar, {
   zIndex: theme.zIndex.appBar,
   transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   height: 48,
-  boxShadow: 'none',
+  boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
 }));
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({

@@ -9,7 +9,10 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   borderRadius: 16,
   background: 'linear-gradient(145deg, #222222, #1c1c1c)',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-  border: '1px solid rgba(255, 255, 255, 0.05)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
 }));
 
 const EmptyChannelsPlaceholder = ({ message = 'Каналы не найдены' }) => {

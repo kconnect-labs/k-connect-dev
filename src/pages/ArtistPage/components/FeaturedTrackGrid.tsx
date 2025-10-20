@@ -39,7 +39,10 @@ const TrackCard = styled(Box)(({ theme }) => ({
   transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(255, 255, 255, 0.08)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   '&:hover': {
     transform: 'translateY(-1px) scale(1.01)',
     borderColor: 'rgba(255, 255, 255, 0.15)',

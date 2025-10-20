@@ -32,13 +32,22 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     borderRadius: theme.spacing(1),
     '&:hover': {
-      border: '1px solid rgba(255, 255, 255, 0.2)',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     },
     '&.Mui-focused': {
-      border: '1px solidrgb(243, 33, 226)',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     },
   },
   '& .MuiInputLabel-root': {
@@ -53,13 +62,22 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     borderRadius: theme.spacing(1),
     '&:hover': {
-      border: '1px solid rgba(255, 255, 255, 0.2)',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     },
     '&.Mui-focused': {
-      border: '1px solid rgba(33, 150, 243, 0.5)',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     },
   },
   '& .MuiInputLabel-root': {
@@ -202,7 +220,10 @@ const TicketSearch: React.FC<TicketSearchProps> = ({
                 onClick={handleClearFilters}
                 sx={{
                   color: 'rgba(255, 255, 255, 0.7)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.1)',
                   },

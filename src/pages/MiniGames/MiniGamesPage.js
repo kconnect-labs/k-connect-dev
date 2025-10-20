@@ -42,7 +42,10 @@ const PageHeader = styled(Box)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   borderRadius: 8,
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   position: 'relative',
   overflow: 'hidden',
 }));
@@ -56,7 +59,10 @@ const GameCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   borderRadius: 8,
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   boxShadow: `0 8px 24px ${alpha(theme.palette.common.black, 0.1)}`,
 }));
 
@@ -67,7 +73,10 @@ const BalanceCard = styled(Paper)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   borderRadius: 8,
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.1)}`,
   marginBottom: theme.spacing(1),
   position: 'relative',
@@ -85,7 +94,10 @@ const StatsCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.05)',
   backdropFilter: 'blur(20px)',
   borderRadius: 20,
-  border: '1px solid rgba(255, 255, 255, 0.15)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   boxShadow: `0 8px 24px ${alpha(theme.palette.common.black, 0.1)}`,
   marginTop: theme.spacing(4),
 }));
@@ -96,7 +108,10 @@ const StatItem = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2.5),
   borderRadius: 16,
   background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   marginBottom: theme.spacing(2),
   height: '100%',
   minHeight: 120,
@@ -106,18 +121,30 @@ const LeaderboardItem = styled(ListItem)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.04)',
   borderRadius: 12,
   marginBottom: theme.spacing(1.5),
-  border: '1px solid rgba(255, 255, 255, 0.08)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   '&:first-of-type': {
     background: 'rgba(255, 215, 0, 0.1)',
-    border: '1px solid rgba(255, 215, 0, 0.2)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
   '&:nth-of-type(2)': {
     background: 'rgba(192, 192, 192, 0.08)',
-    border: '1px solid rgba(192, 192, 192, 0.15)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
   '&:nth-of-type(3)': {
     background: 'rgba(205, 127, 50, 0.08)',
-    border: '1px solid rgba(205, 127, 50, 0.15)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
 }));
 
@@ -611,7 +638,10 @@ const MiniGamesPage = () => {
                         p: 3, 
                         borderRadius: 'var(--main-border-radius)', 
                         background: 'rgba(76, 175, 80, 0.05)',
-                        border: '1px solid rgba(76, 175, 80, 0.15)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}>
                           <EmojiEventsIcon sx={{ color: 'success.main', fontSize: 20 }} />
@@ -679,7 +709,10 @@ const MiniGamesPage = () => {
                         p: 3, 
                         borderRadius: 'var(--main-border-radius)', 
                         background: 'rgba(255, 152, 0, 0.05)',
-                        border: '1px solid rgba(255, 152, 0, 0.15)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}>
                           <AttachMoneyIcon sx={{ color: 'warning.main', fontSize: 20 }} />

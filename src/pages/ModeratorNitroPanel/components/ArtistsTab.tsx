@@ -548,7 +548,10 @@ const ArtistsTab: React.FC = () => {
                 borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
-                border: '1px solid var(--main-border-color)'
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
               }}
             >
               <CardContent sx={{ p: 1.5, flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -599,7 +602,10 @@ const ArtistsTab: React.FC = () => {
                     p: 1, 
                     bgcolor: 'rgba(76, 175, 80, 0.1)', 
                     borderRadius: 1,
-                    border: '1px solid rgba(76, 175, 80, 0.3)'
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
                   }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Avatar 
@@ -1375,7 +1381,10 @@ const ArtistsTab: React.FC = () => {
               p: 2, 
               bgcolor: 'rgba(255, 152, 0, 0.1)', 
               borderRadius: 1,
-              border: '1px solid rgba(255, 152, 0, 0.3)'
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
             }}>
               <Typography variant="subtitle2" gutterBottom color="warning.main">
                 Привязанный пользователь:

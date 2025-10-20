@@ -102,7 +102,10 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
     p: 3,
     borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
@@ -170,7 +173,9 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
     minWidth: 'auto',
     borderRadius: 'var(--small-border-radius)',
     textTransform: 'none' as const,
-    boxShadow: 'none',
+    boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
   });
 
   // Фильтрация бейджей

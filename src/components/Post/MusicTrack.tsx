@@ -14,7 +14,10 @@ const MusicTrackContainer = styled(Box)(({ theme }) => ({
   borderRadius: 'var(--main-border-radius)',
   backgroundColor: 'rgba(255, 255, 255, 0.05)',
   marginBottom: theme.spacing(0.3),
-  border: '1px solid rgba(255, 255, 255, 0.07)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   cursor: 'pointer',
   transition: 'all 0.2s ease',
   '&:hover': {

@@ -24,7 +24,10 @@ const EmptyStateContainer = styled(Box)(({ theme }) => ({
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   borderRadius: 16,
   boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   marginBottom: theme.spacing(3),
 }));
 

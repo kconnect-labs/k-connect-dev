@@ -51,7 +51,10 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: 16,
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
   transition: 'all 0.3s ease',
@@ -464,7 +467,10 @@ const InventoryPackPage = () => {
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: window.innerWidth <= 768 ? 0 : '8px',
             '@media (max-width: 768px)': {
               margin: 0,
@@ -547,7 +553,10 @@ const InventoryPackPage = () => {
                       <Card
                         sx={{
                           background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-                          border: '1px solid rgba(66, 66, 66, 0.5)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           borderRadius: 'var(--main-border-radius)',
                           p: 2,
                           textAlign: 'center',
@@ -702,7 +711,10 @@ const InventoryPackPage = () => {
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--small-border-radius)',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
           },

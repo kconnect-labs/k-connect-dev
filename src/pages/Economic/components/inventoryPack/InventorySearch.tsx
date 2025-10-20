@@ -106,7 +106,10 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
 
         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-        border: '1px solid rgba(0, 0, 0, 0.12)',
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         borderRadius: 'var(--main-border-radius)',
       }}
     >
@@ -229,7 +232,10 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
 
       {/* Отображение ошибки */}
       {error && (
-        <Box sx={{ mt: 1, p: 1, borderRadius: 'var(--small-border-radius)', backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.1))', border: '1px solid rgba(244, 67, 54, 0.3)' }}>
+        <Box sx={{ mt: 1, p: 1, borderRadius: 'var(--small-border-radius)', backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.1))', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)' }}>
           <Typography variant="caption" sx={{ color: 'rgba(244, 67, 54, 0.9)' }}>
             Ошибка поиска: {error}
           </Typography>

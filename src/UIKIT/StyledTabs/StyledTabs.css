@@ -16,7 +16,7 @@
   border-left: 1px solid rgba(200, 200, 200, 0.233);
   border-bottom: 1px solid rgba(100, 100, 100, 0.486);
   box-shadow:
-    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    
     0 0 0 4px rgba(95, 95, 95, 0.06) inset,
     0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
   overflow: visible;
@@ -86,14 +86,20 @@
   border-radius:var(--main-border-radius);
   background: var(--theme-background, rgba(255, 255, 255, 0.03));
   backdrop-filter: var(--theme-backdrop-filter, blur(20px));
-  border: 1px solid rgba(255, 255, 255, 0.05);
   overflow: hidden;
   position: relative;
   z-index: 2;
   box-sizing: border-box;
   contain: layout style paint;
   margin-bottom: 0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(240, 240, 240, 0.24);
+  border-right: 1px solid rgba(200, 200, 200, 0.322);
+  border-left: 1px solid rgba(200, 200, 200, 0.233);
+  border-bottom: 1px solid rgba(100, 100, 100, 0.486);
+  box-shadow:
+    
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
 }
 
 .styled-tabs--default,

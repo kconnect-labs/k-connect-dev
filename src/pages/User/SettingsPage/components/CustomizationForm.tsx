@@ -496,7 +496,10 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     p: 3,
     borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
@@ -505,7 +508,10 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     p: 2,
     borderRadius: 'var(--main-border-radius)',
     background: 'rgba(255, 255, 255, 0.02)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     mb: 2,
   };
 
@@ -1024,7 +1030,10 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
               borderRadius: 'var(--main-border-radius)',
               mb: 3,
               boxShadow: `0 4px 20px ${currentColor}50`,
-              border: '1px solid rgba(66, 66, 66, 0.5)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           />
 
@@ -1172,7 +1181,10 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
               borderRadius: 'var(--main-border-radius)',
               mb: 3,
               boxShadow: `0 4px 20px ${profileColorInput}50`,
-              border: '1px solid rgba(66, 66, 66, 0.5)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           />
 

@@ -214,7 +214,10 @@ const CupsGamePage = () => {
             fontSize: '14px',
             fontWeight: '500',
             borderRadius: 'var(--small-border-radius)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             background: 'transparent',
             color: 'white',
             cursor: 'pointer',
@@ -228,7 +231,10 @@ const CupsGamePage = () => {
           className={`${styles.card} ${styles['p-3']}`}
           style={{
             background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             backdropFilter: 'blur(8px)',
             minWidth: '150px',
           }}
@@ -258,7 +264,10 @@ const CupsGamePage = () => {
         style={{
           background:
             'linear-gradient(135deg, rgba(233, 30, 99, 0.1), rgba(233, 30, 99, 0.05))',
-          border: '1px solid rgba(233, 30, 99, 0.2)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -308,7 +317,10 @@ const CupsGamePage = () => {
                 padding: '8px',
                 fontSize: '14px',
                 borderRadius: 'var(--small-border-radius)',
-                border: '1px solid rgba(0, 0, 0, 0.12)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 background: 'transparent',
                 color: 'white',
                 cursor: 'pointer',
@@ -332,7 +344,10 @@ const CupsGamePage = () => {
         style={{
           background:
             'linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01))',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         }}
       >
         {/* Секция ставки */}
@@ -417,7 +432,10 @@ const CupsGamePage = () => {
                     padding: '8px 16px',
                     fontSize: '14px',
                     borderRadius: 'var(--small-border-radius)',
-                    border: '1px solid rgba(0, 0, 0, 0.12)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     background: 'transparent',
                     color: 'white',
                     cursor: isPlaying ? 'not-allowed' : 'pointer',
@@ -461,7 +479,10 @@ const CupsGamePage = () => {
             style={{
               background:
                 'linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01))',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               position: 'relative',
               overflow: 'hidden',
             }}
@@ -803,7 +824,10 @@ const CupsGamePage = () => {
             left: '50%',
             transform: 'translateX(-50%)',
             backgroundColor: 'rgba(244, 67, 54, 0.1)',
-            border: '1px solid rgba(244, 67, 54, 0.3)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             color: '#f44336',
             zIndex: 1000,
             maxWidth: '90%',

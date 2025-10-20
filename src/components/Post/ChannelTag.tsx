@@ -9,7 +9,10 @@ const ChannelTag = styled(Chip)(({ theme }) => ({
   borderRadius: 'var(--main-border-radius) !important',
   fontSize: '0.75rem',
   fontWeight: 500,
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   '& .MuiChip-label': {
     padding: '0 8px',
   },

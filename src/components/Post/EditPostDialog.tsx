@@ -74,7 +74,10 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
           sx={{ 
             mb: 2,
             backgroundColor: 'rgba(244, 67, 54, 0.1)',
-            border: '1px solid rgba(244, 67, 54, 0.3)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             color: '#f44336',
             '& .MuiAlert-icon': {
               color: '#f44336',
@@ -101,7 +104,10 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
               bgcolor: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
               borderRadius: 'var(--main-border-radius)',
-              border: '1px solid rgba(255, 255, 255, 0.09)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               transition: 'all 0.2s ease',
               '&:hover': {
                 bgcolor: 'rgba(255, 255, 255, 0.1)',

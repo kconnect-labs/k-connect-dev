@@ -285,7 +285,10 @@ const BackButton = styled(Button)(({ theme }) => ({
   borderRadius: 'var(--avatar-border-radius)',
   backgroundColor: 'rgba(31, 31, 31, 0.9)',
   color: '#ffffff',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   transition: 'all 0.3s ease',
   '&:hover': {
     backgroundColor: 'rgba(46, 46, 46, 0.9)',
@@ -394,7 +397,10 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({
         style={{ 
           background: 'linear-gradient(135deg, #B69DF8 0%, #D0BCFF 50%, #E1C4FD 100%)',
           backdropFilter: 'none',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--main-border-radius)',
           padding: '32px',
           marginBottom: '5px',

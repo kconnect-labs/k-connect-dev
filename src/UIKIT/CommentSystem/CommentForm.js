@@ -17,7 +17,10 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     backgroundColor: 'var(--theme-background, rgba(32, 32, 36, 0.6))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
     borderRadius: 'var(--small-border-radius)',
-    border: '1px solid rgba(255, 255, 255, 0.05)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     '& .MuiOutlinedInput-notchedOutline': {
       borderColor: 'transparent',
     },

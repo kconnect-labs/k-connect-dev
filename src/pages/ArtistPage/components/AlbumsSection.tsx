@@ -62,7 +62,10 @@ const AlbumsGrid = styled(Grid)(({ theme }) => ({
 const AlbumCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: 'var(--small-border-radius)',
   overflow: 'hidden',
   cursor: 'pointer',
@@ -148,17 +151,26 @@ const AlbumTypeChip = styled(Chip)(({ theme }) => ({
   '&.single': {
     backgroundColor: 'rgba(76, 175, 80, 0.2)',
     color: '#4CAF50',
-    border: '1px solid rgba(76, 175, 80, 0.3)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
   '&.ep': {
     backgroundColor: 'rgba(255, 152, 0, 0.2)',
     color: '#FF9800',
-    border: '1px solid rgba(255, 152, 0, 0.3)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
   '&.album': {
     backgroundColor: 'rgba(156, 39, 176, 0.2)',
     color: '#9C27B0',
-    border: '1px solid rgba(156, 39, 176, 0.3)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
 }));
 
@@ -189,7 +201,10 @@ const LoadingSkeleton: React.FC = () => (
   <AlbumsGrid container spacing={0}>
     {[...Array(4)].map((_, index) => (
       <Grid item xs={6} sm={4} md={3} lg={3} key={index}>
-        <Card sx={{ background: 'var(--theme-background)', border: '1px solid rgba(66, 66, 66, 0.5)' }}>
+        <Card sx={{ background: 'var(--theme-background)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)' }}>
           <Skeleton variant="rectangular" height={200} />
           <CardContent>
             <Skeleton variant="text" height={24} />
@@ -210,7 +225,10 @@ const ShowAllButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   backgroundColor: 'rgba(182, 157, 248, 0.1)',
   color: '#B69DF8',
-  border: '1px solid rgba(182, 157, 248, 0.3)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   transition: 'all 0.3s ease',
   marginTop: theme.spacing(2),
   '&:hover': {

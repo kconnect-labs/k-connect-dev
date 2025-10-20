@@ -206,7 +206,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           style={{
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             padding: '8px',
             cursor: 'pointer',
@@ -242,7 +245,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
         <div
           style={{
             background: 'rgba(244, 67, 54, 0.1)',
-            border: '1px solid rgba(244, 67, 54, 0.3)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             padding: '16px',
             marginBottom: '24px',
@@ -267,7 +273,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           style={{
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             padding: '16px',
             display: 'flex',
@@ -315,7 +324,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           style={{
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             padding: '16px',
             display: 'flex',
@@ -363,7 +375,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           style={{
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             padding: '16px',
             display: 'flex',
@@ -411,7 +426,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           style={{
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             padding: '16px',
             display: 'flex',
@@ -460,7 +478,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
         style={{
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--main-border-radius)',
           padding: '16px',
           marginBottom: '24px',
@@ -490,7 +511,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
               background: 'rgba(255, 255, 255, 0.05)',
               borderRadius: 'var(--main-border-radius)',
               padding: '12px',
-              border: '1px solid rgba(66, 66, 66, 0.5)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             <div
@@ -550,7 +574,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
               disabled={creatingCode}
               style={{
                 background: 'rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderRadius: 'var(--main-border-radius)',
                 padding: '8px 16px',
                 color: 'var(--theme-text-secondary)',
@@ -572,7 +599,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
         style={{
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--main-border-radius)',
           padding: '16px',
           marginBottom: '24px',
@@ -703,7 +733,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
         style={{
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--main-border-radius)',
           padding: '16px',
         }}
@@ -741,7 +774,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                   padding: '12px',
                   background: 'rgba(255, 255, 255, 0.05)',
                   borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(66, 66, 66, 0.5)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 }}
               >
                 <div

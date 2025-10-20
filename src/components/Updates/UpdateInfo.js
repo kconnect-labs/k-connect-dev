@@ -52,13 +52,17 @@ const UpdateInfo = ({
         borderRadius: 'var(--main-border-radius)',
         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-        border: theme =>
-          `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`,
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+        boxShadow: `
+          
+          0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+          0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset
+        `,
         overflow: 'hidden',
-        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-        '&:hover': {
-          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)',
-        },
+        
       }}
     >
       {/* Заголовок секции */}
@@ -96,7 +100,10 @@ const UpdateInfo = ({
               backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.1))',
               color: 'primary.main',
               fontWeight: 'medium',
-              border: '1px solid rgba(208, 188, 255, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           />
         </Box>
@@ -122,7 +129,10 @@ const UpdateInfo = ({
             sx={{
               fontSize: '0.75rem',
               backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-              border: '1px solid rgba(66, 66, 66, 0.5)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           />
         </Box>

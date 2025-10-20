@@ -124,7 +124,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     background: 'rgba(18, 18, 18, 0.8)',
             backdropFilter: 'var(--theme-backdrop-filter)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-    border: '1px solid rgba(66, 66, 66, 0.5)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       maxWidth: '100%',
@@ -527,11 +530,17 @@ const ModeratorPage = () => {
           borderRadius: 'var(--main-border-radius)',
           background: 'var(--theme-background)',
           backdropFilter: 'var(--theme-backdrop-filter)',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           color: 'rgba(255, 255, 255, 0.87)',
           '&:hover': {
             background: 'rgba(255, 255, 255, 0.08)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           },
         }}
         fullWidth={true}
@@ -555,7 +564,10 @@ const ModeratorPage = () => {
                 borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
-                border: '1px solid rgba(0, 0, 0, 0.12)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               }}
             >
               <Typography variant='body2' color='rgba(255, 255, 255, 0.6)'>
@@ -572,7 +584,10 @@ const ModeratorPage = () => {
                       borderRadius: 'var(--main-border-radius)',
                       background: 'var(--theme-background)',
                       backdropFilter: 'var(--theme-backdrop-filter)',
-                      border: '1px solid rgba(0, 0, 0, 0.12)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       display: 'flex',
                       flexDirection: 'column',
                       gap: 1.5,
@@ -694,11 +709,17 @@ const ModeratorPage = () => {
                         mt: 1,
                         borderRadius: 'var(--main-border-radius)',
                         background: 'rgba(244, 67, 54, 0.05)',
-                        border: '1px solid rgba(244, 67, 54, 0.2)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         color: 'rgba(244, 67, 54, 0.8)',
                         '&:hover': {
                           background: 'rgba(244, 67, 54, 0.1)',
-                          border: '1px solid rgba(244, 67, 54, 0.3)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         },
                       }}
                       fullWidth
@@ -1896,14 +1917,23 @@ const ModeratorPage = () => {
                 borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
-                border: '1px solid rgba(0, 0, 0, 0.12)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 '&:hover': {
                   background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 },
                 '&.Mui-focused': {
                   background: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 },
               },
               '& .MuiInputBase-input': {
@@ -1929,11 +1959,17 @@ const ModeratorPage = () => {
                 borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
-                border: '1px solid rgba(0, 0, 0, 0.12)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 transition: 'all 0.3s ease',
                 '&:hover': {
                   background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   transform: 'translateY(-2px)',
                   boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
                 },
@@ -1997,11 +2033,17 @@ const ModeratorPage = () => {
                       borderRadius: 'var(--main-border-radius)',
                       background: 'var(--theme-background)',
                       backdropFilter: 'var(--theme-backdrop-filter)',
-                      border: '1px solid rgba(0, 0, 0, 0.12)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       color: 'rgba(255, 255, 255, 0.87)',
                       '&:hover': {
                         background: 'rgba(255, 255, 255, 0.08)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         transform: 'translateY(-1px)',
                       },
                     }}
@@ -2016,10 +2058,16 @@ const ModeratorPage = () => {
                       borderRadius: 'var(--main-border-radius)',
                       background: 'rgba(244, 67, 54, 0.1)',
                       backdropFilter: 'var(--theme-backdrop-filter)',
-                      border: '1px solid rgba(244, 67, 54, 0.2)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       '&:hover': {
                         background: 'rgba(244, 67, 54, 0.2)',
-                        border: '1px solid rgba(244, 67, 54, 0.3)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         transform: 'translateY(-1px)',
                       },
                     }}
@@ -2155,7 +2203,10 @@ const ModeratorPage = () => {
             borderRadius: 'var(--main-border-radius)',
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           <Table size='small'>
@@ -2311,7 +2362,10 @@ const ModeratorPage = () => {
             borderRadius: 'var(--main-border-radius)',
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           <Table size='small'>
@@ -3463,10 +3517,16 @@ const ModeratorPage = () => {
                         borderRadius: 'var(--main-border-radius)',
                         background: 'var(--theme-background)',
                         backdropFilter: 'var(--theme-backdrop-filter)',
-                        border: '1px solid rgba(0, 0, 0, 0.12)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         '&:hover': {
                           background: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           transform: 'translateY(-5px)',
                           boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
                         },
@@ -3719,7 +3779,10 @@ const ModeratorPage = () => {
               borderRadius: 'var(--main-border-radius)',
               background: 'var(--theme-background)',
               backdropFilter: 'var(--theme-backdrop-filter)',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             <Avatar
@@ -3762,7 +3825,10 @@ const ModeratorPage = () => {
                 sx={{
                   borderRadius: 'var(--main-border-radius)',
                   background: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   color: 'rgba(255, 255, 255, 0.87)',
                   fontSize: '0.75rem',
                   height: 24,
@@ -3815,7 +3881,10 @@ const ModeratorPage = () => {
               borderRadius: 'var(--main-border-radius)',
               background: 'var(--theme-background)',
               backdropFilter: 'var(--theme-backdrop-filter)',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             {assignedDate && (
@@ -4476,7 +4545,10 @@ const ModeratorPage = () => {
                 borderRadius: 'var(--main-border-radius)',
                 background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
-                border: '1px solid rgba(25, 118, 210, 0.3)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 boxShadow: '0 4px 12px rgba(25, 118, 210, 0.3)',
                 '&:hover': {
                   background:
@@ -4512,10 +4584,16 @@ const ModeratorPage = () => {
                   borderRadius: 'var(--main-border-radius)',
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     transform: 'translateY(-5px)',
                     boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
                   },
@@ -4618,10 +4696,16 @@ const ModeratorPage = () => {
                         borderRadius: 'var(--main-border-radius)',
                         background: 'rgba(25, 118, 210, 0.1)',
                         backdropFilter: 'var(--theme-backdrop-filter)',
-                        border: '1px solid rgba(25, 118, 210, 0.2)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         '&:hover': {
                           background: 'rgba(25, 118, 210, 0.2)',
-                          border: '1px solid rgba(25, 118, 210, 0.3)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           transform: 'translateY(-1px)',
                         },
                       }}
@@ -4638,10 +4722,16 @@ const ModeratorPage = () => {
                           borderRadius: 'var(--main-border-radius)',
                           background: 'rgba(25, 118, 210, 0.1)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(25, 118, 210, 0.2)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           '&:hover': {
                             background: 'rgba(25, 118, 210, 0.2)',
-                            border: '1px solid rgba(25, 118, 210, 0.3)',
+                            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                             transform: 'translateY(-1px)',
                           },
                         }}
@@ -4659,10 +4749,16 @@ const ModeratorPage = () => {
                           borderRadius: 'var(--main-border-radius)',
                           background: 'rgba(25, 118, 210, 0.1)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(25, 118, 210, 0.2)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           '&:hover': {
                             background: 'rgba(25, 118, 210, 0.2)',
-                            border: '1px solid rgba(25, 118, 210, 0.3)',
+                            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                             transform: 'translateY(-1px)',
                           },
                         }}
@@ -4680,10 +4776,16 @@ const ModeratorPage = () => {
                           borderRadius: 'var(--main-border-radius)',
                           background: 'rgba(244, 67, 54, 0.1)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(244, 67, 54, 0.2)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           '&:hover': {
                             background: 'rgba(244, 67, 54, 0.2)',
-                            border: '1px solid rgba(244, 67, 54, 0.3)',
+                            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                             transform: 'translateY(-1px)',
                           },
                         }}
@@ -5134,7 +5236,10 @@ const ModeratorPage = () => {
               borderRadius: 'var(--main-border-radius)',
               background: 'var(--theme-background)',
               backdropFilter: 'var(--theme-backdrop-filter)',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             <ListAltIcon
@@ -5162,7 +5267,10 @@ const ModeratorPage = () => {
                   borderRadius: 'var(--main-border-radius)',
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -5256,7 +5364,10 @@ const ModeratorPage = () => {
                       p: 2,
                       borderRadius: 'var(--main-border-radius)',
                       background: 'rgba(0, 0, 0, 0.2)',
-                      border: '1px solid rgba(66, 66, 66, 0.5)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     }}
                   >
                     <Typography
@@ -5433,7 +5544,10 @@ const ModeratorPage = () => {
               borderRadius: 'var(--main-border-radius)',
               background: 'var(--theme-background)',
               backdropFilter: 'var(--theme-backdrop-filter)',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             <BarChartIcon
@@ -5458,7 +5572,10 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
@@ -5534,7 +5651,10 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
@@ -5605,7 +5725,10 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
@@ -5661,7 +5784,10 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
@@ -5717,7 +5843,10 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
@@ -5773,7 +5902,10 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
@@ -5824,7 +5956,10 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
@@ -5875,7 +6010,10 @@ const ModeratorPage = () => {
                         sx={{
                           background: 'var(--theme-background)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(0, 0, 0, 0.12)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           borderRadius: 'var(--main-border-radius)',
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
@@ -5936,7 +6074,10 @@ const ModeratorPage = () => {
                         sx={{
                           background: 'var(--theme-background)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(0, 0, 0, 0.12)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           borderRadius: 'var(--main-border-radius)',
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
@@ -5992,7 +6133,10 @@ const ModeratorPage = () => {
                         sx={{
                           background: 'var(--theme-background)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(0, 0, 0, 0.12)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           borderRadius: 'var(--main-border-radius)',
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
@@ -6048,7 +6192,10 @@ const ModeratorPage = () => {
                         sx={{
                           background: 'var(--theme-background)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(0, 0, 0, 0.12)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           borderRadius: 'var(--main-border-radius)',
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
@@ -6109,7 +6256,10 @@ const ModeratorPage = () => {
                         sx={{
                           background: 'var(--theme-background)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(0, 0, 0, 0.12)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           borderRadius: 'var(--main-border-radius)',
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
@@ -6172,7 +6322,10 @@ const ModeratorPage = () => {
           borderRadius: 'var(--main-border-radius)',
           background: 'var(--theme-background)',
           backdropFilter: 'var(--theme-backdrop-filter)',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         }}
       >
         <SecurityIcon sx={{ fontSize: 40, mr: 2, color: 'primary.main' }} />
@@ -6197,7 +6350,10 @@ const ModeratorPage = () => {
           borderRadius: 'var(--main-border-radius)',
           background: 'var(--theme-background)',
           backdropFilter: 'var(--theme-backdrop-filter)',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         }}
       >
         <Tabs
@@ -6213,7 +6369,10 @@ const ModeratorPage = () => {
               borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
               background: 'var(--theme-background)',
               backdropFilter: 'var(--theme-backdrop-filter)',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               borderBottom: 'none',
               marginRight: 1,
               color: 'rgba(255, 255, 255, 0.7)',
@@ -6224,7 +6383,10 @@ const ModeratorPage = () => {
               '&.Mui-selected': {
                 background: 'rgba(255, 255, 255, 0.08)',
                 color: 'rgba(255, 255, 255, 0.87)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
               },
             },
@@ -6342,7 +6504,10 @@ const ModeratorPage = () => {
               p: 2.5,
               borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
-              border: '1px solid rgba(244, 67, 54, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mb: 1,
             }}
           >
@@ -6495,7 +6660,10 @@ const ModeratorPage = () => {
               p: 2.5,
               borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
-              border: '1px solid rgba(244, 67, 54, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mb: 1,
             }}
           >
@@ -6633,7 +6801,10 @@ const ModeratorPage = () => {
               p: 2.5,
               borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
-              border: '1px solid rgba(244, 67, 54, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mb: 1,
             }}
           >
@@ -6782,7 +6953,10 @@ const ModeratorPage = () => {
               p: 2.5,
               borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
-              border: '1px solid rgba(244, 67, 54, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mb: 1,
             }}
           >
@@ -6914,7 +7088,10 @@ const ModeratorPage = () => {
               p: 2.5,
               borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(25,118,210,0.05)',
-              border: '1px solid rgba(25,118,210,0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mb: 2,
             }}
           >
@@ -7146,7 +7323,10 @@ const ModeratorPage = () => {
               p: 2.5,
               borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(156,39,176,0.05)',
-              border: '1px solid rgba(156,39,176,0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mb: 2,
             }}
           >
@@ -7435,7 +7615,10 @@ const ModeratorPage = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   height: '100%',
                 }}
@@ -7474,7 +7657,10 @@ const ModeratorPage = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   height: '100%',
                 }}
@@ -7776,7 +7962,10 @@ const ModeratorPage = () => {
               p: 2.5,
               borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
-              border: '1px solid rgba(244, 67, 54, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mb: 1,
             }}
           >
@@ -7925,7 +8114,10 @@ const ModeratorPage = () => {
               p: 2.5,
               borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
-              border: '1px solid rgba(244, 67, 54, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mb: 1,
             }}
           >
@@ -8166,7 +8358,10 @@ const ModeratorPage = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 }}
               >
@@ -8816,7 +9011,10 @@ const ModeratorPage = () => {
               p: 2.5,
               borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(25,118,210,0.05)',
-              border: '1px solid rgba(25,118,210,0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mb: 2,
             }}
           >
@@ -9084,7 +9282,10 @@ const ModeratorPage = () => {
                   maxHeight: 200,
                   overflow: 'auto',
                   bgcolor: 'rgba(0,0,0,0.2)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 }}
               >
                 {generatedKeys.map((key, index) => (

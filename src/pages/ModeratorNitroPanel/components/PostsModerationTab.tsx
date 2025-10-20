@@ -159,7 +159,10 @@ const PostsModerationTab: React.FC = () => {
         alignItems: 'center', 
         background: 'var(--theme-background)', 
         backdropFilter: 'var(--theme-backdrop-filter)', 
-        border: '1px solid var(--main-border-color)', 
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', 
         borderRadius: 'var(--main-border-radius)', 
         p: 2, 
         mb: 1 
@@ -194,7 +197,10 @@ const PostsModerationTab: React.FC = () => {
           sx={{
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid var(--main-border-color)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             mb: 1,
           }}
@@ -345,7 +351,10 @@ const PostsModerationTab: React.FC = () => {
                     p: 2,
                     background: 'rgba(255, 255, 255, 0.05)',
                     borderRadius: 'var(--main-border-radius)',
-                    border: '1px solid var(--main-border-color)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   }}
                 >
                   {currentPost.original_post.user && (
@@ -413,7 +422,10 @@ const PostsModerationTab: React.FC = () => {
           sx: {
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid var(--main-border-color)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
           }
         }}

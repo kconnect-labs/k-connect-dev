@@ -54,7 +54,10 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
   boxShadow: '0 4px 25px rgba(0, 0, 0, 0.2)',
   borderRadius: 16,
   padding: theme.spacing(0.8),
-  border: '1px solid rgba(255, 255, 255, 0.06)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   display: 'flex',
   alignItems: 'center',
   overflow: 'hidden',
@@ -141,7 +144,9 @@ const VolumeSlider = styled(Slider)(({ theme, covercolor }) => ({
     width: 8,
     height: 8,
     '&:hover, &.Mui-focusVisible': {
-      boxShadow: 'none',
+      boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
     },
   },
   '& .MuiSlider-rail': {
@@ -220,7 +225,10 @@ const TrackInfoSection = memo(
           height: 52,
           borderRadius: 'var(--main-border-radius)',
           objectFit: 'cover',
-          border: '1px solid rgba(66, 66, 66, 0.5)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           marginRight: 1.5,
           transition: 'all 0.3s ease',
           '&:hover': {

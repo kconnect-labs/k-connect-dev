@@ -206,7 +206,10 @@ const BalanceToggleContainer = styled(Box)(({ theme }) => ({
   marginTop: '16px',
   borderRadius: 'var(--main-border-radius)',
   background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   backdropFilter: 'blur(10px)',
 }));
 
@@ -3120,7 +3123,10 @@ const BalancePage = () => {
                   onClick={handleCloseTransactionDetails}
                   sx={{ 
                     borderRadius: 'var(--main-border-radius)',
-                    border: '1px solid rgba(207, 188, 251, 0.5)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     borderColor: '#cfbcfb',
                     color: '#cfbcfb',
                     padding: '6px 12px',
@@ -3175,7 +3181,9 @@ const BalancePage = () => {
                     borderRadius: 'var(--main-border-radius)',
                     overflow: 'hidden',
                     '&:before': { display: 'none' },
-                    boxShadow: 'none',
+                    boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
                     background: 'rgba(255, 255, 255, 0.05)',
                   }}
                 >
@@ -3527,7 +3535,10 @@ const BalancePage = () => {
                 borderRadius: 'var(--main-border-radius)',
                 backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                border: '1px solid rgba(0, 0, 0, 0.12)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 position: 'relative',
                 '&::before': {
                   content: '""',
@@ -4015,7 +4026,10 @@ const BalancePage = () => {
                   p: 3,
                   borderRadius: 'var(--main-border-radius)',
                   backgroundColor: '#1e1e1e',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   mt: 2,
                 }}
               >
@@ -4569,7 +4583,10 @@ const BalancePage = () => {
                         transform: 'translateY(-3px)',
                         boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
                       },
-                      border: '1px solid rgba(0, 0, 0, 0.12)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     }}
                   >
                     {/* Иконка подписки */}
@@ -4735,7 +4752,10 @@ const BalancePage = () => {
                     transform: 'translateY(-3px)',
                     boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
                   },
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 }}
               >
                 {/* Декорация */}
@@ -4899,7 +4919,10 @@ const BalancePage = () => {
                   gap: 1,
                   p: 2,
                   borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 }}
               >
                 {/* Информация о курсе */}

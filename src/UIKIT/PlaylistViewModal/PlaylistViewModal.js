@@ -53,7 +53,10 @@ const ViewDialog = styled(Dialog)(({ theme }) => ({
       backdropFilter: 'blur(20px) !important',
       backgroundImage: 'none !important',
       overflow: 'hidden !important',
-      border: '1px solid rgba(66, 66, 66, 0.5) !important',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     },
   },
 }));
@@ -132,7 +135,9 @@ const ActionButton = styled(Button)(({ theme }) => ({
   borderRadius: theme.spacing(3),
   padding: theme.spacing(1, 3),
   textTransform: 'none',
-  boxShadow: 'none',
+  boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
 }));
 
 const UserAvatar = styled(Avatar)(({ theme }) => ({

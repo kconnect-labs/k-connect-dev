@@ -447,7 +447,10 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
               backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               borderRadius: 'var(--small-border-radius)',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               overflow: 'hidden',
               mt: '10px',
             }}
@@ -519,7 +522,10 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                   startIcon={<Wallet sx={{ fontSize: 18 }} />}
                   sx={{
                     background: 'var(--theme-background, rgba(77, 214, 81, 0.15))',
-                    border: '1px solid rgba(77, 214, 81, 0.25)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     borderRadius: 'var(--main-border-radius)',
                     color: '#4CAF50',
                     fontSize: '0.85rem',
@@ -530,7 +536,10 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                     minWidth: 'auto',
                     '&:hover': {
                       background: 'var(--theme-background, rgba(77, 214, 81, 0.25))',
-                      border: '1px solid rgba(77, 214, 81, 0.4)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       transform: 'translateY(-1px)',
                     },
                   }}
@@ -551,7 +560,10 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                  borderRadius: 'var(--small-border-radius)',
                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-                 border: '1px solid rgba(0, 0, 0, 0.12)',
+                 borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                  overflow: 'hidden',
                }}
              >

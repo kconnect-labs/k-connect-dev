@@ -119,7 +119,10 @@ export const BadgeCard: React.FC<BadgeCardProps> = ({
               fontWeight: 500,
               backgroundColor: 'rgba(183, 0, 255, 0.9)',
               color: '#fffff',
-              border: '1px solid rgba(255, 0, 179, 0.18)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               backdropFilter: 'blur(4px)',
               boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
               '& .MuiChip-label': {

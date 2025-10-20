@@ -69,7 +69,10 @@ const StyledDialogPaper = styled('div')(({ theme }) => ({
   backdropFilter: 'blur(20px)',
   borderRadius: 16,
   boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-  border: '1px solid rgba(255,255,255,0.10)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   overflow: 'hidden',
 }));
 
@@ -77,7 +80,10 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   background: 'rgba(255,255,255,0.02)',
   borderRadius: 'var(--main-border-radius) !important',
   boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-  border: '1px solid rgba(255,255,255,0.07)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   margin: theme.spacing(2),
   padding: theme.spacing(3, 2, 2, 2),
 }));
@@ -86,13 +92,19 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   background: 'rgba(255,255,255,0.04)',
   borderRadius: 'var(--main-border-radius) !important',
   boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-  border: '1px solid rgba(255,255,255,0.07)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
 }));
 
 const StyledListItem = styled(ListItem)(({ theme, selected }) => ({
   borderRadius: 10,
   background: selected ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.02)',
-  border: '1px solid rgba(255,255,255,0.05)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   marginBottom: theme.spacing(0.5),
   transition: 'background 0.2s',
   '&:hover': {
@@ -624,7 +636,10 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
           <Box
             sx={{
               p: 1.5,
-              border: '1px solid',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               borderColor: 'divider',
               borderRadius: 'var(--main-border-radius)',
               height: '100%',
@@ -726,7 +741,10 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
           backdropFilter: 'blur(20px)',
           borderRadius: 'var(--main-border-radius)',
           boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-          border: '1px solid rgba(255,255,255,0.10)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           overflow: 'hidden',
           '@media (max-width: 600px)': {
             width: '100%',

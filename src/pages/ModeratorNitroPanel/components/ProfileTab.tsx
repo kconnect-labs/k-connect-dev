@@ -163,7 +163,10 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ currentUser, moderatorData, per
             borderRadius: 'var(--main-border-radius)',
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           <Box
@@ -213,7 +216,10 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ currentUser, moderatorData, per
                 sx={{
                   borderRadius: 'var(--main-border-radius)',
                   background: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   color: 'rgba(255, 255, 255, 0.87)',
                   fontSize: '0.75rem',
                   height: 24,
@@ -232,7 +238,10 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ currentUser, moderatorData, per
             borderRadius: 'var(--main-border-radius)',
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           {assignedDate && (

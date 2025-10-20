@@ -104,15 +104,12 @@ const HeaderPlayer = ({
 
       {isMobile && clearPlayer && (
         <button className='close-button' onClick={() => {
-          // Сначала останавливаем музыку
           if (isPlaying) {
             togglePlay();
           }
-          // Затем закрываем плеер (как повторное нажатие на ноту)
           if (onClose) {
             onClose();
           }
-          // И наконец очищаем музыку
           setTimeout(() => {
             clearPlayer();
           }, 100);

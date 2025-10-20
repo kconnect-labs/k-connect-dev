@@ -20,7 +20,10 @@ export const UserPositionCard: React.FC<UserPositionCardProps> = ({
       className="theme-aware"
       sx={{
         borderRadius: 'var(--small-border-radius)',
-        border: '1px solid rgba(66, 66, 66, 0.5)',
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         color: '#D0BCFF',
         fontWeight: 700,
         px: 3,
@@ -32,7 +35,9 @@ export const UserPositionCard: React.FC<UserPositionCardProps> = ({
         maxWidth: 1200,
         minWidth: 320,
         mb: 1,
-        boxShadow: 'none',
+        boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
         position: 'relative',
         overflow: 'hidden',
         zIndex: 2,

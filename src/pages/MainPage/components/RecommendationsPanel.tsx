@@ -34,7 +34,15 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
           mb: -0.625,
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+          borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+          borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+          borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+          boxShadow: `
+            
+            0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+            0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset
+          `,
           overflow: 'hidden',
           display: { xs: 'none', sm: 'block' },
         }}
@@ -98,7 +106,15 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
           mb: -0.625,
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+          borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+          borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+          borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+          boxShadow: `
+            
+            0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+            0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset
+          `,
           overflow: 'hidden',
           display: { xs: 'none', sm: 'block' },
         }}
@@ -119,7 +135,10 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
               mx: 'auto',
               mb: 2,
               bgcolor: 'rgba(208, 188, 255, 0.1)',
-              border: '1px solid rgba(208, 188, 255, 0.25)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             <PersonAddIcon sx={{ color: '#D0BCFF', fontSize: 26 }} />
@@ -159,8 +178,15 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
         mb: -0.625,
         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-        boxShadow: 'none',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+        boxShadow: `
+          
+          0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+          0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset
+        `,
         overflow: 'hidden',
         display: { xs: 'none', sm: 'block' },
       }}

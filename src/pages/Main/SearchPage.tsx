@@ -85,7 +85,10 @@ const SearchBox = styled(Box)(({ theme }) => ({
   borderRadius: 16,
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
 }));
 
@@ -93,10 +96,16 @@ const SearchInput = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: 'var(--main-border-radius) !important',
             background: 'rgba(255, 255, 255, 0.02)',
-    border: '1px solid rgba(66, 66, 66, 0.5)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     transition: 'all 0.3s ease',
     '&:hover': {
-      border: '1px solid rgba(255, 255, 255, 0.2)',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     },
     '&.Mui-focused': {
       border: `1px solid ${theme.palette.primary.main}`,
@@ -149,7 +158,10 @@ const UserCard = styled(motion.div)(({ theme }) => ({
   marginBottom: theme.spacing(1.5),
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(255, 255, 255, 0.08)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   cursor: 'pointer',
   position: 'relative',
@@ -157,7 +169,10 @@ const UserCard = styled(motion.div)(({ theme }) => ({
   '&:hover': {
     transform: 'translateY(-2px)',
     boxShadow: '0 12px 40px rgba(0, 0, 0, 0.3)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
 }));
 

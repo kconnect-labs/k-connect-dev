@@ -285,7 +285,10 @@ const BugReportPage = () => {
         style={{
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--small-border-radius)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
           marginBottom: '5px',
@@ -315,7 +318,10 @@ const BugReportPage = () => {
               placeholder='Краткое описание проблемы'
               style={{
                 background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
-                border: '1px solid rgba(66, 66, 66, 0.5)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderRadius: 'var(--main-border-radius)',
               }}
             />
@@ -344,7 +350,10 @@ const BugReportPage = () => {
               placeholder='Подробное описание проблемы'
               style={{
                 background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
-                border: '1px solid rgba(66, 66, 66, 0.5)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderRadius: 'var(--main-border-radius)',
               }}
             />
@@ -373,7 +382,10 @@ const BugReportPage = () => {
                 onChange={handleInputChange}
                 style={{
                   background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
-                  border: '1px solid rgba(66, 66, 66, 0.5)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                 }}
               >
@@ -394,7 +406,10 @@ const BugReportPage = () => {
                   cursor: 'pointer',
                   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                 }}
               >
@@ -418,7 +433,10 @@ const BugReportPage = () => {
                 className={styles['img-preview']}
                 style={{
                   borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(66, 66, 66, 0.5)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 }}
               />
             </div>
@@ -472,7 +490,10 @@ const BugReportPage = () => {
               marginBottom: '5px',
               background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               borderRadius: 'var(--small-border-radius)',
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
             }}
@@ -566,7 +587,10 @@ const BugReportPage = () => {
           style={{
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--small-border-radius)',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
             marginBottom: '5px',
@@ -618,7 +642,10 @@ const BugReportPage = () => {
         style={{
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--main-border-radius)',
           marginBottom: '5px',
         }}
@@ -631,7 +658,10 @@ const BugReportPage = () => {
         style={{
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--small-border-radius)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
           marginBottom: '5px',
@@ -667,7 +697,10 @@ const BugReportPage = () => {
               }
               style={{
                 borderRadius: 'var(--main-border-radius)',
-                border: '1px solid rgba(66, 66, 66, 0.5)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               }}
             />
           </div>
@@ -803,7 +836,10 @@ const BugReportPage = () => {
                 marginBottom: '5px',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                border: '1px solid rgba(0, 0, 0, 0.12)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderRadius: 'var(--main-border-radius)',
                 padding: '16px',
               }}
@@ -871,7 +907,10 @@ const BugReportPage = () => {
         style={{
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--small-border-radius)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
         }}
@@ -885,7 +924,10 @@ const BugReportPage = () => {
           rows={2}
           style={{
             background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
           }}
         />

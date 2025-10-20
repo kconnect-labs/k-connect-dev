@@ -28,7 +28,10 @@ const StyledDialog = styled(Dialog)({
   '& .MuiDialog-paper': {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(66, 66, 66, 0.5)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     borderRadius: 16,
     overflow: 'hidden',
     width: 400,
@@ -98,7 +101,10 @@ const MarketPriceChip = styled(Box)({
   fontWeight: 'bold',
   fontSize: '0.9rem',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   zIndex: 2,
 });
 

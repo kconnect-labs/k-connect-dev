@@ -26,7 +26,10 @@ const BanPage = () => {
             background: 'linear-gradient(135deg, #1A1A1A 0%, #121212 100%)',
             borderRadius: 'var(--small-border-radius)',
             boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
-            border: '1px solid rgba(255, 255, 255, 0.05)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           <Box
@@ -73,7 +76,10 @@ const BanPage = () => {
               bgcolor: 'rgba(244, 67, 54, 0.05)',
               borderRadius: 'var(--small-border-radius)',
               mb: 4,
-              border: '1px solid rgba(244, 67, 54, 0.1)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>

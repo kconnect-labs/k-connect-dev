@@ -39,7 +39,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     background: 'rgba(18, 18, 18, 0.95)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(207, 188, 251, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     borderRadius: theme.spacing(2),
     maxWidth: 600,
     width: '90vw',

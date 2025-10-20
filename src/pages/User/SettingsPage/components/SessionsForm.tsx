@@ -264,7 +264,10 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
             backgroundImage:
               'linear-gradient(45deg, rgba(16, 16, 16, 0.9), rgba(22, 22, 22, 0.9))',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
-            border: '1px solid rgba(208, 188, 255, 0.1)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             color: '#fff',
             '&:hover': {
               backgroundColor: 'rgba(22, 22, 22, 0.9)',
@@ -618,7 +621,10 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
               backgroundColor: 'rgba(208, 188, 255, 0.1)',
               color: '#d0bcff',
               boxShadow: '0 4px 12px rgba(208, 188, 255, 0.1)',
-              border: '1px solid rgba(208, 188, 255, 0.3)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               '&:hover': {
                 backgroundColor: 'rgba(208, 188, 255, 0.2)',
               },
@@ -671,7 +677,10 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
             sx={{
               backgroundColor: 'rgba(208, 188, 255, 0.1)',
               color: '#d0bcff',
-              border: '1px solid rgba(208, 188, 255, 0.3)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               '&:hover': {
                 backgroundColor: 'rgba(208, 188, 255, 0.2)',
               },

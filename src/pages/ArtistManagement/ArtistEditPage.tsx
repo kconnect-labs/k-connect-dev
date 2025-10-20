@@ -91,14 +91,23 @@ const ArtistEditPage: React.FC = () => {
   const textFieldStyles = {
     '& .MuiOutlinedInput-root': {
       background: 'var(--theme-background, rgba(255,255,255,0.03))',
-      border: '1px solid var(--theme-border, rgba(255,255,255,0.08))',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
       borderRadius: 'var(--theme-border-radius, 8px)',
       color: 'var(--theme-text-primary, inherit)',
       '&:hover': {
-        border: '1px solid var(--theme-border-hover, rgba(255,255,255,0.15))'
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
       },
       '&.Mui-focused': {
-        border: '1px solid var(--main-accent-color)'
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
       }
     },
     '& .MuiInputLabel-root': {
@@ -364,7 +373,10 @@ const ArtistEditPage: React.FC = () => {
             mb: 2,
             background: 'var(--theme-background, rgba(255,255,255,0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid var(--theme-border, rgba(255,255,255,0.08))',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--theme-border-radius, 16px)',
             color: 'var(--theme-text-primary, inherit)'
           }}>
@@ -380,11 +392,17 @@ const ArtistEditPage: React.FC = () => {
                     variant="outlined"
                     size="small"
                     sx={{
-                      border: '1px solid var(--theme-border, rgba(255,255,255,0.08))',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       color: 'var(--theme-text-primary, inherit)',
                       '&:hover': {
                         background: 'var(--theme-background, rgba(255,255,255,0.05))',
-                        border: '1px solid var(--theme-border-hover, rgba(255,255,255,0.15))'
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
                       }
                     }}
                   >
@@ -415,11 +433,17 @@ const ArtistEditPage: React.FC = () => {
                       variant="outlined"
                       size="small"
                       sx={{
-                        border: '1px solid var(--theme-border, rgba(255,255,255,0.08))',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         color: 'var(--theme-text-primary, inherit)',
                         '&:hover': {
                           background: 'var(--theme-background, rgba(255,255,255,0.05))',
-                          border: '1px solid var(--theme-border-hover, rgba(255,255,255,0.15))'
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
                         }
                       }}
                     >
@@ -515,7 +539,10 @@ const ArtistEditPage: React.FC = () => {
           <Card sx={{
             background: 'var(--theme-background, rgba(255,255,255,0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid var(--theme-border, rgba(255,255,255,0.08))',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--theme-border-radius, 16px)',
             color: 'var(--theme-text-primary, inherit)'
           }}>
@@ -581,7 +608,10 @@ const ArtistEditPage: React.FC = () => {
                       <Card
                         sx={{
                           background: 'var(--theme-background, rgba(255,255,255,0.03))',
-                          border: '1px solid var(--theme-border, rgba(255,255,255,0.08))',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           borderRadius: 'var(--theme-border-radius, 12px)',
                           overflow: 'hidden'
                         }}
@@ -675,7 +705,10 @@ const ArtistEditPage: React.FC = () => {
                                   py: 0.5,
                                   borderRadius: 'var(--small-border-radius)',
                                   background: 'var(--theme-background, rgba(255,255,255,0.05))',
-                                  border: '1px solid var(--theme-border, rgba(255,255,255,0.1))'
+                                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
                                 }}
                               >
                                 <Icon icon="solar:play-outline" width={14} height={14} />
@@ -693,7 +726,10 @@ const ArtistEditPage: React.FC = () => {
                                   py: 0.5,
                                   borderRadius: 'var(--small-border-radius)',
                                   background: 'var(--theme-background, rgba(255,255,255,0.05))',
-                                  border: '1px solid var(--theme-border, rgba(255,255,255,0.1))'
+                                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
                                 }}
                               >
                                 <Icon icon="solar:heart-outline" width={14} height={14} />
@@ -734,7 +770,10 @@ const ArtistEditPage: React.FC = () => {
             mb: 2,
             background: 'var(--theme-background, rgba(255,255,255,0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid var(--theme-border, rgba(255,255,255,0.08))',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--theme-border-radius, 16px)',
             color: 'var(--theme-text-primary, inherit)'
           }}>
@@ -778,11 +817,17 @@ const ArtistEditPage: React.FC = () => {
               onClick={() => setDeleteDialogOpen(false)}
               variant="outlined"
               sx={{
-                border: '1px solid var(--theme-border, rgba(255,255,255,0.08))',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 color: 'var(--theme-text-primary, inherit)',
                 '&:hover': {
                   background: 'var(--theme-background, rgba(255,255,255,0.05))',
-                  border: '1px solid var(--theme-border-hover, rgba(255,255,255,0.15))'
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
                 }
               }}
             >
@@ -939,7 +984,10 @@ const ArtistEditPage: React.FC = () => {
                             onClick={() => handleUnassignTrack(track.id)}
                             startIcon={<DeleteIcon />}
                             sx={{
-                              border: '1px solid var(--error-color, #f44336)',
+                              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                               color: 'var(--error-color, #f44336)',
                               fontWeight: 600,
                               textTransform: 'none',
@@ -950,7 +998,10 @@ const ArtistEditPage: React.FC = () => {
                               '&:hover': {
                                 background: 'var(--error-color, #f44336)',
                                 color: 'white',
-                                border: '1px solid var(--error-color, #f44336)',
+                                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                                 transform: 'translateY(-1px)',
                                 boxShadow: '0 4px 12px rgba(244, 67, 54, 0.25)'
                               },

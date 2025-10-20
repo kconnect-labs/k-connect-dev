@@ -67,7 +67,10 @@ const UserRecommendation = ({ user }) => {
         background: '#1d1d1d',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12)',
         mb: 1.5,
-        border: '1px solid rgba(255, 255, 255, 0.03)',
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         transition: 'all 0.2s ease',
         '&:hover': {
           boxShadow: '0 3px 8px rgba(0, 0, 0, 0.15)',

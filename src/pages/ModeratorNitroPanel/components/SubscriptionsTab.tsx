@@ -174,7 +174,10 @@ const SubscriptionsTab: React.FC = () => {
       {/* Статистика подписок */}
       <Grid container spacing={1} sx={{ mb: 1 }}>
         <Grid item xs={6} sm={3}>
-          <Card sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)' }}>
+          <Card sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)' }}>
             <CardContent sx={{ textAlign: 'center', p: 2 }}>
               <CardMembership sx={{ fontSize: 24, color: 'primary.main', mb: 0.5 }} />
               <Typography variant="body2">Базовая</Typography>
@@ -185,7 +188,10 @@ const SubscriptionsTab: React.FC = () => {
           </Card>
         </Grid>
         <Grid item xs={6} sm={3}>
-          <Card sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)' }}>
+          <Card sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)' }}>
             <CardContent sx={{ textAlign: 'center', p: 2 }}>
               <Star sx={{ fontSize: 24, color: 'secondary.main', mb: 0.5 }} />
               <Typography variant="body2">Премиум</Typography>
@@ -196,7 +202,10 @@ const SubscriptionsTab: React.FC = () => {
           </Card>
         </Grid>
         <Grid item xs={6} sm={3}>
-          <Card sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)' }}>
+          <Card sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)' }}>
             <CardContent sx={{ textAlign: 'center', p: 2 }}>
               <Diamond sx={{ fontSize: 24, color: 'warning.main', mb: 0.5 }} />
               <Typography variant="body2">Ультимейт</Typography>
@@ -207,7 +216,10 @@ const SubscriptionsTab: React.FC = () => {
           </Card>
         </Grid>
         <Grid item xs={6} sm={3}>
-          <Card sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)' }}>
+          <Card sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)' }}>
             <CardContent sx={{ textAlign: 'center', p: 2 }}>
               <WorkspacePremium sx={{ fontSize: 24, color: 'error.main', mb: 0.5 }} />
               <Typography variant="body2">MAX</Typography>
@@ -220,7 +232,10 @@ const SubscriptionsTab: React.FC = () => {
       </Grid>
 
       {/* Поиск пользователей */}
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)', p: 2, mb: 1 }}>
+      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)', p: 2, mb: 1 }}>
         <TextField
           fullWidth
           placeholder="Поиск по имени или username..."
@@ -249,12 +264,18 @@ const SubscriptionsTab: React.FC = () => {
 
       {/* Список пользователей */}
       {users.length > 0 && (
-        <List sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)', p: 1 }}>
+        <List sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)', p: 1 }}>
               {users.map((user) => (
                 <ListItem
                   key={user.id}
                   sx={{
-                    border: '1px solid var(--main-border-color)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     borderRadius: 'var(--main-border-radius)',
                     mb: 1,
                     background: 'var(--theme-background)',
@@ -315,7 +336,10 @@ const SubscriptionsTab: React.FC = () => {
           sx: {
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid var(--main-border-color)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
           }
         }}
@@ -339,7 +363,10 @@ const SubscriptionsTab: React.FC = () => {
               </Box>
 
               {/* Выдача новой подписки */}
-              <Box sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)', p: 2, mb: 2 }}>
+              <Box sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)', p: 2, mb: 2 }}>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     <FormControl fullWidth>
                       <InputLabel>Тип подписки</InputLabel>
@@ -388,7 +415,10 @@ const SubscriptionsTab: React.FC = () => {
                       <ListItem
                         key={subscription.id}
                         sx={{
-                          border: '1px solid var(--main-border-color)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                           borderRadius: 'var(--main-border-radius)',
                           mb: 1,
                           background: 'var(--theme-background)',

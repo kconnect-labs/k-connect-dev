@@ -186,7 +186,10 @@ const StatisticsTab: React.FC = () => {
       <Box
         sx={{
           p: 2,
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--small-border-radius)',
           background: 'rgba(255, 255, 255, 0.02)',
         }}
@@ -431,7 +434,10 @@ const StatisticsTab: React.FC = () => {
           <Card
             sx={{
               background: 'rgba(255, 255, 255, 0.02)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               borderRadius: 'var(--small-border-radius)',
             }}
           >

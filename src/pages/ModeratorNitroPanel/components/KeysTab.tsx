@@ -313,7 +313,10 @@ const KeysTab: React.FC = () => {
             borderRadius: 'var(--main-border-radius)',
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid var(--main-border-color)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           <Typography variant="body1" color="text.secondary">
@@ -328,7 +331,10 @@ const KeysTab: React.FC = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid var(--main-border-color)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   height: '100%',
                   display: 'flex',
@@ -424,11 +430,17 @@ const KeysTab: React.FC = () => {
                       mt: 'auto',
                       borderRadius: 'var(--main-border-radius)',
                       background: 'rgba(244, 67, 54, 0.05)',
-                      border: '1px solid rgba(244, 67, 54, 0.2)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       color: 'rgba(244, 67, 54, 0.8)',
                       '&:hover': {
                         background: 'rgba(244, 67, 54, 0.1)',
-                        border: '1px solid rgba(244, 67, 54, 0.3)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       },
                     }}
                   >
@@ -461,7 +473,10 @@ const KeysTab: React.FC = () => {
           sx: {
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid var(--main-border-color)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
           }
         }}
@@ -640,7 +655,10 @@ const KeysTab: React.FC = () => {
                   maxHeight: 200,
                   overflow: 'auto',
                   background: 'rgba(0,0,0,0.2)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 }}
               >
                 {generatedKeys.map((key, index) => (

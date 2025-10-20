@@ -44,7 +44,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     background: 'rgba(18, 18, 18, 0.95)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(207, 188, 251, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     borderRadius: theme.spacing(2),
     maxWidth: 800,
     width: '90vw',
@@ -54,7 +57,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 
 const StyledChip = styled(Chip)(({ theme }) => ({
   background: 'rgba(207, 188, 251, 0.1)',
-  border: '1px solid rgba(207, 188, 251, 0.2)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   color: 'rgba(207, 188, 251, 0.9)',
   fontWeight: 500,
 }));
@@ -273,7 +279,10 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                   p: 2, 
                   background: 'rgba(207, 188, 251, 0.05)',
                   borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(207, 188, 251, 0.1)'
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
                 }}>
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
                     <Skeleton variant="circular" width={24} height={24} />
@@ -296,7 +305,10 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                   p: 2, 
                   background: 'rgba(207, 188, 251, 0.05)',
                   borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(207, 188, 251, 0.1)'
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)'
                 }}>
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
                     <Avatar 

@@ -262,7 +262,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: isMobile ? 0 : 'var(--main-border-radius)',
             minHeight: isMobile ? '100vh' : 'auto',
             maxHeight: isMobile ? '100vh' : '90vh',
@@ -307,7 +310,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
                 px: 3,
                 borderRadius: 'var(--main-border-radius)',
                 bgcolor: 'var(--theme-surface)',
-                border: '1px solid var(--theme-border)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 mb: 2,
                 '&:hover': {
                   bgcolor: 'var(--theme-hover)',
@@ -380,7 +386,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
                 px: 3,
                 borderRadius: 'var(--main-border-radius)',
                 bgcolor: 'var(--theme-surface)',
-                border: '1px solid var(--theme-border)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 mb: 2,
                 '&:hover': {
                   bgcolor: 'var(--theme-hover)',
@@ -464,7 +473,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
                     '&:disabled': {
                       bgcolor: 'var(--theme-disabled)',
                       color: 'var(--theme-text-disabled)',
-                      border: '1px solid var(--theme-border)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     },
                   }}
                 >
@@ -488,7 +500,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
                   px: 3,
                   borderRadius: 'var(--main-border-radius)',
                   bgcolor: 'var(--theme-surface)',
-                  border: '1px solid var(--theme-border)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   mb: 2,
                   '&:hover': {
                     bgcolor: 'var(--theme-hover)',
@@ -563,7 +578,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
                 mt: 2, 
                 bgcolor: 'var(--theme-info-bg)', 
                 color: 'var(--theme-text-primary)',
-                border: '1px solid var(--theme-info-border)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderRadius: 'var(--main-border-radius)',
               }}
             >
@@ -586,7 +604,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: isMobile ? 0 : 'var(--main-border-radius)',
             minHeight: isMobile ? '100vh' : 'auto',
             maxHeight: isMobile ? '100vh' : '90vh',

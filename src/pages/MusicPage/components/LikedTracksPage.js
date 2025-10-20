@@ -72,7 +72,10 @@ const HeaderCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
 }));
 
 const TrackListItem = styled(ListItem)(({ theme, isActive, ...props }) => ({
@@ -81,7 +84,10 @@ const TrackListItem = styled(ListItem)(({ theme, isActive, ...props }) => ({
     ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
     : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.05)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   marginBottom: theme.spacing(0.25), // 2px отступ между треками
   padding: theme.spacing(0.75, 2), // Еще меньше паддинг для компактности
   transition: 'background 0.2s ease',
@@ -156,7 +162,10 @@ const DraggableTrackListItem = styled(ListItem)(({ theme, isActive, isDragging, 
     ? 'var(--theme-background, rgba(255, 255, 255, 0.08))'
     : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.05)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   marginBottom: theme.spacing(0.25),
   padding: theme.spacing(0.75, 2),
   transition: 'all 0.15s ease',
@@ -436,7 +445,10 @@ const LikedTracksPage = ({ onBack }) => {
                         fontSize: '0.7rem',
                         backgroundColor: 'rgba(255, 255, 255, 0.05)',
                         color: 'text.secondary',
-                        border: '1px solid rgba(66, 66, 66, 0.5)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       }}
                     />
                   </>
@@ -529,7 +541,10 @@ const LikedTracksPage = ({ onBack }) => {
                 background: 'rgba(255, 255, 255, 0.03)',
                 backdropFilter: 'blur(20px)',
                 borderRadius: 'var(--main-border-radius)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
                 transition: 'background 0.2s',
                 '&:hover': {
@@ -567,7 +582,10 @@ const LikedTracksPage = ({ onBack }) => {
             borderRadius: 'var(--main-border-radius) !important',
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03)) ',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(255, 255, 255, 0.05)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           <FavoriteIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
@@ -656,7 +674,10 @@ const LikedTracksPage = ({ onBack }) => {
           sx: {
             backgroundColor: 'rgba(30, 30, 30, 0.95)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255,255,255,0.05)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
           },

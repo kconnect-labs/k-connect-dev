@@ -857,7 +857,9 @@ const ClickerPage = () => {
           '&:disabled': {
             opacity: 0.6,
             transform: 'none',
-            boxShadow: 'none',
+            boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
           },
         }}
       >
@@ -894,7 +896,9 @@ const ClickerPage = () => {
           '&:disabled': {
             opacity: 0.6,
             transform: 'none',
-            boxShadow: 'none',
+            boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
           },
         }}
       >
@@ -1705,7 +1709,10 @@ const ClickerPage = () => {
               borderRadius: 3,
               background: 'rgba(30, 30, 30, 0.6)',
               backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(66, 66, 66, 0.5)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             <Box sx={{ mb: 2 }}>
@@ -1751,7 +1758,10 @@ const ClickerPage = () => {
                       borderRadius: 3,
                       background: alpha(theme.palette.background.paper, 0.4),
                       backdropFilter: 'blur(5px)',
-                      border: '1px solid rgba(192,192,192,0.3)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       display: 'flex',
                       flexDirection: { xs: 'row', md: 'column' },
                       alignItems: { xs: 'center', md: 'center' },
@@ -1788,7 +1798,10 @@ const ClickerPage = () => {
                         sx={{
                           width: { xs: 40, md: 64 },
                           height: { xs: 40, md: 64 },
-                          border: '1px solid silver',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         }}
                       />
                       <Box
@@ -1803,7 +1816,10 @@ const ClickerPage = () => {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          border: '1px solid silver',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         }}
                       >
                         <Typography variant='caption' fontWeight='bold'>
@@ -1968,7 +1984,10 @@ const ClickerPage = () => {
                       borderRadius: 3,
                       background: alpha(theme.palette.background.paper, 0.4),
                       backdropFilter: 'blur(5px)',
-                      border: '1px solid rgba(255,215,0,0.5)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       display: 'flex',
                       flexDirection: { xs: 'row', md: 'column' },
                       alignItems: { xs: 'center', md: 'center' },
@@ -2024,7 +2043,10 @@ const ClickerPage = () => {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          border: '1px solid gold',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         }}
                       >
                         <EmojiEventsIcon
@@ -2193,7 +2215,10 @@ const ClickerPage = () => {
                       borderRadius: 3,
                       background: alpha(theme.palette.background.paper, 0.4),
                       backdropFilter: 'blur(5px)',
-                      border: '1px solid rgba(205,127,50,0.3)',
+                      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       display: 'flex',
                       flexDirection: { xs: 'row', md: 'column' },
                       alignItems: { xs: 'center', md: 'center' },
@@ -2230,7 +2255,10 @@ const ClickerPage = () => {
                         sx={{
                           width: { xs: 40, md: 64 },
                           height: { xs: 40, md: 64 },
-                          border: '1px solid #cd7f32',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         }}
                       />
                       <Box
@@ -2245,7 +2273,10 @@ const ClickerPage = () => {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          border: '1px solid #cd7f32',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         }}
                       >
                         <Typography variant='caption' fontWeight='bold'>
@@ -2434,7 +2465,10 @@ const ClickerPage = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         mr: 2,
-                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                       }}
                     >
                       <Typography

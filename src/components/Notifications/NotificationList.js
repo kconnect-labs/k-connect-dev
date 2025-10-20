@@ -75,7 +75,9 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
       height: '100vh',
       maxHeight: '100vh',
       border: 'none',
-      boxShadow: 'none',
+      boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
     },
     '& .MuiMenuItem-root': {
       padding: '10px 16px',

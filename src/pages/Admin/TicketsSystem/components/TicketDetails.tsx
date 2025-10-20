@@ -91,7 +91,10 @@ interface TicketDetailsProps {
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: theme.spacing(2),
   padding: theme.spacing(2),
   marginBottom: theme.spacing(2),
@@ -277,7 +280,10 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
           p: 2,
           borderRadius: 'var(--main-border-radius)',
           background: 'rgba(207, 188, 251, 0.05)',
-          border: '1px solid rgba(207, 188, 251, 0.1)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           fontSize: '0.9rem',
           lineHeight: 1.5,
           '& strong': {
@@ -605,12 +611,21 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
             mb: 2,
             '& .MuiOutlinedInput-root': {
               background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               '&:hover': {
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               },
               '&.Mui-focused': {
-                border: '1px solid rgba(33, 150, 243, 0.5)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               },
             },
             '& .MuiInputBase-input': {
@@ -722,7 +737,10 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                             mb: 1,
                             '& .MuiOutlinedInput-root': {
                               background: 'rgba(255, 255, 255, 0.05)',
-                              border: '1px solid rgba(0, 0, 0, 0.12)',
+                              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                             },
                             '& .MuiInputBase-input': {
                               color: 'rgba(255, 255, 255, 0.87)',

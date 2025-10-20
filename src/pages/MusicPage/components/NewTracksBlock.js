@@ -34,7 +34,10 @@ const NewTracksCard = styled(Card)(({ theme }) => ({
       background: 'var(--theme-background, rgba(0, 0, 0, 0.03))', // Фон 003
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
 }));
 
 const NewTracksHeader = styled(Box)(({ theme }) => ({
@@ -45,7 +48,10 @@ const NewTracksHeader = styled(Box)(({ theme }) => ({
   borderRadius: 'var(--main-border-radius) !important',
       background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.05)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
 }));
 
 const TrackItem = styled(ListItem)(({ theme, isActive }) => ({
@@ -54,7 +60,10 @@ const TrackItem = styled(ListItem)(({ theme, isActive }) => ({
     ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
     : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
       backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.05)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   marginBottom: theme.spacing(0.25),
   padding: theme.spacing(0.75, 2),
   transition: 'background 0.2s ease',
@@ -279,8 +288,10 @@ const NewTracksBlock = () => {
                                     backgroundColor:
                                       'rgba(255, 255, 255, 0.05)',
                                     color: 'text.secondary',
-                                    border:
-                                      '1px solid rgba(66, 66, 66, 0.5)',
+                                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                                   }}
                                 />
                               </>

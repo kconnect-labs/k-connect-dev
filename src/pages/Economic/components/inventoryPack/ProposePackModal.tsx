@@ -60,7 +60,10 @@ const FilePreview = styled(Box)(({ theme }) => ({
   borderRadius: 8,
   overflow: 'hidden',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -74,7 +77,10 @@ const FilePreview = styled(Box)(({ theme }) => ({
 const ItemNameInput = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
-    border: '1px solid rgba(66, 66, 66, 0.5)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     borderRadius: 8,
     '&:hover': {
       borderColor: 'rgba(255, 255, 255, 0.2)',
@@ -367,7 +373,10 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
                       sx={{
                         p: isMobile ? 0.5 : 1,
                         background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-                        border: '1px solid rgba(66, 66, 66, 0.5)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         borderRadius: 'var(--main-border-radius)',
                         position: 'relative',
                         width: isMobile ? 'calc(50% - 4px)' : 'auto',

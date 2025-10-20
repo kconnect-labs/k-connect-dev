@@ -372,7 +372,10 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
             sx={{
               bgcolor: 'rgba(76, 175, 80, 0.1)',
               color: '#4caf50',
-              border: '1px solid #4caf50',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               '&:hover': {
                 bgcolor: 'rgba(76, 175, 80, 0.2)',
               },
@@ -421,7 +424,10 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
                 mb: 1,
                 bgcolor: 'rgba(255, 255, 255, 0.05)',
                 borderRadius: 'var(--main-border-radius)',
-                border: '1px solid rgba(66, 66, 66, 0.5)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -665,7 +671,10 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
             m: 2,
             bgcolor: 'rgba(244, 67, 54, 0.1)',
             color: '#f44336',
-            border: '1px solid rgba(244, 67, 54, 0.3)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           {error}

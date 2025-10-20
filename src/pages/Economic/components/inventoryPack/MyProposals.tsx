@@ -27,7 +27,10 @@ import { motion } from 'framer-motion';
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: 16,
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
   transition: 'all 0.3s ease',
@@ -67,7 +70,10 @@ const ItemImage = styled(Box)(({ theme }) => ({
   borderRadius: 6,
   overflow: 'hidden',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -293,7 +299,10 @@ const MyProposals: React.FC = () => {
                   </Box>
 
                   {proposal.status === 'rejected' && proposal.rejection_reason && (
-                    <Paper sx={{ mt: 2, p: 2, background: 'rgba(255, 0, 0, 0.1)', border: '1px solid rgba(255, 0, 0, 0.2)' }}>
+                    <Paper sx={{ mt: 2, p: 2, background: 'rgba(255, 0, 0, 0.1)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)' }}>
                       <Typography variant="body2" color="error" sx={{ fontWeight: 500, mb: 1 }}>
                         Причина отклонения:
                       </Typography>

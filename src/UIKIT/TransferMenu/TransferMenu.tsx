@@ -776,7 +776,10 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                 bgcolor: 'rgba(40, 40, 40, 0.4)',
                 backdropFilter: 'blur(5px)',
                 borderRadius: 'var(--main-border-radius)',
-                border: '1px solid rgba(60, 60, 60, 0.4)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 display: 'flex',
                 alignItems: 'center',
               }}
@@ -1037,7 +1040,10 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                 bgcolor: 'rgba(50, 20, 20, 0.4)',
                 backdropFilter: 'blur(5px)',
                 borderRadius: 'var(--main-border-radius)',
-                border: '1px solid rgba(70, 20, 20, 0.4)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               }}
             >
               <Typography variant='body2' color='error'>
@@ -1115,7 +1121,10 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                 bgcolor: 'rgba(207, 188, 251, 0.05)',
                 borderRadius: 'var(--main-border-radius)',
                 mb: 3,
-                border: '1px solid rgba(207, 188, 251, 0.2)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 overflow: 'hidden',
               }}
             >

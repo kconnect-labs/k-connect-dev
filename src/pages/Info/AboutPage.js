@@ -1095,7 +1095,9 @@ const AboutPage = () => {
                 border: '1.5px solid rgba(255,255,255,0.35)',
                 fontWeight: 500,
                 letterSpacing: 0.2,
-                boxShadow: 'none',
+                boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
                 textTransform: 'none',
                 transition: 'all 0.2s',
                 '&:hover': {

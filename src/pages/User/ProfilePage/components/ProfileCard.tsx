@@ -250,8 +250,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       sx={{
         p: 0,
         borderRadius: 'var(--small-border-radius)',
-        boxShadow: 'none',
-        background:
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+        boxShadow: `
+          
+          0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+          0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset
+        `,
+                background:
           (user?.profile_id === 2 || user?.profile_id === 3) && user?.banner_url
             ? `url(${user.banner_url}), var(--theme-background, rgba(255, 255, 255, 0.03))`
             : 'var(--theme-background, rgba(255, 255, 255, 0.03))',
@@ -267,7 +275,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
         overflow: 'hidden',
         mb: '5px',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
         position: 'relative',
         zIndex: 2,
       }}
@@ -702,7 +709,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 sx={{
                   p: 1,
                   borderRadius: 'var(--main-border-radius)',
-                  boxShadow: 'none',
+                  boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
                   textAlign: 'center',
                   background: theme =>
                     theme.palette.mode === 'dark'
@@ -759,7 +768,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 sx={{
                   p: 1,
                   borderRadius: 'var(--main-border-radius)',
-                  boxShadow: 'none',
+                  boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
                   textAlign: 'center',
                   background: theme =>
                     theme.palette.mode === 'dark'
@@ -819,7 +830,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   sx={{
                     p: 1,
                     borderRadius: 'var(--main-border-radius)',
-                    boxShadow: 'none',
+                    boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
                     textAlign: 'center',
                     background: theme =>
                       theme.palette.mode === 'dark'
@@ -936,7 +949,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   sx={{
                     p: 1,
                     borderRadius: 'var(--main-border-radius)',
-                    boxShadow: 'none',
+                    boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
                     textAlign: 'center',
                     background: theme =>
                       theme.palette.mode === 'dark'

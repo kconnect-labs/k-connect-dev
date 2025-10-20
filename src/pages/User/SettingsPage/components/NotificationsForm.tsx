@@ -302,7 +302,10 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
     p: 3,
     borderRadius: 'var(--main-border-radius)',
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
@@ -312,7 +315,10 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
     p: 2,
     borderRadius: 'var(--main-border-radius)',
     background: 'rgba(255, 255, 255, 0.02)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   };
 
   if (loadingPrefs) {
@@ -560,7 +566,10 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
           },
         }}

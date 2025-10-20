@@ -229,7 +229,10 @@ const AsyncStickerRenderer = ({ src, style, onClick }) => {
 const cardStyles = {
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: 'var(--small-border-radius)',
   color: 'var(--theme-text-primary, inherit)',
 };
@@ -238,7 +241,10 @@ const buttonStyles = {
   borderRadius: 'var(--small-border-radius)',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   color: 'var(--theme-text-primary, inherit)',
   '&:hover': {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
@@ -570,7 +576,10 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
                 ? {}
                 : {
                     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                    border: '1px solid rgba(0, 0, 0, 0.12)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   }),
             }}
           >
@@ -589,7 +598,10 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
             sx={{
               ...buttonStyles,
               background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             Войти для добавления

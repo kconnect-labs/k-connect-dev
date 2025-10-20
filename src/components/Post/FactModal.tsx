@@ -124,7 +124,10 @@ const FactModal: React.FC<FactModalProps> = ({
           sx={{
             mb: 3,
             backgroundColor: 'rgba(244, 67, 54, 0.1)',
-            border: '1px solid rgba(244, 67, 54, 0.3)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             color: '#f44336',
             '& .MuiAlert-icon': {
               color: '#f44336',
@@ -218,7 +221,10 @@ const FactModal: React.FC<FactModalProps> = ({
               p: 2,
               borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.1)',
-              border: '1px solid rgba(244, 67, 54, 0.3)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               mb: 3,
             }}
           >

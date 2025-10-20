@@ -125,7 +125,10 @@ const GameContainer = styled(Paper)(({ theme }) => ({
   margin: '0 auto',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: 8,
   boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
 }));
@@ -614,7 +617,10 @@ const RouletteGame = () => {
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
                   borderRadius: 8,
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                 }}
               />
@@ -755,7 +761,10 @@ const RouletteGame = () => {
                     ? 'rgba(255, 255, 255, 0.1)'
                     : '#D0BCFF',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   color: isSpinning ? 'var(--theme-text-primary)' : '#000000',
                   boxShadow: '0 4px 12px rgba(208, 188, 255, 0.3)',
                   letterSpacing: 0.5,

@@ -29,7 +29,9 @@ export const createNSFWOverlay = (isMobile: boolean, onShowSensitive: () => void
     mb: isMobile ? 1 : 2,
     background: '#5c5b5e',
     color: '#fff',
-    boxShadow: 'none',
+    boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
     fontSize: isMobile ? '0.75rem' : '0.85rem',
     px: isMobile ? 0.5 : 1,
     py: isMobile ? 0.25 : 0.5,

@@ -97,7 +97,10 @@ const BannersSection: React.FC = () => {
             backgroundColor: 'rgba(255, 255, 255, 0.02)',
             borderRadius: 'var(--main-border-radius)',
             mb: 2,
-            border: '1px solid rgba(255, 255, 255, 0.05)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             overflow: 'hidden',
           }}
         >
@@ -141,7 +144,10 @@ const BannersSection: React.FC = () => {
             sx={{
               backgroundColor: 'rgba(208, 188, 255, 0.1)',
               color: '#D0BCFF',
-              border: '1px solid rgba(208, 188, 255, 0.3)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           />
           <Chip
@@ -150,7 +156,10 @@ const BannersSection: React.FC = () => {
             sx={{
               backgroundColor: 'rgba(255, 255, 255, 0.1)',
               color: 'rgba(255, 255, 255, 0.8)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           />
           <Chip
@@ -159,7 +168,10 @@ const BannersSection: React.FC = () => {
             sx={{
               backgroundColor: 'rgba(255, 255, 255, 0.1)',
               color: 'rgba(255, 255, 255, 0.8)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           />
         </Box>
@@ -245,7 +257,10 @@ const BannersSection: React.FC = () => {
               borderRadius: 'var(--main-border-radius)',
               overflow: 'hidden',
               mb: 3,
-              border: '1px solid rgba(66, 66, 66, 0.5)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             }}
           >
             <img

@@ -45,7 +45,10 @@ const AllTracksCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background, rgba(0, 0, 0, 0.03))', // Фон 003
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
 }));
 
 const AllTracksHeader = styled(Box)(({ theme }) => ({
@@ -56,7 +59,10 @@ const AllTracksHeader = styled(Box)(({ theme }) => ({
   borderRadius: 'var(--main-border-radius) !important',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.05)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
 }));
 
 const SearchContainer = styled(Box)(({ theme }) => ({
@@ -68,12 +74,21 @@ const StyledSearchField = styled(TextField)(({ theme }) => ({
     borderRadius: 'var(--main-border-radius) !important',
     background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(255, 255, 255, 0.05)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     '&:hover': {
-      border: '1px solid rgba(66, 66, 66, 0.5)',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     },
     '&.Mui-focused': {
-      border: '1px solid rgba(255, 255, 255, 0.2)',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
       boxShadow: '0 0 0 2px rgba(255, 255, 255, 0.1)',
     },
   },
@@ -94,7 +109,10 @@ const TrackCard = styled(Paper)(({ theme }) => ({
   padding: '8px',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   display: 'flex',
   alignItems: 'center',
   gap: '8px',

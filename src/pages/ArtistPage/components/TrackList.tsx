@@ -41,7 +41,10 @@ const StyledListItem = styled(Box)<{ isCurrentTrack?: boolean }>(({ theme, isCur
   backgroundColor: isCurrentTrack 
     ? 'rgba(182, 157, 248, 0.1)' 
     : 'transparent',
-  border: '1px solid transparent',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   position: 'relative',
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',

@@ -32,7 +32,10 @@ interface TicketListProps {
 // Стилизованные компоненты
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'rgba(207, 188, 251, 0.05)',
-  border: '1px solid rgba(207, 188, 251, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: theme.spacing(2),
   marginBottom: theme.spacing(2),
   transition: 'all 0.2s ease',
@@ -42,7 +45,10 @@ const StyledCard = styled(Card)(({ theme }) => ({
     backdropFilter: 'blur(20px)',
     '&:hover': {
       background: 'rgba(207, 188, 251, 0.08)',
-      border: '1px solid rgba(207, 188, 251, 0.2)',
+      borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
       transform: 'translateY(-1px)',
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
     },
@@ -58,7 +64,10 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 const StyledChip = styled(Chip)(({ theme }) => ({
   background: 'rgba(207, 188, 251, 0.1)',
-  border: '1px solid rgba(207, 188, 251, 0.2)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   color: 'rgba(207, 188, 251, 0.9)',
   fontWeight: 500,
   '& .MuiChip-label': {

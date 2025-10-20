@@ -67,7 +67,10 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: 20,
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
   transition: 'all 0.3s ease',
@@ -100,20 +103,29 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
 const BenefitCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.05)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(208, 188, 255, 0.2)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: 16,
   padding: theme.spacing(2),
   transition: 'all 0.3s ease',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(208, 188, 255, 0.4)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
 }));
 
 const TopicChip = styled(Chip)(({ theme }) => ({
   background: 'rgba(208, 188, 255, 0.1)',
   color: '#D0BCFF',
-  border: '1px solid rgba(208, 188, 255, 0.3)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   fontWeight: 500,
   margin: theme.spacing(0.5),
   '&:hover': {
@@ -146,7 +158,10 @@ const BonusCard = styled(Card)(({ theme }) => ({
   background:
     'linear-gradient(135deg, rgba(208, 188, 255, 0.1) 0%, rgba(156, 100, 242, 0.1) 100%)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(208, 188, 255, 0.3)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: 16,
   padding: theme.spacing(2),
   textAlign: 'center',
@@ -154,7 +169,10 @@ const BonusCard = styled(Card)(({ theme }) => ({
   '&:hover': {
     background:
       'linear-gradient(135deg, rgba(208, 188, 255, 0.15) 0%, rgba(156, 100, 242, 0.15) 100%)',
-    border: '1px solid rgba(208, 188, 255, 0.5)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     transform: 'translateY(-2px)',
   },
 }));

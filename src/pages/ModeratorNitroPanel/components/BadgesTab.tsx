@@ -258,7 +258,10 @@ const BadgesTab: React.FC = () => {
         alignItems: 'center', 
         background: 'var(--theme-background)', 
         backdropFilter: 'var(--theme-backdrop-filter)', 
-        border: '1px solid var(--main-border-color)', 
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', 
         borderRadius: 'var(--main-border-radius)', 
         p: 2, 
         mb: 1 
@@ -299,7 +302,10 @@ const BadgesTab: React.FC = () => {
             borderRadius: 'var(--main-border-radius)',
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid var(--main-border-color)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           <Typography variant="body1" color="text.secondary">
@@ -314,7 +320,10 @@ const BadgesTab: React.FC = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid var(--main-border-color)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   height: '100%',
                   display: 'flex',
@@ -481,7 +490,10 @@ const BadgesTab: React.FC = () => {
           sx: {
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid var(--main-border-color)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
           }
         }}
@@ -573,7 +585,10 @@ const BadgesTab: React.FC = () => {
           sx: {
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid var(--main-border-color)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
           }
         }}

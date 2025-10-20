@@ -22,7 +22,10 @@ const BannerContainer = styled(motion.div)(({ theme, isMobile }) => ({
   padding: isMobile ? '4px 16px' : '4px 12px',
   borderRadius: isMobile ? 'var(--main-border-radius) !important' : '10px',
   background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   backdropFilter: 'blur(10px)',
   width: isMobile ? '100%' : 'auto',
   maxWidth: isMobile ? 'none' : '280px',
@@ -33,7 +36,10 @@ const BannerContainer = styled(motion.div)(({ theme, isMobile }) => ({
   justifyContent: isMobile ? 'center' : 'flex-start',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     transform: 'translateY(-1px)',
   },
 }));
@@ -176,7 +182,7 @@ const BirthdayBanner = ({ onVisibilityChange }) => {
 
         <BannerContent>
           <BirthdayText>
-            У {Имя друга у которго днь рождения} ДР! 🎂
+            У друга ДР! 🎂
           </BirthdayText>
           <BirthdaySubText>
             Поздравим постиком!

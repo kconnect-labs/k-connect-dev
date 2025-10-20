@@ -67,7 +67,10 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
         style={{
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderRadius: 'var(--main-border-radius)',
           padding: '16px',
           display: 'flex',
@@ -102,7 +105,10 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
       style={{
         background: 'rgba(255, 255, 255, 0.03)',
         backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(0, 0, 0, 0.12)',
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
         borderRadius: 'var(--main-border-radius)',
         padding: '16px',
       }}
@@ -159,7 +165,10 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
             background: 'rgba(255, 255, 255, 0.05)',
             borderRadius: 'var(--small-border-radius)',
             padding: '12px',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           <div

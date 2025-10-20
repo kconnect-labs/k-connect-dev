@@ -86,7 +86,10 @@ const PostInput = styled(TextField)(({ theme }) => ({
         ? 'rgba(0, 0, 0, 0.2)'
         : 'rgba(0, 0, 0, 0.03)',
     borderRadius: 'var(--main-border-radius)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     fontSize: '0.95rem',
     padding: theme.spacing(1.5, 2),
     color: theme.palette.text.primary,
@@ -481,9 +484,15 @@ const CreatePost: React.FC<CreatePostProps> = ({
         WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(0px))',
         position: 'relative',
         overflow: 'hidden',
-        boxShadow: 'none',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
-        ...sx,
+        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+        boxShadow: `
+          
+          0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+          0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset
+        `,
       }}
     >
       {error && (
@@ -639,7 +648,10 @@ const CreatePost: React.FC<CreatePostProps> = ({
                     p: 1.5,
                     borderRadius: 'var(--small-border-radius)',
                     backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     position: 'relative',
                   }}
                 >
@@ -855,7 +867,10 @@ const CreatePost: React.FC<CreatePostProps> = ({
                   position: 'relative',
                   borderRadius: 'var(--main-border-radius)',
                   overflow: 'hidden',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
                 }}
               >
@@ -879,7 +894,10 @@ const CreatePost: React.FC<CreatePostProps> = ({
                           position: 'relative',
                           borderRadius: 'var(--small-border-radius)',
                           overflow: 'hidden',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         }}
                       >
                         <img
@@ -970,7 +988,10 @@ const CreatePost: React.FC<CreatePostProps> = ({
                     mb: 1,
                     borderRadius: 'var(--large-border-radius)!important',
                     bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',

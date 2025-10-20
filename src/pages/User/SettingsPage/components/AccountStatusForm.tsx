@@ -30,32 +30,50 @@ import { styled } from '@mui/material/styles';
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'var(--background-color)',
   backdropFilter: 'var(--backdrop-filter)',
-  border: '1px solid rgba(207, 188, 251, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   borderRadius: theme.spacing(2),
   color: 'var(--theme-text-primary)',
   '&:hover': {
-    border: '1px solid rgba(207, 188, 251, 0.2)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
 }));
 
 const StyledChip = styled(Chip)(({ theme }) => ({
   background: 'rgba(207, 188, 251, 0.1)',
   color: '#d0bcff',
-  border: '1px solid rgba(207, 188, 251, 0.3)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   '&.warning': {
     background: 'rgba(255, 193, 7, 0.1)',
     color: '#ffc107',
-    border: '1px solid rgba(255, 193, 7, 0.3)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
   '&.ban': {
     background: 'rgba(239, 68, 68, 0.1)',
     color: '#ef4444',
-    border: '1px solid rgba(239, 68, 68, 0.3)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
   '&.expired': {
     background: 'rgba(156, 163, 175, 0.1)',
     color: '#9ca3af',
-    border: '1px solid rgba(156, 163, 175, 0.3)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
 }));
 

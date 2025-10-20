@@ -29,7 +29,10 @@ const TrackItemContainer = styled(Box)(({ theme, isPlaying }) => ({
   backgroundColor: isPlaying
     ? alpha(theme.palette.primary.main, 0.15)
     : 'transparent',
-  border: '1px solid transparent',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   '&:hover': {
     backgroundColor: alpha(theme.palette.text.primary, 0.05),
     transform: 'translateY(-2px)',

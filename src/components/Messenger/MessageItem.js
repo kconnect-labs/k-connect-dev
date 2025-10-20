@@ -814,7 +814,10 @@ const MessageItem = ({
             backgroundImage:
               'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))',
             boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             overflow: 'hidden',
             maxWidth: '360px',
             width: '90%',
@@ -905,7 +908,10 @@ const MessageItem = ({
             width: '100%',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
             borderRadius: 'var(--main-border-radius)',
-            border: '1px solid rgba(211, 47, 47, 0.2)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           }}
         >
           {error}

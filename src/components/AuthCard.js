@@ -12,7 +12,10 @@ const StyledCard = styled(motion.create(Card))(({ theme }) => ({
   boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
   position: 'relative',
   overflow: 'hidden',
-  border: '1px solid rgba(255, 255, 255, 0.05)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   '&::before': {
     content: '""',
     position: 'absolute',

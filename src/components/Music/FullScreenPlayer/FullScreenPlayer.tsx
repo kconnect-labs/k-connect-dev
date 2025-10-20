@@ -409,7 +409,6 @@ const ControlButton = memo(({ active, play, ...props }: { active?: boolean; play
     sx={{
       background: 'none',
       border: 'none',
-      boxShadow: 'none',
       borderRadius: 0,
       padding: play ? '8px' : '4px',
       margin: 0,
@@ -420,7 +419,7 @@ const ControlButton = memo(({ active, play, ...props }: { active?: boolean; play
       '&:hover': {
         color: '#fff',
         background: 'none',
-        boxShadow: 'none',
+        
         border: 'none',
       },
     }}
@@ -609,7 +608,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
       PaperProps={{
         sx: {
           backgroundColor: 'transparent',
-          boxShadow: 'none',
+          
           overflow: 'hidden',
         },
       }}
@@ -1919,7 +1918,10 @@ const LyricsEditorContent: React.FC<{
         PaperProps={{
           style: {
             backgroundColor: 'var(--theme-background, rgba(25, 25, 25, 0.95))',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
             color: 'white',
             minWidth: '250px',

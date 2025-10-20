@@ -77,7 +77,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(66, 66, 66, 0.5)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     borderRadius: 16,
     overflow: 'hidden',
     width: 400,
@@ -196,7 +199,10 @@ const MarketPriceChip = styled(Box)(({ theme }) => ({
   fontWeight: 'bold',
   fontSize: '0.75rem', // Уменьшил с 0.9rem до 0.75rem
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   zIndex: 2,
 }));
 
@@ -1025,7 +1031,10 @@ const ItemInfoModal = ({
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: window.innerWidth <= 768 ? 0 : 1,
             '@media (max-width: 768px)': {
               margin: 0,
@@ -1195,7 +1204,10 @@ const ItemInfoModal = ({
                     bgcolor: 'var(--theme-background, rgba(40, 40, 40, 0.4))',
                     backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
                     borderRadius: 'var(--main-border-radius)',
-                    border: '1px solid rgba(60, 60, 60, 0.4)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     display: 'flex',
                     alignItems: 'center',
                   }}
@@ -1239,7 +1251,10 @@ const ItemInfoModal = ({
               background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
               color: 'text.primary',
               fontWeight: 500,
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               '&:hover': {
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.15))',
                 borderColor: 'rgba(255, 255, 255, 0.3)',
@@ -1302,7 +1317,10 @@ const ItemInfoModal = ({
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             borderRadius: 'var(--main-border-radius)',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           },
         }}
       >
@@ -1361,7 +1379,10 @@ const ItemInfoModal = ({
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             borderRadius: 'var(--main-border-radius)',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           },
         }}
       >

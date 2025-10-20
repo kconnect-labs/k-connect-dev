@@ -1411,7 +1411,9 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
           mb: isMobile ? 1 : 2,
           background: '#5c5b5e',
           color: '#fff',
-          boxShadow: 'none',
+          boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
           fontSize: isMobile ? '0.75rem' : '0.85rem',
           px: isMobile ? 0.5 : 1,
           py: isMobile ? 0.25 : 0.5,
@@ -1547,6 +1549,15 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
           borderColor: isPinned ? statusColor || 'primary.main' : 'divider',
           cursor: 'auto',
           position: 'relative',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+          borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+          borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+          borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+          boxShadow: `
+            
+            0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+            0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset
+          `,
         }}
       >
         <AnimatePresence>
@@ -2002,7 +2013,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                         borderRadius: 'var(--small-border-radius)',
                         backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                         backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         position: 'relative',
                         '&::before': {
                           content: '""',
@@ -2055,7 +2069,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                                 height: 14,
                                 borderRadius: 'var(--avatar-border-radius)',
                                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                                 cursor: 'help',
                                 fontSize: '0.65rem',
                                 color: 'rgba(255, 255, 255, 0.7)',
@@ -2359,7 +2376,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                         px: 1,
                         borderRadius: 'var(--main-border-radius)',
                         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                        border: '1px solid rgba(255, 255, 255, 0.05)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         fontSize: '0.7rem',
                         ml: 1,
                       }}
@@ -2381,7 +2401,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 borderRadius: 'var(--small-border-radius)',
                 backgroundColor: 'rgba(255, 255, 255, 0.02)',
                 backdropFilter: 'blur(50px)',
-                border: '1px solid rgba(66, 66, 66, 0.5)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 position: 'relative',
                 '&::before': {
                   content: '""',
@@ -2435,7 +2458,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                         height: 16,
                         borderRadius: 'var(--avatar-border-radius)',
                         backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                         cursor: 'help',
                         fontSize: '0.7rem',
                         color: 'rgba(255, 255, 255, 0.7)',
@@ -2498,7 +2524,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 background: 'rgba(0, 0, 0, 0.05)',
                 backdropFilter: 'blur(40px)',
                 WebkitBackdropFilter: 'blur(0px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderRadius: 'var(--large-border-radius)!important',
                 px: 2.5,
                 py: 0.85,
@@ -2662,7 +2691,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   sx={{
                     width: 28,
                     height: 28,
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     flexShrink: 0,
                     borderRadius: 'var(--avatar-border-radius)',
                     overflow: 'hidden',
@@ -2791,7 +2823,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 borderRadius: 'var(--main-border-radius)',
                 background: 'rgba(255, 255, 255, 0.03)',
                 backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>

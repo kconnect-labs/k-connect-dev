@@ -1019,7 +1019,10 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null, disablePaddin
             width: '100%',
             maxWidth: '400px',
             borderRadius: 'var(--small-border-radius)',
-            border: '1px solid rgba(100, 90, 140, 0.1)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             '&:before': {
               content: '""',
               position: 'absolute',
@@ -1096,7 +1099,9 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null, disablePaddin
                   color='error'
                   sx={{
                     borderRadius: 'var(--large-border-radius)!important',
-                    boxShadow: 'none',
+                    boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
                     px: 2,
                   }}
                   endIcon={
@@ -1130,7 +1135,10 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null, disablePaddin
             width: '100%',
             maxWidth: '400px',
             borderRadius: 'var(--small-border-radius)',
-            border: '1px solid rgba(100, 90, 140, 0.1)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             '&:before': {
               content: '""',
               position: 'absolute',
@@ -1208,7 +1216,9 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null, disablePaddin
                   color='error'
                   sx={{
                     borderRadius: 'var(--large-border-radius)!important',
-                    boxShadow: 'none',
+                    boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
                     px: 2,
                   }}
                 >

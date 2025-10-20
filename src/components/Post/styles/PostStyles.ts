@@ -30,7 +30,11 @@ export const PostCard = styled(Card, {
     ? `1px solid ${statusColor ? `${statusColor}33` : 'rgba(140, 82, 255, 0.2)'}`
     : '1px solid rgba(255, 255, 255, 0.12)',
   '&:hover': {
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
+    boxShadow: `
+      0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+      0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset,
+      0 4px 12px rgba(0, 0, 0, 0.12)
+    `,
   },
 }));
 
@@ -41,7 +45,10 @@ export const FactCard = styled(Box)(({ theme }) => ({
   borderRadius: 'var(--main-border-radius)',
   backgroundColor: 'rgba(255, 255, 255, 0.05)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   position: 'relative',
   '&::before': {
     content: '""',
@@ -119,7 +126,9 @@ export const NSFWButton = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   background: '#5c5b5e',
   color: '#fff',
-  boxShadow: 'none',
+  boxShadow: `
+    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
+    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
   fontSize: '0.75rem',
   padding: theme.spacing(0.25, 0.5),
   [theme.breakpoints.up('sm')]: {

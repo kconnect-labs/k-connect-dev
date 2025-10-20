@@ -124,7 +124,10 @@ const VerificationTab: React.FC = () => {
       )}
 
       {/* Поиск пользователей */}
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)', p: 2 }}>
+      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)', p: 2 }}>
         <TextField
           fullWidth
           placeholder="Поиск пользователей..."
@@ -157,7 +160,10 @@ const VerificationTab: React.FC = () => {
                   sx={{
                     background: 'var(--theme-background)',
                     backdropFilter: 'var(--theme-backdrop-filter)',
-                    border: '1px solid var(--main-border-color)',
+                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                     borderRadius: 'var(--main-border-radius)',
                     mb: 1,
                   }}
@@ -204,7 +210,10 @@ const VerificationTab: React.FC = () => {
           sx: {
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid var(--main-border-color)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
           }
         }}

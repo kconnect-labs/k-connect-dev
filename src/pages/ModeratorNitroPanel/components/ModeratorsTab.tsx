@@ -250,7 +250,10 @@ const ModeratorsTab: React.FC = () => {
       )}
 
       {/* Поиск пользователей */}
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)', p: 2, mb: 1 }}>
+      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)', p: 2, mb: 1 }}>
         <TextField
           fullWidth
           placeholder="Поиск по имени или username..."
@@ -279,12 +282,18 @@ const ModeratorsTab: React.FC = () => {
 
       {/* Список пользователей */}
       {users.length > 0 && (
-        <List sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)', p: 1 }}>
+        <List sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)', p: 1 }}>
           {users.map((user) => (
             <ListItem
               key={user.id}
               sx={{
-                border: '1px solid var(--main-border-color)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderRadius: 'var(--main-border-radius)',
                 mb: 1,
                 background: 'var(--theme-background)',
@@ -337,12 +346,18 @@ const ModeratorsTab: React.FC = () => {
 
       {/* Список модераторов */}
       {moderators.length > 0 && (
-        <List sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)', p: 1, mb: 1 }}>
+        <List sx={{ background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)', borderRadius: 'var(--main-border-radius)', p: 1, mb: 1 }}>
           {moderators.map((moderator) => (
             <ListItem
               key={moderator.id}
               sx={{
-                border: '1px solid var(--main-border-color)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderRadius: 'var(--main-border-radius)',
                 mb: 1,
                 background: 'var(--theme-background)',
@@ -397,7 +412,10 @@ const ModeratorsTab: React.FC = () => {
           sx: {
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid var(--main-border-color)',
+            borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
             borderRadius: 'var(--main-border-radius)',
           }
         }}

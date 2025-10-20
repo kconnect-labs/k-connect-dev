@@ -40,7 +40,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     background: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
     borderRadius: theme.spacing(2),
     color: 'rgba(255, 255, 255, 0.87)',
   },
@@ -50,10 +53,16 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   borderRadius: theme.spacing(1),
   marginBottom: theme.spacing(1),
-  border: '1px solid rgba(255, 255, 255, 0.08)',
+  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
   },
 }));
 
@@ -136,12 +145,21 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
             mb: 2,
             '& .MuiOutlinedInput-root': {
               background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               '&:hover': {
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               },
               '&.Mui-focused': {
-                border: '1px solid rgba(207, 188, 251, 0.5)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
               },
             },
             '& .MuiInputLabel-root': {
@@ -163,7 +181,10 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
               onChange={(e) => setDuration(e.target.value)}
               sx={{
                 background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(0, 0, 0, 0.12)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 '& .MuiSelect-icon': {
                   color: 'rgba(255, 255, 255, 0.7)',
                 },

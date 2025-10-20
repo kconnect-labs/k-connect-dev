@@ -31,7 +31,10 @@ const UserSubscriptionBadge = ({ user }) => {
             ? mainColor
             : theme => (theme.palette.mode === 'dark' ? '#d0bcff' : '#7c4dff'),
           fontWeight: 'bold',
-          border: '1px solid',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderColor: mainColor
             ? `${mainColor}4D`
             : theme =>
@@ -99,7 +102,10 @@ const UserSubscriptionBadge = ({ user }) => {
                     ? 'rgb(208, 188, 255)'
                     : '#90CAF9',
           fontWeight: 'bold',
-          border: '1px solid',
+          borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
           borderColor:
             user.subscription.type === 'premium'
               ? 'rgba(186, 104, 200, 0.6)'

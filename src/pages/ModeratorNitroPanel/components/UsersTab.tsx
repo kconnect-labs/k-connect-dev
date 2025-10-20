@@ -410,7 +410,10 @@ const UsersTab: React.FC = () => {
             <Card
               elevation={0}
               sx={{
-                border: '1px solid var(--main-border-color)',
+                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
@@ -641,7 +644,10 @@ const UsersTab: React.FC = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {userWarnings.map((warning) => (
                 <Card key={warning.id} elevation={0} sx={{ 
-                  border: '1px solid var(--main-border-color)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   p: 2
                 }}>
@@ -721,7 +727,10 @@ const UsersTab: React.FC = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {userBans.map((ban) => (
                 <Card key={ban.id} elevation={0} sx={{ 
-                  border: '1px solid var(--main-border-color)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                   borderRadius: 'var(--main-border-radius)',
                   p: 2
                 }}>

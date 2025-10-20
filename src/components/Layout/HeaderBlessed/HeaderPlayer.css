@@ -18,7 +18,7 @@
   border-left: 1px solid rgba(200, 200, 200, 0.233);
   border-bottom: 1px solid rgba(100, 100, 100, 0.486);
   box-shadow:
-    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    
     0 0 0 4px rgba(95, 95, 95, 0.06) inset,
     0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
 }
@@ -326,7 +326,7 @@
   border-left: 1px solid rgba(200, 200, 200, 0.233);
   border-bottom: 1px solid rgba(100, 100, 100, 0.486);
   box-shadow:
-    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    
     0 0 0 4px rgba(95, 95, 95, 0.06) inset,
     0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -383,7 +383,7 @@
     border-right: 1px solid rgba(200, 200, 200, 0.322);
     border-left: 1px solid rgba(200, 200, 200, 0.233);
     border-bottom: 1px solid rgba(100, 100, 100, 0.486);    box-shadow:
-    0 4px 32px 0 rgba(51, 51, 51, 0.13),
+    
     0 0 0 4px rgba(95, 95, 95, 0.06) inset,
     0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
     margin-top: 4px;
