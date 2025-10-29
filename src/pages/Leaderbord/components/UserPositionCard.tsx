@@ -35,9 +35,7 @@ export const UserPositionCard: React.FC<UserPositionCardProps> = ({
         maxWidth: 1200,
         minWidth: 320,
         mb: 1,
-        boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+        boxShadow: 'var(--box-shadow)',
         position: 'relative',
         overflow: 'hidden',
         zIndex: 2,

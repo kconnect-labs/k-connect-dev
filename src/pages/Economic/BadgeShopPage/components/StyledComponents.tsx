@@ -171,9 +171,7 @@ export const BadgeBuyButton = styled(Button)(({ theme }) => ({
   padding: '4px 12px',
   minWidth: 'auto',
   fontSize: '0.75rem',
-  boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+  boxShadow: 'var(--box-shadow)',
   backgroundColor: theme.palette.mode === 'dark' ? '#d0bcff' : '#6200ee',
   color: theme.palette.mode === 'dark' ? '#000' : '#fff',
   '&:hover': {

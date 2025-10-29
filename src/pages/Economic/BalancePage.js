@@ -1168,9 +1168,8 @@ const BalancePage = () => {
   // Функция для определения доступности подписки
   const isSubscriptionAvailable = (subscriptionType) => {
     const priorities = {
-      'premium': 1,
-      'ultimate': 2,
-      'max': 3
+      'ultimate': 1,
+      'max': 2
     };
     
     // Находим максимальную активную подписку
@@ -3397,9 +3396,7 @@ const BalancePage = () => {
                     borderRadius: 'var(--main-border-radius)',
                     overflow: 'hidden',
                     '&:before': { display: 'none' },
-                    boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+                    boxShadow: 'var(--box-shadow)',
                     background: 'rgba(255, 255, 255, 0.05)',
                   }}
                 >
@@ -5470,9 +5467,8 @@ const BalancePage = () => {
                         {Object.entries(subscriptionPlans).map(([type, plan]) => {
                           // Определяем приоритеты подписок
                           const subscriptionPriorities = {
-                            'premium': 1,
-                            'ultimate': 2,
-                            'max': 3
+                            'ultimate': 1,
+                            'max': 2
                           };
                           
                           // Находим максимальную активную подписку получателя

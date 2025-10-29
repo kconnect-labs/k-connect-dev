@@ -331,9 +331,7 @@ const LightBox = ({
       PaperProps={{
         sx: {
           bgcolor: 'rgba(0, 0, 0, 0.9)',
-          boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+          boxShadow: 'var(--box-shadow)',
           borderRadius: 0,
           height: '100vh',
           width: '100vw',

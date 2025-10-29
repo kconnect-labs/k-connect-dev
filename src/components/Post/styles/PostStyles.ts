@@ -30,11 +30,7 @@ export const PostCard = styled(Card, {
     ? `1px solid ${statusColor ? `${statusColor}33` : 'rgba(140, 82, 255, 0.2)'}`
     : '1px solid rgba(255, 255, 255, 0.12)',
   '&:hover': {
-    boxShadow: `
-      0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-      0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset,
-      0 4px 12px rgba(0, 0, 0, 0.12)
-    `,
+    boxShadow: 'var(--box-shadow)',
   },
 }));
 
@@ -126,9 +122,7 @@ export const NSFWButton = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   background: '#5c5b5e',
   color: '#fff',
-  boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+  boxShadow: 'var(--box-shadow)',
   fontSize: '0.75rem',
   padding: theme.spacing(0.25, 0.5),
   [theme.breakpoints.up('sm')]: {

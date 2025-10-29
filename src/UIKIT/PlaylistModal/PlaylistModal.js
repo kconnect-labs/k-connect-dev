@@ -193,9 +193,7 @@ const ActionButton = styled(Button)(({ theme }) => ({
   borderRadius: theme.spacing(3),
   padding: theme.spacing(1, 3),
   textTransform: 'none',
-  boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+  boxShadow: 'var(--box-shadow)',
 }));
 
 const PlayingIndicator = styled(Box)(({ theme }) => ({

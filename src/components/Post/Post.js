@@ -1411,9 +1411,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
           mb: isMobile ? 1 : 2,
           background: '#5c5b5e',
           color: '#fff',
-          boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+          boxShadow: 'var(--box-shadow)',
           fontSize: isMobile ? '0.75rem' : '0.85rem',
           px: isMobile ? 0.5 : 1,
           py: isMobile ? 0.25 : 0.5,
@@ -1553,11 +1551,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
           borderRight: '1px solid rgba(200, 200, 200, 0.322)',
           borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
           borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
-          boxShadow: `
-            
-            0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-            0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset
-          `,
+          boxShadow: 'var(--box-shadow)',
         }}
       >
         <AnimatePresence>

@@ -114,9 +114,7 @@ const InputControlsRow = React.memo(
         backgroundColor: '#262626',
         borderRadius: 'var(--main-border-radius)',
         padding: '0 4px',
-        boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+        boxShadow: 'var(--box-shadow)',
       }}
     >
       <PhotoButton onClick={onPhoto} />
@@ -341,9 +339,7 @@ const MessageInput = ({
         pb: '20px',
         backgroundColor: 'transparent' ? isMobile : '#1a1a1a',
         borderRadius: 0,
-        boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+        boxShadow: 'var(--box-shadow)',
         display: 'flex',
         flexDirection: 'column',
       }}

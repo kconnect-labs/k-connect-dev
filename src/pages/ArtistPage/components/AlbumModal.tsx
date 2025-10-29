@@ -408,14 +408,10 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                         mr: 1,
                         background: 'rgba(182,157,248,0.12)',
                         color: '#B69DF8',
-                        boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+                        boxShadow: 'var(--box-shadow)',
                         '&:hover': {
                           background: 'rgba(182,157,248,0.22)',
-                          boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+                          boxShadow: 'var(--box-shadow)',
 
                         },
                       }}

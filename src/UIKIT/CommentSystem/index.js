@@ -505,9 +505,7 @@ const CommentSystem = ({
                   color='error'
                   sx={{
                     borderRadius: 'var(--large-border-radius)!important',
-                    boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+                    boxShadow: 'var(--box-shadow)',
                   }}
                 >
                   {t('comment.dialog.delete.confirm')}
@@ -588,9 +586,7 @@ const CommentSystem = ({
                   color='error'
                   sx={{
                     borderRadius: 'var(--large-border-radius)!important',
-                    boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+                    boxShadow: 'var(--box-shadow)',
                     px: 2,
                   }}
                   endIcon={

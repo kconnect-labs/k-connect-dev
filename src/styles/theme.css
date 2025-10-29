@@ -23,7 +23,7 @@
   --small-border-radius: 14px;
   --large-border-radius: 22px;
   --avatar-border-radius: 50%;
-  
+  --box-shadow: none;
   /* Цветовая схема браузера */
   color-scheme: dark;
   accent-color: #D0BCFF;
@@ -126,6 +126,7 @@
   --main-border-radius: 24px;
   --small-border-radius: 18px;
   --large-border-radius: 32px;
+  --box-shadow: 0 0 0 4px rgba(95, 95, 95, 0.06) inset, 0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
 }
 [data-theme="CursedBlur"] {
   --theme-background: rgba(255, 255, 255, 0.3);
@@ -145,6 +146,8 @@
   --main-border-radius: 24px;
   --small-border-radius: 18px;
   --large-border-radius: 32px;
+  --box-shadow: 0 0 0 4px rgba(95, 95, 95, 0.06) inset, 0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset;
+
 }
 
 /* Белая тема */
@@ -544,8 +547,7 @@ body.no-blur .theme-menu,
   background: var(--theme-background) !important;
   backdrop-filter: var(--theme-backdrop-filter) !important;
   border-radius: var(--main-border-radius) !important;
-  box-shadow:0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset !important;
+  box-shadow:var(--box-shadow) !important;
 }
 
 

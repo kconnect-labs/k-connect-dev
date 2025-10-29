@@ -173,9 +173,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
     minWidth: 'auto',
     borderRadius: 'var(--small-border-radius)',
     textTransform: 'none' as const,
-    boxShadow: `
-    0 0 0 4px rgba(95, 95, 95, 0.06) inset,
-    0 1.5px 16px 0 rgba(65, 65, 65, 0.18) inset`,
+    boxShadow: 'var(--box-shadow)',
   });
 
   // Фильтрация бейджей
