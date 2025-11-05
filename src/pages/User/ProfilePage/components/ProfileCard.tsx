@@ -535,9 +535,40 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   }
                   isProfile={true} // Добавляем флаг для профиля
                   onClick={() => {
-                    // Проверяем, является ли это shop бейджем (начинается с shop/)
-                    if (user.achievement?.image_path?.startsWith('shop/')) {
-                      handleBadgeClick(user.achievement.image_path);
+                    // Открываем модалку для всех бейджей
+                    if (user.achievement?.image_path) {
+                      const imagePath = user.achievement.image_path;
+                      const isShopBadge = imagePath.includes('/shop/') || imagePath.startsWith('shop/') || imagePath.includes('bages/shop/');
+                      
+                      if (isShopBadge) {
+                        let shopPath = imagePath;
+                        
+                        if (imagePath.startsWith('http')) {
+                          // Если это полный URL, извлекаем путь после shop/
+                          // Пример: https://s3.k-connect.ru/static/images/bages/shop/filename.svg
+                          const shopMatch = imagePath.match(/shop\/([^/?]+)/);
+                          if (shopMatch) {
+                            shopPath = `shop/${shopMatch[1]}`;
+                          } else {
+                            // Пробуем найти после bages/
+                            const bagesMatch = imagePath.match(/bages\/shop\/([^/?]+)/);
+                            if (bagesMatch) {
+                              shopPath = `shop/${bagesMatch[1]}`;
+                            }
+                          }
+                        } else if (imagePath.startsWith('shop/')) {
+                          shopPath = imagePath;
+                        } else if (imagePath.includes('/shop/')) {
+                          const match = imagePath.match(/\/shop\/([^/?]+)/);
+                          if (match) {
+                            shopPath = `shop/${match[1]}`;
+                          }
+                        }
+                        
+                        handleBadgeClick(shopPath);
+                      } else {
+                        console.log('Badge click on non-shop badge:', imagePath);
+                      }
                     }
                   }}
                   onError={(e: any) => {

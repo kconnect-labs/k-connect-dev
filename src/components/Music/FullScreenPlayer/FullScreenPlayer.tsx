@@ -146,41 +146,59 @@ const AlbumArt = memo(
     border-radius: 20px;
     object-fit: cover;
     border: 1px solid rgba(255,255,255,0.1);
+    box-sizing: border-box;
     transition: opacity 0.3s ease;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
     
-    @media (max-width: 768px) {
+    @media (min-width: 769px) {
       @media (max-height: 850px) {
-        width: min(70vw, 20rem);
-        height: min(70vw, 20rem);
+        width: 20rem;
+        height: 20rem;
       }
       
       @media (max-height: 800px) {
-        width: min(67.5vw, 18.75rem);
-        height: min(67.5vw, 18.75rem);
+        width: 18.75rem;
+        height: 18.75rem;
       }
       
-      @media (max-height: 700px) {
-        width: min(65vw, 17.5rem);
-        height: min(65vw, 17.5rem);
+      @media (max-height: 750px) {
+        width: 16rem;
+        height: 16rem;
       }
       
-      @media (max-height: 600px) {
-        width: min(55vw, 15rem);
-        height: min(55vw, 15rem);
-      }
-      
-      @media (max-height: 500px) {
-        width: min(47.5vw, 12.5rem);
-        height: min(47.5vw, 12.5rem);
-      }
-      
-      @media (max-height: 400px) {
-        width: min(40vw, 10rem);
-        height: min(40vw, 10rem);
+      @media (max-height: 690px) {
+        display: none;
       }
     }
     
-
+    @media (max-width: 768px) {
+      @media (max-height: 800px) {
+        width: 20rem;
+        height: 20rem;
+      }
+      
+      @media (max-height: 700px) {
+        width: 17rem;
+        height: 17rem;
+      }
+      
+      @media (max-height: 600px) {
+        width: 15rem;
+        height: 15rem;
+      }
+      
+      @media (max-height: 500px) {
+        width: 12rem;
+        height: 12rem;
+      }
+      
+      @media (max-height: 400px) {
+        width: 10rem;
+        height: 10rem;
+      }
+    }
   `
 );
 
@@ -297,16 +315,14 @@ const TrackArtist = memo(
 const ProgressContainer = memo(
   styled(Box)`
     width: 100%;
+    max-width: 375px;
     display: flex;
     flex-direction: column;
     gap: 6px;
     
     @media (max-width: 768px) {
       width: 100%;
-    }
-    
-    @media (min-width: 769px) {
-      max-width: 375px;
+      max-width: 100%;
     }
     
     @media (max-height: 850px) {
@@ -737,24 +753,34 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
               alignItems: 'center',
               justifyContent: isMobile && lyricsDisplayMode ? 'flex-end' : (isMobile ? 'flex-start' : 'center'),
               minHeight: isMobile ? 'auto' : '100%',
-              transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: isMobile || !lyricsDisplayMode ? 'translateX(0)' : 'translateX(-25%)',
+              ...(!isMobile && {
+                transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: !lyricsDisplayMode ? 'translateX(0)' : 'translateX(-50%)',
+              }),
+              width: '100%',
+              maxWidth: '600px',
             }}
           >
             {/* Album Art or Lyrics Display */}
             <AlbumArtContainer sx={{ 
-              minHeight: isMobile && lyricsDisplayMode ? '0' : '350px', 
               width: '100%',
+              maxWidth: '100%',
               flex: isMobile && lyricsDisplayMode ? '1 1 auto' : (isMobile || !lyricsDisplayMode ? '0 0 auto' : '1 1 auto'),
               marginTop: isMobile && !lyricsDisplayMode ? '99px' : '0px',
               transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              ...(!isMobile && {
+                '@media (max-height: 690px)': {
+                  display: 'none',
+                },
+              }),
             }}>
               <Box
                 sx={{
                   width: '100%',
-                  height: isMobile && lyricsDisplayMode ? '65vh' : '350px',
-                  maxHeight: isMobile && lyricsDisplayMode ? '65vh' : '350px',
-                  minHeight: isMobile && lyricsDisplayMode ? '300px' : '350px',
+                  aspectRatio: '1 / 1',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -762,6 +788,62 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                   position: 'relative',
                   padding: '0px',
                   transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxSizing: 'border-box',
+                  ...(!isMobile && {
+                    maxWidth: '26rem',
+                    '@media (max-height: 850px)': {
+                      maxWidth: '24rem',
+                    },
+                    '@media (max-height: 800px)': {
+                      maxWidth: '22.5rem',
+                    },
+                    '@media (max-height: 750px)': {
+                      maxWidth: '20rem',
+                    },
+                    '@media (max-height: 690px)': {
+                      display: 'none',
+                    },
+                  }),
+                  ...(isMobile && {
+                    maxWidth: '320px',
+                    '@media (max-height: 800px)': {
+                      maxWidth: '300px',
+                    },
+                    '@media (max-height: 700px)': {
+                      maxWidth: '272px',
+                    },
+                    '@media (max-height: 600px)': {
+                      maxWidth: '240px',
+                    },
+                    '@media (max-height: 500px)': {
+                      maxWidth: '192px',
+                    },
+                    '@media (max-height: 400px)': {
+                      maxWidth: '160px',
+                    },
+                    ...(lyricsDisplayMode && {
+                      maxHeight: '65vh',
+                      height: '65vh',
+                      maxWidth: '100%',
+                      aspectRatio: 'none',
+                      '@media (max-height: 700px)': {
+                        maxHeight: '55vh',
+                        height: '55vh',
+                      },
+                      '@media (max-height: 600px)': {
+                        maxHeight: '50vh',
+                        height: '50vh',
+                      },
+                      '@media (max-height: 500px)': {
+                        maxHeight: '45vh',
+                        height: '45vh',
+                      },
+                      '@media (max-height: 400px)': {
+                        maxHeight: '40vh',
+                        height: '40vh',
+                      },
+                    }),
+                  }),
                 }}
               >
                 {isMobile && lyricsDisplayMode && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) ? (
@@ -771,17 +853,20 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                       height: '100%',
                       opacity: 1,
                       transform: 'scale(1)',
-                      transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                      animation: 'fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                      '@keyframes fadeInScale': {
-                        '0%': {
-                          opacity: 0,
-                          transform: 'scale(0.8)',
-                        },
-                        '100%': {
-                          opacity: 1,
-                          transform: 'scale(1)',
-                        },
+                      '@media (max-height: 800px)': {
+                        transform: 'scale(0.95)',
+                      },
+                      '@media (max-height: 700px)': {
+                        transform: 'scale(0.9)',
+                      },
+                      '@media (max-height: 600px)': {
+                        transform: 'scale(0.85)',
+                      },
+                      '@media (max-height: 500px)': {
+                        transform: 'scale(0.8)',
+                      },
+                      '@media (max-height: 400px)': {
+                        transform: 'scale(0.75)',
                       },
                     }}
                   >
@@ -802,6 +887,9 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                     src={coverPath} 
                     alt={(currentTrack as any)?.title || 'Track'} 
                     style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
                       transform: isMobile ? 'scale(1)' : 'scale(0.8)',
                       transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                       opacity: 1,
@@ -818,8 +906,11 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                 flexDirection: 'column',
                 alignItems: 'center',
                 width: '100%',
+                maxWidth: '600px',
                 flex: '0 0 auto',
                 paddingBottom: isMobile && lyricsDisplayMode ? '20px' : '0',
+                alignSelf: 'stretch',
+                boxSizing: 'border-box',
               }}
             >
               {/* Track Info */}
@@ -1097,6 +1188,69 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
 
           </CloseButton>
         </Box>
+
+        {/* Volume Slider - Fixed at Bottom (Desktop/Tablet only) */}
+        {!isMobile && (
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            width: '100%',
+            padding: '0 32px',
+            paddingBottom: '16px',
+            zIndex: 1000,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: '375px',
+              '@media (max-width: 768px)': {
+                maxWidth: '100%',
+              },
+            }}
+          >
+            <Slider
+              value={isMuted ? 0 : volume}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={handleVolumeChange}
+              sx={{
+                color: 'white',
+                '& .MuiSlider-track': {
+                  backgroundColor: 'white',
+                  height: 9,
+                  borderRadius: 'var(--large-border-radius)!important',
+                },
+                '& .MuiSlider-rail': {
+                  backgroundColor: 'rgba(255,255,255,0.5)',
+                  height: 9,
+                  borderRadius: 'var(--large-border-radius)!important',
+                },
+                '& .MuiSlider-thumb': {
+                  display: 'none',
+                },
+                '&:hover': {
+                  '& .MuiSlider-track': {
+                    height: 14,
+                    borderRadius: 'var(--large-border-radius)!important',
+                  },
+                  '& .MuiSlider-rail': {
+                    height: 14,
+                    borderRadius: 'var(--large-border-radius)!important',
+                  },
+                },
+              }}
+            />
+          </Box>
+        </Box>
+        )}
 
         {/* Snackbar */}
         <Snackbar
