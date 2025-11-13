@@ -150,7 +150,10 @@ const Post = ({
   const { user: currentUser } = useContext(AuthContext);
   const { playTrack, currentTrack, isPlaying, togglePlay } =
     useContext(MusicContext);
-  const { setPostDetail, openPostDetail } = usePostDetail();
+  const { setPostDetail, openPostDetail, overlayOpen, currentPostId } = usePostDetail();
+  
+  // Проверяем, открыт ли этот пост в модалке
+  const isPostInModal = overlayOpen && currentPostId === post?.id;
 
 
   
@@ -1532,7 +1535,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         isPinned={isPinned}
         statusColor={statusColor}
         onClick={handlePostClick}
-
         onDoubleClick={handleDoubleClick}
         onTouchStart={handleTouchStart}
         ref={postRef}
@@ -1579,9 +1581,14 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
         <Box sx={{ px: 2, pt: 2, pb: 1.5 }}>
           <Box
-            sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}
+            sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              mb: 1.5,
+              position: 'relative',
+            }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
               <Box
                 component={Link}
                 to={`/profile/${post.user?.username || 'unknown'}`}
@@ -1694,6 +1701,33 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 </Typography>
               </Box>
             </Box>
+            
+            {/* Меню (троеточие) - показывается всегда в модалке */}
+            {isPostInModal && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                }}
+              >
+                <MoreVertIcon
+                  sx={{ 
+                    color: '#fff', 
+                    cursor: 'pointer', 
+                    fontSize: 21,
+                    p: 0.5,
+                    borderRadius: '50%',
+                    transition: 'background-color 0.2s ease',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    },
+                  }}
+                  onClick={handleMenuOpen}
+                  data-no-navigate
+                />
+              </Box>
+            )}
           </Box>
 
           <Box sx={{ position: 'relative' }}>
@@ -2507,375 +2541,349 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               justifyContent: 'space-between',
               alignItems: 'center',
               mt: 0.5,
-              gap: 1.7, 
+              gap: 1, 
             }}
           >
-            {/* Левая группа: лайк, коммент, репост, поделиться */}
+            {/* Левая группа: лайк */}
             <Box
               sx={{
                 display: 'flex',
-                gap: 1.7,
+                alignItems: 'center',
                 background: 'rgba(0, 0, 0, 0.05)',
                 backdropFilter: 'blur(40px)',
                 WebkitBackdropFilter: 'blur(0px)',
                 borderTop: '1px solid rgba(240, 240, 240, 0.24)',
-        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
-        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
-        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+                borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+                borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+                borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
                 borderRadius: 'var(--large-border-radius)!important',
                 px: 2.5,
                 py: 0.85,
-                alignItems: 'center',
-              }}
-            >
-
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                  position: 'relative',
-                }}
-                onClick={handleLike}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 21,
-                    height: 21,
-                  }}
-                >
-                  {liked ? (
-                    <Box
-                      sx={{
-                        color: theme.palette.primary.main,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <LikeIconFill />
-                    </Box>
-                  ) : (
-                    <LikeIcon />
-                  )}
-                </Box>
-                {likesCount > 0 && (
-                  <Typography
-                    sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}
-                  >
-                    {likesCount}
-                  </Typography>
-                )}
-              </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                }}
-                onClick={(e) => handleCommentClick(post.id, e)}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 21,
-                    height: 21,
-                  }}
-                >
-                  <CommentIcon />
-                </Box>
-                {(post?.total_comments_count || post?.comments_count) > 0 && (
-                  <Typography
-                    sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}
-                  >
-                    {post?.total_comments_count || post?.comments_count}
-                  </Typography>
-                )}
-              </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                }}
-                onClick={handleRepostClick}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 21,
-                    height: 21,
-                  }}
-                >
-                  <RepostIcon />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                }}
-                onClick={handleShare}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 21,
-                    height: 21,
-                  }}
-                >
-                  <ShareIcon />
-                </Box>
-              </Box>
-            
-            </Box>
-
-            {/* Правая группа: просмотры и меню */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                borderRadius: 'var(--large-border-radius)!important', 
-                px: 1.2, 
-                py: 0.85, 
-                minWidth: 68, 
-                justifyContent: 'center',
-                gap: 0.5, 
-              }}
-            >
-              {/* <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize:14 }} />
-              <Typography sx={{ color: '#fff', fontSize: '0.65rem', mr: 1.7 }}>{viewsCount}</Typography> */}
-              <MoreVertIcon
-                sx={{ color: '#fff', cursor: 'pointer', fontSize: 21 }}
-                onClick={handleMenuOpen}
-                data-no-navigate
-              />
-            </Box>
-          </Box>
-
-          {/* Компонент последнего комментария в стиле ВК */}
-          {lastComment && !lastCommentLoading && (
-            <Box
-              sx={{
-                padding: '12px',
-                borderRadius: 'var(--main-border-radius) !important',
-                background: 'rgba(255, 255, 255, 0.03)',
                 cursor: 'pointer',
+                position: 'relative',
                 transition: 'all 0.2s ease',
-                marginTop: '12px',
-                marginBottom: '-13px',
-                marginLeft: '-17px',
-                marginRight: '-17px',
+                '&:hover': {
+                  background: 'rgba(0, 0, 0, 0.08)',
+                },
               }}
-              onClick={(e) => handleCommentClick(post.id, e)}
+              onClick={handleLike}
             >
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                {/* Аватар автора комментария */}
-                <Box
-                  sx={{
-                    width: 28,
-                    height: 28,
-                    borderTop: '1px solid rgba(240, 240, 240, 0.24)',
-        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
-        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
-        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
-                    flexShrink: 0,
-                    borderRadius: 'var(--avatar-border-radius)',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <img
-                    src={
-                      lastComment.user?.avatar_url ||
-                      `/static/uploads/avatar/${lastComment.user?.id}/${lastComment.user?.photo || 'avatar.png'}`
-                    }
-                    alt={lastComment.user?.name || 'User'}
-                    width={28}
-                    height={28}
-                    style={{
-                      borderRadius: 'var(--avatar-border-radius)',
-                      objectFit: 'cover'
-                    }}
-                    onError={safeImageError}
-                  />
-                </Box>
-
-                {/* Контент комментария */}
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  {/* Имя автора и время */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 21,
+                  height: 21,
+                }}
+              >
+                {liked ? (
                   <Box
                     sx={{
+                      color: theme.palette.primary.main,
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 1,
-                      mb: 0.5,
+                      justifyContent: 'center',
                     }}
                   >
-                    <Typography
-                      sx={{
-                        fontSize: '0.9rem',
-                        fontWeight: 600,
-                        color: 'rgba(255, 255, 255, 0.9)',
-                        textDecoration: 'none',
-                        '&:hover': {
-                          color: '#D0BCFF',
-                        },
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
-                      component={Link}
-                      to={`/profile/${lastComment.user?.username || 'unknown'}`}
-                      onClick={e => e.stopPropagation()}
-                    >
-                      {lastComment.user?.name || 'Пользователь'}
-                      {(lastComment.user?.verification?.status > 0 || 
-                        lastComment.user?.verification_status === 'verified' ||
-                        lastComment.user?.verification_status > 0) && (
-                          <VerificationBadge
-                            status={lastComment.user?.verification?.status || lastComment.user?.verification_status}
-                            size='small'
-                          />
-                        )}
-                    </Typography>
-
-                    <Typography
-                      sx={{
-                        fontSize: '0.7rem',
-                        color: 'rgba(255, 255, 255, 0.5)',
-                        ml: 'auto',
-                      }}
-                    >
-                      {formatTimeAgo(lastComment.timestamp)}
-                    </Typography>
+                    <LikeIconFill />
                   </Box>
-
-                  {/* Текст комментария */}
-                  <Typography
-                    sx={{
-                      fontSize: '0.8rem',
-                      lineHeight: 1.4,
-                      color: 'rgba(255, 255, 255, 0.85)',
-                      wordBreak: 'break-word',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {lastComment.content}
-                  </Typography>
-
-                  {/* Изображение комментария (если есть) */}
-                  {lastComment.image && (
-                    <Box
-                      sx={{
-                        mt: 0.8,
-                        borderRadius: 'var(--small-border-radius)',
-                        overflow: 'hidden',
-                        maxWidth: 120,
-                        maxHeight: 80,
-                      }}
-                    >
-                      <img
-                        src={lastComment.image}
-                        alt='Comment'
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                        }}
-                        onError={safeImageError}
-                      />
-                    </Box>
-                  )}
-                </Box>
+                ) : (
+                  <LikeIcon />
+                )}
               </Box>
+              {likesCount > 0 && (
+                <Typography
+                  sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}
+                >
+                  {likesCount}
+                </Typography>
+              )}
             </Box>
-          )}
 
-          {/* Скелетон загрузки последнего комментария */}
-          {lastCommentLoading && (
-            <Box
-              sx={{
-                mt: 1.5,
-                mb: 1.5,
-                p: 1.5,
-                borderRadius: 'var(--main-border-radius)',
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
-                borderTop: '1px solid rgba(240, 240, 240, 0.24)',
-        borderRight: '1px solid rgba(200, 200, 200, 0.322)',
-        borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
-        borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                <Box
-                  sx={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 'var(--avatar-border-radius)',
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    flexShrink: 0,
-                  }}
-                />
-                <Box sx={{ flex: 1 }}>
+            {/* Центральный блок: последний комментарий */}
+            {lastCommentLoading ? (
+              <Box
+                sx={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(40px)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+                  borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+                  borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+                  borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+                  borderRadius: 'var(--large-border-radius)!important',
+                  px: 1.5,
+                  py: 0.85,
+                  mx: 1.5,
+                  minWidth: 0,
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
                   <Box
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      mb: 0.5,
+                      width: 24,
+                      height: 24,
+                      borderRadius: 'var(--avatar-border-radius)',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      flexShrink: 0,
+                      animation: 'pulse 1.5s ease-in-out infinite',
                     }}
-                  >
+                  />
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Box
                       sx={{
-                        width: 80,
+                        width: '80%',
                         height: 12,
                         borderRadius: 'var(--small-border-radius)',
                         background: 'rgba(255, 255, 255, 0.1)',
                         animation: 'pulse 1.5s ease-in-out infinite',
                       }}
                     />
-                    <Box
-                      sx={{
-                        width: 50,
-                        height: 10,
-                        borderRadius: 'var(--small-border-radius)',
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        animation: 'pulse 1.5s ease-in-out infinite',
-                        animationDelay: '0s',
-                      }}
-                    />
                   </Box>
+                </Box>
+              </Box>
+            ) : lastComment ? (
+              <Box
+                sx={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(40px)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+                  borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+                  borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+                  borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+                  borderRadius: 'var(--large-border-radius)!important',
+                  px: 1.5,
+                  py: 0.85,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  minWidth: 0,
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                  },
+                }}
+                onClick={(e) => handleCommentClick(post.id, e)}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%', minWidth: 0, position: 'relative' }}>
+                  {/* Аватар автора комментария */}
                   <Box
                     sx={{
-                      width: '100%',
-                      height: 16,
-                      borderRadius: 'var(--small-border-radius)',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      animation: 'pulse 1.5s ease-in-out infinite',
-                      animationDelay: '0.4s',
+                      width: 24,
+                      height: 24,
+                      flexShrink: 0,
+                      borderRadius: 'var(--avatar-border-radius)',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
-                  />
+                  >
+                    <img
+                      src={
+                        lastComment.user?.avatar_url ||
+                        `/static/uploads/avatar/${lastComment.user?.id}/${lastComment.user?.photo || 'avatar.png'}`
+                      }
+                      alt={lastComment.user?.name || 'User'}
+                      width={24}
+                      height={24}
+                      style={{
+                        borderRadius: 'var(--avatar-border-radius)',
+                        objectFit: 'cover'
+                      }}
+                      onError={safeImageError}
+                    />
+                  </Box>
+
+                  {/* Контент комментария */}
+                  <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                    <Typography
+                      sx={{
+                        fontSize: '0.8rem',
+                        color: 'rgba(255, 255, 255, 0.85)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      <Box
+                        component={Link}
+                        to={`/profile/${lastComment.user?.username || 'unknown'}`}
+                        onClick={e => e.stopPropagation()}
+                        sx={{
+                          fontWeight: 600,
+                          color: 'rgba(255, 255, 255, 0.9)',
+                          textDecoration: 'none',
+                          mr: 0.5,
+                          display: 'inline',
+                          '&:hover': {
+                            color: '#D0BCFF',
+                          },
+                        }}
+                      >
+                        {lastComment.user?.name || 'Пользователь'}
+                      </Box>
+                      {lastComment.content}
+                    </Typography>
+                  </Box>
+
+                  {/* Счетчик комментариев справа, если больше 1 */}
+                  {(post?.total_comments_count || post?.comments_count || 0) > 1 && (
+                    <Typography
+                      sx={{
+                        fontSize: '0.8rem',
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        flexShrink: 0,
+                        position: 'absolute',
+                        right: 0,
+                      }}
+                    >
+                      {(post?.total_comments_count || post?.comments_count || 0)}
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
+            ) : !isPostInModal ? (
+              <Box
+                sx={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(40px)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+                  borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+                  borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+                  borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+                  borderRadius: 'var(--large-border-radius)!important',
+                  px: 1.5,
+                  py: 0.85,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  minWidth: 0,
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                  },
+                }}
+                onClick={(e) => handleCommentClick(post.id, e)}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, width: '100%', minWidth: 0 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 21,
+                      height: 21,
+                      opacity: 0.6,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <CommentIcon />
+                  </Box>
+                  <Typography
+                    sx={{
+                      fontSize: '0.8rem',
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      fontStyle: 'italic',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      flex: 1,
+                      minWidth: 0,
+                      textAlign: 'center',
+                    }}
+                  >
+                    Оставьте комментарий
+                  </Typography>
+                </Box>
+              </Box>
+            ) : (
+              <Box sx={{ flex: 1 }} />
+            )}
+
+            {/* Правая группа: репост, поделиться, меню */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5,
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  background: 'rgba(0, 0, 0, 0.05)',
+                  backdropFilter: 'blur(40px)',
+                  WebkitBackdropFilter: 'blur(0px)',
+                  borderTop: '1px solid rgba(240, 240, 240, 0.24)',
+                  borderRight: '1px solid rgba(200, 200, 200, 0.322)',
+                  borderLeft: '1px solid rgba(200, 200, 200, 0.233)',
+                  borderBottom: '1px solid rgba(100, 100, 100, 0.486)',
+                  borderRadius: 'var(--large-border-radius)!important',
+                  px: 2.5,
+                  py: 0.85,
+                  gap: 1.5,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      opacity: 0.7,
+                    },
+                  }}
+                  onClick={handleRepostClick}
+                >
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 21,
+                      height: 21,
+                    }}
+                  >
+                    <RepostIcon />
+                  </Box>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      opacity: 0.7,
+                    },
+                  }}
+                  onClick={handleShare}
+                >
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 21,
+                      height: 21,
+                    }}
+                  >
+                    <ShareIcon />
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          )}
+          </Box>
+
         </Box>
       </PostCard>
 
